@@ -13,13 +13,16 @@ class Sarsa_Learning:
         self.N_episodes = N
 
     def computeQ(self):
-        # Initialize the Q matrix 16(rows)x4(columns)
-        Q = np.zeros([env.observation_space.n, env.action_space.n])
 
-        for i in range(env.observation_space.n):
-            if (i != 5) and (i != 7) and (i != 11) and (i != 12) and (i != 15):
-                for j in range(env.action_space.n):
-                    Q[i, j] = np.random.rand()
+        tower = Hanoi_Env(3)
+
+        # Initialize the Q matrix 16(rows)x4(columns)
+        Q = np.zeros([tower.state, len(tower.actions)])
+
+        # for i in range(env.observation_space.n):
+        #     if (i != 5) and (i != 7) and (i != 11) and (i != 12) and (i != 15):
+        #         for j in range(env.action_space.n):
+        #             Q[i, j] = np.random.rand()
 
         # Epsilon-Greedy policy, given a state the agent chooses the action that it believes has the best long-term effect with probability 1-eps, otherwise, it chooses an action uniformly at random. Epsilon may change its value.
 
@@ -33,46 +36,36 @@ class Sarsa_Learning:
 
         for i_episode in range(self.N_episodes):
 
-            number_of_discs = 3
-            number_of_pegs = 3
-
-            initial_state = list(list([x for x in range(0,number_of_discs)]).sort().reverse())
-
-            for x in range(0,number_of_pegs):
-                initial_state.append(list([0 for y in range(0,number_of_discs)]))
-
-            tower = Hanoi_Env(initial_state)
-
             currentState = tower.get_state()
 
             # Select action a using a policy based on Q
             if np.random.rand() <= epsilon:  # pick randomly
-                currentAction = random.randint(0, env.action_space.n - 1)
+                currentAction = random.randint(0, len(tower.allowed.moves(currentState)))
             else:  # pick greedily
                 currentAction = np.argmax(Q[currentState, :])
 
+            currentAction = tower.allowed.moves(currentState)[currentAction]
+
             totalreward = 0
-            while True:
-                env.render()
+
+            while not tower.finished(currentState) :
 
                 # Carry out an action a
-                observation, reward, done, info = env.step(currentAction)
-                if done is True:
-                    break;
+                nextState, reward = tower.get_moved_states(currentAction)
 
                 # Observe reward r and state s'
                 totalreward += reward
-                nextState = observation
 
                 # Select action a' using a policy based on Q
                 if np.random.rand() <= epsilon:  # pick randomly
-                    nextAction = random.randint(0, env.action_space.n - 1)
+                    nextAction = random.randint(0, len(tower.allowed.moves(nextState)))
                 else:  # pick greedily
                     nextAction = np.argmax(Q[nextState, :])
 
+                nextAction = tower.allowed.moves(nextState)[nextAction]
                 # update Q with Q-learning
                 Q[currentState, currentAction] += learning_rate * (
-                reward + discount * Q[nextState, nextAction] - Q[currentState, currentAction])
+                    reward + discount * Q[nextState, nextAction] - Q[currentState, currentAction])
 
                 currentState = nextState
                 currentAction = nextAction
@@ -87,8 +80,8 @@ class Sarsa_Learning:
                     a.pop()
                 print a
 
-                for i in range(env.observation_space.n):
-                    print "-----"
-                    for j in range(env.action_space.n):
-                        print Q[i, j]
+                # for i in range(env.observation_space.n):
+                #     print "-----"
+                #     for j in range(len(tower.actions)):
+                #         print Q[i, j]
         pass
