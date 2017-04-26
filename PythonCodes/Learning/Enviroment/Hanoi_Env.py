@@ -17,7 +17,6 @@ class Hanoi_Env:
         for x in range(0, p-1):
             initial_state.append(list())
 
-        self.final_state = initial_state[::-1]
         self.state = initial_state
         #sprint initial_state
 
@@ -69,17 +68,17 @@ class Hanoi_Env:
 
         if self.finished(stateToshow):
             reward = 10000
-        elif reward != 0:
-            reward += -10
+        elif 0 == reward:
+            reward = -10
 
         return stateToshow,reward
-        #state = [self.pegs[0],self.pegs[1],self.pegs[2]]
-        #state = [x for x in self.pegs]
 
     def finished(self,state):
-        if state == self.final_state :
+        if len(state[self.n-1]) == [x for x in range(0,self.n)][::-1]:
             return True
         return False
+
+
 
     def restart(self):
         initial_state = list()
