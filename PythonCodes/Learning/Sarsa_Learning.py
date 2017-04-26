@@ -70,7 +70,7 @@ class Sarsa_Learning:
                 currentState = nextState
                 currentAction = nextAction
 
-                print "Episode: %d reward %d best %d epsilon %f" % (i_episode, totalreward, bestreward, epsilon)
+                print ("Episode: %d reward %d best %d epsilon %f" % (i_episode, totalreward, bestreward, epsilon))
                 if totalreward > bestreward:
                     bestreward = totalreward
                 if i_episode > self.N_episodes / 2:
@@ -78,7 +78,7 @@ class Sarsa_Learning:
                 if i_episode >= self.N_episodes - 10:
                     a.insert(0, totalreward)
                     a.pop()
-                print a
+                print (a)
 
                 # for i in range(env.observation_space.n):
                 #     print "-----"
