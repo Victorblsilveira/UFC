@@ -1,10 +1,12 @@
 # move = (OriginPeg, DestinyPeg)
 # state = [Peg1[],Peg2[],Peg3[]]
+
 import copy
 import itertools
 
 
 class HanoiEnv:
+
     def __init__(self, n=3, p=3):
         self.p = p
         self.n = n
@@ -65,10 +67,10 @@ class HanoiEnv:
         else:
             reward = -100
 
-        if self.finished(state_to_show):
+        if self.finished_state(state_to_show):
             reward = 10000
         elif 0 == reward:
-            reward = -10
+            reward = -5
 
         return str(state_to_show), reward
 
