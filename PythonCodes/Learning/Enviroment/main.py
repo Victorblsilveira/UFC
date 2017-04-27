@@ -1,5 +1,5 @@
-import Sarsa_Learning
+import SarsaLearning
 
-learn = Sarsa_Learning.Sarsa_Learning()
+learn = SarsaLearning.SarsaLearning()
 
-learn.computeQ()
+learn.compute_q()
