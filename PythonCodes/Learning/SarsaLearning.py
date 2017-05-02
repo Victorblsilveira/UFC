@@ -1,25 +1,34 @@
 import random
 import numpy as np
-from Enviroment import HanoiEnv
-
 
 class SarsaLearning:
 
-    def __init__(self, gamma=0.8, alpha=1.0, n=10000):
+    def __init__(self, env, gamma=0.8, alpha=1.0, n=10000):
         self.gamma = gamma
         self.alpha = alpha
         self.n_episodes = n
+        self.env = env
+
+    def change_ep_number(self, number):
+        self.n = number
+
+    def change_learning_rate(self, number):
+        self.gamma = number
+
+    def get_ep_number(self):
+        return self.n_episodes
+
+    def get_learning_rate(self):
+        return self.gamma
 
     def compute_q(self):
 
-        tower = HanoiEnv.HanoiEnv(3)
-
         Q = dict()
 
-        current_state = tower.get_state()
+        current_state = self.env.get_state()
 
         Q[current_state] = dict()
-        for x in tower.actions:
+        for x in self.env.actions:
             Q[current_state][x] = np.random.rand()
 
         epsilon = 0.1
@@ -31,7 +40,7 @@ class SarsaLearning:
             number_of_moves = 0
 
             # Select action a using a policy based on Q
-            moves = tower.actions
+            moves = self.env.actions
             if np.random.rand() <= epsilon:  # pick randomly
                 current_action = random.randint(0, len(moves) - 1)
             else:  # pick greedily
@@ -39,16 +48,16 @@ class SarsaLearning:
 
             #totalreward = 0
             # print moves
-            while not tower.finished():
+            while not self.env.finished():
 
                 number_of_moves = number_of_moves + 1
                 # Carry out an action a
-                next_state, reward = tower.get_moved_state(tower.actions[current_action])
+                next_state, reward = self.env.get_moved_state(self.env.actions[current_action])
 
                 # Observe reward r and state s'
                 # totalreward += reward
 
-                # Creating or not an state on Q
+                # Creating or not a state on Q
                 if next_state not in Q.keys():
                     Q[next_state] = dict()
                     for x in moves:
@@ -63,8 +72,8 @@ class SarsaLearning:
                 # Q[current_state][tower.actions[current_action]] += learning_rate * (
                 #     reward + discount * Q[next_state][tower.actions[next_action]] -
                 #     Q[current_state][tower.actions[current_action]])
-                Q[current_state][tower.actions[current_action]] = (1-learning_rate)*Q[current_state][tower.actions[current_action]]+(
-                    learning_rate * (reward + discount * Q[next_state][tower.actions[next_action]]))
+                Q[current_state][self.env.actions[current_action]] = (1-learning_rate)*Q[current_state][self.env.actions[current_action]]+(
+                    learning_rate * (reward + discount * Q[next_state][self.env.actions[next_action]]))
                 # print(currentState)
                 # print(moves[currentAction])
                 # print(nextState)
@@ -75,8 +84,8 @@ class SarsaLearning:
                 # if number_of_moves > 4:
                 #     break
 
-            tower.restart()
-            current_state = tower.get_state()
+            self.env.restart()
+            current_state = self.env.get_state()
             print(number_of_moves)
             # print(Q)
             # break
