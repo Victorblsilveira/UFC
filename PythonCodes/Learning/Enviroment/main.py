@@ -1,6 +1,6 @@
-import SarsaLearning
-import Enviroment
+import SarsaLearning as Learn
+from Enviroment import HanoiEnv as Env
 
-learn = SarsaLearning.SarsaLearning(Enviroment.HanoiEnv(3))
+learn = Learn.SarsaLearning(Env.HanoiEnv(3))
 
 learn.compute_q()
