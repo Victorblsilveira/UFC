@@ -1,16 +1,14 @@
 # move = (OriginPeg, DestinyPeg)
 # state = [Peg1[],Peg2[],Peg3[]]
 
-import copy
 import itertools
 
 
 class HanoiEnv:
-
     def __init__(self, n=3, p=3):
         self.p = p
         self.n = n
-        self.actions = list(itertools.permutations(range(self.n), 2))
+        self.actions = list(itertools.permutations(range(self.p), 2))
 
         initial_state = list()
         initial_state.append([x for x in range(0, n)][::-1])
@@ -40,7 +38,6 @@ class HanoiEnv:
     def move_allowed(self, move):
         disc_from = move[0]
         disc_to = move[1]
-
         if self.state[disc_from]:
             if self.state[disc_to]:
                 return self.state[disc_to][-1] > self.state[disc_from][-1]
@@ -52,35 +49,25 @@ class HanoiEnv:
     def get_state(self):
         return str(self.state)
 
-    def get_moved_state(self, move, modify=True):
-        state_to_show = copy.copy(self.state)
-        reward = 0
+    def get_moved_state(self, move):
         if self.move_allowed(move):
-            if modify:
-                self.state[move[1]].append(self.state[move[0]].pop())
-                state_to_show = copy.copy(self.state)
-
+            self.state[move[1]].append(self.state[move[0]].pop())
+            if self.finished():
+                reward = 10000
             else:
-                copy_state = copy.copy(self.state)
-                copy_state[move[1]].append(copy_state[move[0]].pop())
-                state_to_show = copy_state
+                reward = -5
         else:
             reward = -100
 
-        if self.finished_state(state_to_show):
-            reward = 10000
-        elif 0 == reward:
-            reward = -5
-
-        return str(state_to_show), reward
+        return self.get_state(), reward
 
     def finished_state(self, state):
-        if state[self.n - 1] == [x for x in range(0, self.n)][::-1]:
+        if state[self.p - 1] == [x for x in range(0, self.n)][::-1]:
             return True
         return False
 
     def finished(self):
-        if self.state[self.n - 1] == [x for x in range(0, self.n)][::-1]:
+        if self.state[self.p - 1] == [x for x in range(0, self.n)][::-1]:
             return True
         return False
 
@@ -90,4 +77,3 @@ class HanoiEnv:
         for x in range(0, self.p - 1):
             initial_state.append(list())
         self.state = initial_state
-        # print "restarted with state of : "+str(self.state)

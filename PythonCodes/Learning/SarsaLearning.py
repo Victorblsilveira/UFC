@@ -41,21 +41,15 @@ class SarsaLearning:
 
             # Select action a using a policy based on Q
             moves = self.env.actions
-            if np.random.rand() <= epsilon:  # pick randomly
-                current_action = random.randint(0, len(moves) - 1)
-            else:  # pick greedily
-                current_action = np.argmax(Q[current_state].values())
+            # if np.random.rand() <= epsilon:  # pick randomly
+            #     current_action = random.randint(0, len(moves) - 1)
+            # else:  # pick greedily
+            current_action = max(Q[current_state],key=lambda i: Q[current_state][i])
 
-            #totalreward = 0
-            # print moves
             while not self.env.finished():
-
                 number_of_moves = number_of_moves + 1
                 # Carry out an action a
-                next_state, reward = self.env.get_moved_state(self.env.actions[current_action])
-
-                # Observe reward r and state s'
-                # totalreward += reward
+                next_state, reward = self.env.get_moved_state(current_action)
 
                 # Creating or not a state on Q
                 if next_state not in Q.keys():
@@ -64,28 +58,23 @@ class SarsaLearning:
                         Q[next_state][x] = np.random.rand()
 
                 # Select action a' using a policy based on Q
-                if np.random.rand() <= epsilon:  # pick randomly
-                    next_action = random.randint(0, len(moves) - 1)
-                else:  # pick greedily
-                    next_action = np.argmax(Q[next_state].values())
+                # if np.random.rand() <= epsilon:  # pick randomly
+                #     next_action = random.randint(0, len(moves) - 1)
+                # else:  # pick greedily
 
+                next_action = max(Q[next_state],key=lambda i: Q[next_state][i])
+
+                #print(next_action)
                 # Q[current_state][tower.actions[current_action]] += learning_rate * (
                 #     reward + discount * Q[next_state][tower.actions[next_action]] -
                 #     Q[current_state][tower.actions[current_action]])
-                Q[current_state][self.env.actions[current_action]] = (1-learning_rate)*Q[current_state][self.env.actions[current_action]]+(
-                    learning_rate * (reward + discount * Q[next_state][self.env.actions[next_action]]))
-                # print(currentState)
-                # print(moves[currentAction])
-                # print(nextState)
-                # print(moves[nextAction])
-                # print Q
+                Q[current_state][current_action] = (1-learning_rate)*Q[current_state][current_action]+(
+                    learning_rate * (reward + discount * Q[next_state][next_action]))
+
                 current_state = next_state
                 current_action = next_action
-                # if number_of_moves > 4:
-                #     break
 
             self.env.restart()
             current_state = self.env.get_state()
             print(number_of_moves)
-            # print(Q)
-            # break
+        print(Q)
