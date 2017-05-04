@@ -3,7 +3,7 @@ import numpy as np
 
 
 class SarsaLearning:
-    def __init__(self, env, gamma=0.8, alpha=0.99, n=50000):
+    def __init__(self, env, gamma=0.9, alpha=0.99, n=50000):
         self.gamma = gamma
         self.alpha = alpha
         self.n_episodes = n
