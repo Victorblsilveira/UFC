@@ -2,3 +2,13 @@
 .options {
   display: inline-block;
 }
+
+
+.buttons{
+  display: inline-block;
+
+}
+
+.button{
+  border: 0px;
+}
