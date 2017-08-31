@@ -1,15 +1,11 @@
-<<<<<<< HEAD
-
 var img = new Image();
+var ctx;
+var canvas;
 
-var imageLoader = document.getElementById('imageLoader');
-    imageLoader.addEventListener('change', handleImage, false);
 
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
-
-document.getElementById('reset').onclick = function() {
-	ctx.drawImage(img, 0, 0);
+window.onload = function(){
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
 }
 
 function handleImage(e){
@@ -25,6 +21,10 @@ function handleImage(e){
     reader.readAsDataURL(e.target.files[0]);     
 }
 
+function reset(){
+	ctx.drawImage(img, 0, 0);
+}
+
 function applyFilter(filter) {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
@@ -34,10 +34,6 @@ function applyFilter(filter) {
 	ctx.putImageData(imgd, 0, 0)
 }
 
-document.getElementById('btn_gray').onclick = function() {
-	applyFilter(grayscale);
-}
-
 var grayscale = function(pixels, i) {
 	mean = (pixels[i] + pixels[i+1] + pixels[i+2])/3
 	pixels[i] = mean
@@ -45,11 +41,9 @@ var grayscale = function(pixels, i) {
 	pixels[i+2] = mean
 }
 
-=======
-function black_White(){console.log('preto branco');}
 function potenc(){console.log('potencia');}
 function negative(){console.log('negativo');}
 function potenc_inv(){console.log('raiz quadrada');}
 function log(){console.log('log');}
 function subtract(){console.log('subtract');}
->>>>>>> 8a38a02c24788172a6e5a74669c6833c49d5a00f
+

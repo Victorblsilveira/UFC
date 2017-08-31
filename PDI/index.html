@@ -2,16 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="js/index.js"></script>
     <link rel="stylesheet" href="/css/index.css">
     <title></title>
   </head>
   <body>
 
-    <input type="file" id="imageLoader" name="imageLoader"/>
-    <button id='btn_gray'>Grayscale</button>
-    <button id='reset'>Reset</button>
+    <input  class='loader' onchange="handleImage(event)" type="file"/>
+
+    <button onclick="applyFilter(grayscale)">Grayscale</button>
+    <button onclick="reset()">Reset</button>
     <canvas id='canvas'></canvas>
-    <script src="image_processor.js"></script>
+    
 
   </body>
 </html>
