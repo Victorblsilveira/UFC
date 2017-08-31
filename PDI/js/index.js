@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 var img = new Image();
 
@@ -44,3 +45,11 @@ var grayscale = function(pixels, i) {
 	pixels[i+2] = mean
 }
 
+=======
+function black_White(){console.log('preto branco');}
+function potenc(){console.log('potencia');}
+function negative(){console.log('negativo');}
+function potenc_inv(){console.log('raiz quadrada');}
+function log(){console.log('log');}
+function subtract(){console.log('subtract');}
+>>>>>>> 8a38a02c24788172a6e5a74669c6833c49d5a00f
