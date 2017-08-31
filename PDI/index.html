@@ -9,11 +9,16 @@
   <body>
 
     <input  class='loader' onchange="handleImage(event)" type="file"/>
-
-    <button onclick="applyFilter(grayscale)">Grayscale</button>
-    <button onclick="reset()">Reset</button>
-    <canvas id='canvas'></canvas>
+    
     
 
-  </body>
+
+    <div class="filter-options">
+      <button onclick="applyFilter(grayscale)">Grayscale</button>
+      <button onclick="reset()">Reset</button>
+    </div>
+    <div class="image-panel">
+     <img class='image' src="">
+     <canvas id='canvas'></canvas> 
+    </div>  </body>
 </html>
