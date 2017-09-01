@@ -2,6 +2,8 @@ var img = new Image();
 var ctx;
 var canvas;
 
+var lambda = 10;
+var constant = 2;
 
 window.onload = function(){
 	canvas = document.getElementById('canvas');
@@ -34,16 +36,45 @@ function applyFilter(filter) {
 	ctx.putImageData(imgd, 0, 0)
 }
 
-var grayscale = function(pixels, i) {
-	mean = (pixels[i] + pixels[i+1] + pixels[i+2])/3
+function getMean(pixels, i) {
+	return (pixels[i] + pixels[i+1] + pixels[i+2])/3
+}
+
+function grayscale(pixels, i) {
+	mean = getMean(pixels, i);
 	pixels[i] = mean
 	pixels[i+1] = mean 
 	pixels[i+2] = mean
 }
 
-function potenc(){console.log('potencia');}
-function negative(){console.log('negativo');}
-function potenc_inv(){console.log('raiz quadrada');}
-function log(){console.log('log');}
-function subtract(){console.log('subtract');}
+function negative(pixels, i) {
+	pixels[i] = 255 - pixels[i];
+	pixels[i+1] = 255 - pixels[i+1];
+	pixels[i+2] = 255 - pixels[i+2];
+}
+
+function potenc(pixels, i) {
+	mean = getMean(pixels, i) / 255;
+	pixels[i] = Math.pow(mean, lambda) * 255;
+	pixels[i+1] = Math.pow(mean, lambda) * 255;
+	pixels[i+2] = Math.pow(mean, lambda) * 255;
+}
+
+function log(pixels, i) {
+	mean = getMean(pixels, i) / 255;
+	pixels[i] = constant * Math.log(1+mean) * 255;
+	pixels[i+1] = constant * Math.log(1+mean) * 255;
+	pixels[i+2] = constant * Math.log(1+mean) * 255;
+}
+
+function inverse_log(pixels, i) {
+	mean = getMean(pixels, i) / 255;
+	pixels[i]   = (Math.exp(mean) - 1) / constant * 255;
+	pixels[i+1] = (Math.exp(mean) - 1) / constant * 255;
+	pixels[i+2] = (Math.exp(mean) - 1) / constant * 255;
+}
+
+function subtract(pixels, i) {
+	console.log('subtract');
+}
 
