@@ -2,6 +2,7 @@ var img = new Image();
 var ctx;
 var canvas;
 
+var threshold = 0.5
 var lambda = 10;
 var constant = 2;
 
@@ -40,6 +41,11 @@ function applyFilter(filter,element) {
 	ctx.putImageData(imgd, 0, 0)
 }
 
+function actualizeTreshold(element){
+	threshold = element.target.value/1000;
+	document.getElementById("range").innerHTML= threshold;
+}
+
 function getMean(pixels, i) {
 	return (pixels[i] + pixels[i+1] + pixels[i+2])/3
 }
@@ -76,6 +82,12 @@ function inverse_log(pixels, i) {
 	pixels[i]   = (Math.exp(mean) - 1) / constant * 255;
 	pixels[i+1] = (Math.exp(mean) - 1) / constant * 255;
 	pixels[i+2] = (Math.exp(mean) - 1) / constant * 255;
+}
+
+function limiar(pixels, i){
+	pixels[i]   = (threshold * 255 > pixels[i]) ? 255 : 0
+	pixels[i+1] = (threshold * 255 > pixels[i]) ? 255 : 0
+	pixels[i+2] = (threshold * 255 > pixels[i]) ? 255 : 0
 }
 
 function subtract(pixels, i) {

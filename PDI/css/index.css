@@ -11,6 +11,18 @@
   text-align: center;
 }
 
+.slidebar{
+  display: inline-block;
+  width: 70%;
+}
+
+.limit{
+  display: inline-block;
+  width: 10%;
+  color: white;
+  vertical-align: super;
+}
+
 .filter-options{
   width: 15%;
   display: inline-block;

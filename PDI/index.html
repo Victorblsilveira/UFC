@@ -19,6 +19,13 @@
         <button class="filter" onclick="applyFilter(potenc)">Potency</button>
         <button class="filter" onclick="applyFilter(log)">Log</button>
         <button class="filter" onclick="applyFilter(inverse_log)">Inverse Log</button>
+        <div class="">
+          <button class="filter" onclick="applyFilter(limiar)">Limiar : <span id='range'>0.5</span>
+          </button>
+          <div class="limit -min">0</div>
+          <input class="slidebar" type="range"  min="0" max="1000" onchange="actualizeTreshold(event)"/>
+          <div class="limit -max">1</div>
+        </div>
         <button class="filter" onclick="reset()">Reset</button>
       </div>
 
