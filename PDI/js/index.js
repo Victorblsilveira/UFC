@@ -11,6 +11,8 @@ window.onload = function(){
 }
 
 function handleImage(e){
+		console.log(e);
+
     var reader = new FileReader();
     reader.onload = function(event){
         img.onload = function(){
@@ -19,15 +21,17 @@ function handleImage(e){
             ctx.drawImage(img,0,0);
         }
         img.src = event.target.result;
+				document.querySelector('#origin').setAttribute("src",event.target.result)
     }
-    reader.readAsDataURL(e.target.files[0]);     
+    reader.readAsDataURL(e.target.files[0]);
 }
 
 function reset(){
 	ctx.drawImage(img, 0, 0);
 }
 
-function applyFilter(filter) {
+function applyFilter(filter,element) {
+
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	for (var i = 0; i < pix.length; i+=4) {
@@ -43,7 +47,7 @@ function getMean(pixels, i) {
 function grayscale(pixels, i) {
 	mean = getMean(pixels, i);
 	pixels[i] = mean
-	pixels[i+1] = mean 
+	pixels[i+1] = mean
 	pixels[i+2] = mean
 }
 
@@ -77,4 +81,3 @@ function inverse_log(pixels, i) {
 function subtract(pixels, i) {
 	console.log('subtract');
 }
-

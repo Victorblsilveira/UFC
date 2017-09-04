@@ -1,13 +1,58 @@
+.loader{
+  width: 100%;
+  display: inline-block;
+  border-width: 0px;
+  text-align: center;
+  color: white;
+}
 
-.options {
+.content{
+  padding-top: 20px;
+}
+
+.filter-options{
+  width: 15%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.filter{
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 5px;
+    border-width: 0px;
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.filter:hover{
+    opacity: 0.5;
+    transition: 0.4;
+}
+
+.image-panel{
+  width: 75%;
   display: inline-block;
 }
 
-.buttons{
-  display: inline-block;
-
+.image{
+    max-width: 400px;
+    max-height: 400px;
+    margin-left:  10px;
 }
 
-.button{
-  border: 0px;
+.head{
+  text-align: center;
+  color: white;
+}
+
+
+#canvas{
+  max-height: 400px;
+  max-width: 400px;
+  margin-left: 10px;
+}
+
+body{
+  background: url("/img/background.jpg")
 }
