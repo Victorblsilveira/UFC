@@ -23,6 +23,12 @@
   vertical-align: super;
 }
 
+.pointer{
+  width: 20%;
+  display: inline-block;
+  vertical-align: super;
+}
+
 .filter-options{
   width: 15%;
   display: inline-block;
@@ -36,6 +42,7 @@
     border-width: 0px;
     background-color: cornflowerblue;
     color: white;
+    overflow: hidden;
 }
 
 .filter:hover{

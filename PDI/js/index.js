@@ -3,8 +3,8 @@ var ctx;
 var canvas;
 
 var threshold = 0.5
-var lambda = 10;
-var constant = 2;
+var lambda = 1;
+var constant = 25;
 var bitSlicePos = 4;
 var bitSliceValue = Math.pow(2, bitSlicePos);
 
@@ -54,6 +54,19 @@ function updateTresholdBitSlice(element){
 	document.getElementById("range_bitslice").innerHTML= bitSlicePos;
 }
 
+
+function updateLambda(element){
+	val = element.target.value/2
+	lambda = (val > 10) ? val - 9 : 1/(11-val);
+	lambda = lambda.toFixed(2);
+	document.getElementById("range_potenc").innerHTML= lambda;
+}
+
+function updateConstant(element){
+	constant = element.target.value
+	document.getElementById("range_log").innerHTML= constant;
+}
+
 function getMean(pixels, i) {
 	return (pixels[i] + pixels[i+1] + pixels[i+2])/3
 }
@@ -87,6 +100,12 @@ function inverse_log(pixels, i) {
 function limiar(pixels, i) {
 	mean = getMean(pixels, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold > mean) ? 255 : 0
+}
+
+function limiar_apar(pixels, i){
+	mean = getMean(pixels, i) / 255;
+	
+	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold_inf > mean) ? 0 : (threshold_sup > mean) ? medValue : 255
 }
 
 function bit_slice(pixels, i) {
