@@ -13,7 +13,7 @@
 
 .slidebar{
   display: inline-block;
-  width: 70%;
+  width: 60%;
 }
 
 .limit{
@@ -68,5 +68,5 @@
 }
 
 body{
-  background: url("/img/background.jpg")
+  background: url("../img/background.jpg")
 }

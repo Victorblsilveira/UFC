@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="js/index.js"></script>
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="css/index.css">
     <title>PDI</title>
   </head>
   <body>
@@ -20,11 +20,19 @@
         <button class="filter" onclick="applyFilter(log)">Log</button>
         <button class="filter" onclick="applyFilter(inverse_log)">Inverse Log</button>
         <div class="">
-          <button class="filter" onclick="applyFilter(limiar)">Limiar : <span id='range'>0.5</span>
+          <button class="filter" onclick="applyFilter(limiar)">Limiar : <span id='range_limiar'>0.5</span>
           </button>
           <div class="limit -min">0</div>
-          <input class="slidebar" type="range"  min="0" max="1000" onchange="actualizeTreshold(event)"/>
+          <input class="slidebar" type="range"  min="0" max="1000" onchange="updateTresholdLimiar(event)"/>
           <div class="limit -max">1</div>
+        </div>
+
+        <div class="">
+          <button class="filter" onclick="applyFilter(bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
+          </button>
+          <div class="limit -min">0</div>
+          <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
+          <div class="limit -max">7</div>
         </div>
         <button class="filter" onclick="reset()">Reset</button>
       </div>
