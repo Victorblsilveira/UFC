@@ -1,6 +1,8 @@
 var img = new Image();
 var ctx;
 var canvas;
+var histogram;
+var histogramNormalizer;
 
 var threshold = 0.5
 var lambda = 1;
@@ -23,23 +25,44 @@ function handleImage(e){
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img,0,0);
+            loadHistogram();
         }
         img.src = event.target.result;
 				document.querySelector('#origin').setAttribute("src",event.target.result)
     }
     reader.readAsDataURL(e.target.files[0]);
-		processHistogram()
 }
 
 function reset(){
 	ctx.drawImage(img, 0, 0);
 }
 
-function processHistogram(){
-
+function loadHistogram() {
+	histogram = Array.apply(null, Array(256)).map(Number.prototype.valueOf,0);
+	histogramNormalizer = [];
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
+	for (var i = 0; i < pix.length; i+=4) {
+		mean = parseInt(getMean(pix, i));
+		histogram[mean] += 1;
+	}
+	sum = 0;
+	for (var i in histogram) sum += histogram[i];
+	sum = parseFloat(sum);
+	acc = 0;
+	for (var i = 0; i < 256; i++) {
+		acc += histogram[i];
+		histogramNormalizer[i] = Math.round(255 * acc/sum);
+	}
 }
 
+function processHistogram(){
+	console.log(getHistogram());
+}
+
+
 function applyFilter(filter,element) {
+	loadHistogram();
 
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
@@ -159,4 +182,9 @@ function bit_slice(pixels, i) {
 
 function subtract(pixels, i) {
 	console.log('subtract');
+}
+
+function normalizeHistogram(pixels, i) {
+	mean = parseInt(getMean(pixels, i));
+	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
