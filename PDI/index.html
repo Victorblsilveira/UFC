@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="js/index.js"></script>
+    <link rel="import" href="bower_components/google-chart/charts-loader.html">
     <link rel="stylesheet" href="css/index.css">
     <title>PDI</title>
   </head>
@@ -73,14 +74,22 @@
           <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
           <div class="limit -max">7</div>
         </div>
-
         <button class="filter" onclick="reset()">Reset</button>
+
+        <h4 class="head">Outras Opções</h4>
+        <button class="filter" name="button" onclick="showGraphs(true)">Histogramas</button>
 
       </div>
 
       <div class="image-panel">
        <img id='origin' class='image' src="">
        <canvas id='canvas'></canvas>
+      </div>
+
+      <div class="histogramas hide">
+          <button type="button" onclick="showGraphs(false)" name="button">Close</button>
+          <div id="histo_1" class=""></div>
+          <div id="histo_2" class=""></div>
       </div>
     </div>
 

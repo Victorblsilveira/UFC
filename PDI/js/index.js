@@ -28,10 +28,15 @@ function handleImage(e){
 				document.querySelector('#origin').setAttribute("src",event.target.result)
     }
     reader.readAsDataURL(e.target.files[0]);
+		processHistogram()
 }
 
 function reset(){
 	ctx.drawImage(img, 0, 0);
+}
+
+function processHistogram(){
+
 }
 
 function applyFilter(filter,element) {
@@ -111,6 +116,14 @@ function limiar_apar(pixels, i){
 	mean = getMean(pixels, i) / 255;
 
 	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold_inf > mean) ? 0 : (threshold_sup > mean) ? medValue : 255
+}
+
+function showGraphs(option){
+	if (option){
+		document.getElementsByClassName("histogramas")[0].classList.remove("hide")
+	}else {
+		document.getElementsByClassName("histogramas")[0].classList.add("hide")
+	}
 }
 
 function bit_slice(pixels, i) {

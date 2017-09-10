@@ -75,6 +75,14 @@
     margin-left:  10px;
 }
 
+.hide{
+  opacity: 0;
+}
+
+.histogramas{
+  display: inline-block;
+  width: 75%;
+}
 .head{
   text-align: center;
   color: white;
