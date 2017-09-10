@@ -46,7 +46,7 @@ function applyFilter(filter,element) {
 	for (var i = 0; i < pix.length; i+=4) {
 		filter(pix, i);
 	}
-	ctx.putImageData(imgd, 0, 0)
+	ctx.putImageData(imgd, 0, 0);
 }
 
 function updateTresholdLimiar(element){
@@ -112,10 +112,36 @@ function limiar(pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold > mean) ? 255 : 0
 }
 
-function limiar_apar(pixels, i){
-	mean = getMean(pixels, i) / 255;
+function getPoints() {
+	i1 = (pointers[0] > pointers[2]) ? 2 : 0;
+	i2 = 2 - i1;
+	P1 = [pointers[i1], pointers[i1+1]];
+	P2 = [pointers[i2], pointers[i2+1]];
+	return [P1, P2];
+}
 
-	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold_inf > mean) ? 0 : (threshold_sup > mean) ? medValue : 255
+function linF1(x) {
+	P = getPoints()[0];
+	return (P[0] != 0) ? parseInt(x * (P[1] / P[0])) : P[1];
+}
+
+function linF2(x) {
+	P1 = getPoints()[0];
+	P2 = getPoints()[1];
+	P = [P2[0] - P1[0], P2[1] - P1[1]];
+	return (P[0] != 0) ? parseInt((x - P1[0]) * (P[1] / P[0]) + P1[1]) : P2[1];
+}
+
+function linF3(x) {
+	P = getPoints()[1];
+	return (P[0] != 255) ? parseInt((x - P[0]) * ((255 - P[1]) / (255 - P[0])) + P[1]) : P[1];
+}
+
+function limiar_apar(pixels, i){
+	mean = getMean(pixels, i);
+	P = getPoints();
+	val = (mean < P[0][0]) ? linF1(mean) : (mean > P[1][0]) ? linF3(mean) : linF2(mean);
+	pixels[i] = pixels[i+1] = pixels[i+2] = val;
 }
 
 function showGraphs(option){
