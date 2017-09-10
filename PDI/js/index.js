@@ -7,6 +7,7 @@ var lambda = 1;
 var constant = 25;
 var bitSlicePos = 4;
 var bitSliceValue = Math.pow(2, bitSlicePos);
+var pointers = [0,0,0,0]
 
 window.onload = function(){
 	canvas = document.getElementById('canvas');
@@ -67,6 +68,10 @@ function updateConstant(element){
 	document.getElementById("range_log").innerHTML= constant;
 }
 
+function updateVariables(event,indexVariable){
+	pointers[indexVariable] = parseInt(event.target.value);
+}
+
 function getMean(pixels, i) {
 	return (pixels[i] + pixels[i+1] + pixels[i+2])/3
 }
@@ -104,7 +109,7 @@ function limiar(pixels, i) {
 
 function limiar_apar(pixels, i){
 	mean = getMean(pixels, i) / 255;
-	
+
 	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold_inf > mean) ? 0 : (threshold_sup > mean) ? medValue : 255
 }
 

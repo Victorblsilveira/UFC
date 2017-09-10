@@ -24,17 +24,17 @@
           <button class="filter" onclick="applyFilter(potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
           <div class="limit -min">0.1</div>
           <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
-          <div class="limit -max">10</div>  
+          <div class="limit -max">10</div>
         </div>
 
         <div class="">
           <button class="filter" onclick="applyFilter(log)">Log (C=<span id='range_log'>11</span>)</button>
           <div class="limit -min">1</div>
           <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
-          <div class="limit -max">20</div>  
+          <div class="limit -max">20</div>
         </div>
 
-        
+
         <button class="filter" onclick="applyFilter(inverse_log)">Inverse Log</button>
 
         <div class="">
@@ -48,11 +48,22 @@
         <div class="">
           <button class="filter" onclick="applyFilter(limiar_apar)">Limiar por Partes : <span id='range_limiar'>0.5</span>
           </button>
-          <div class="limit -min">0</div>
-          <input class="pointer" type="number" name="quantity" min="0" max="255"></input>
-          <input class="pointer" type="number" name="quantity" min="0" max="255">
-          <div class="limit -max">255</div>       
-
+          <div class="point">
+            <div class="x">
+                X : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255">
+            </div>
+            <div class="y">
+                Y : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255">
+            </div>
+          </div>
+          <div class="point">
+            <div class="x">
+                X : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255">
+            </div>
+            <div class="y">
+                Y : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255">
+            </div>
+          </div>
         </div>
 
         <div class="">

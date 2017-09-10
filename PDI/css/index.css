@@ -22,9 +22,22 @@
   color: white;
   vertical-align: super;
 }
+.x{
+  color: white;
+}
 
+.y{
+  color: white;
+  transform: translate(1px);
+}
+
+.point{
+  display: inline-block;
+  width: 45%;
+}
 .pointer{
-  width: 20%;
+  color: black;
+  width: 45%;
   display: inline-block;
   vertical-align: super;
 }
@@ -75,5 +88,6 @@
 }
 
 body{
-  background: url("../img/background.jpg")
+  /*background: url("../img/background.jpg")*/
+  background: #404040;
 }
