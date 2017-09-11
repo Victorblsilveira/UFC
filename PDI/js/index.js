@@ -4,6 +4,30 @@ var canvas;
 var histogram;
 var histogramNormalizer;
 
+google.charts.load("current", {packages:["corechart"]});
+
+var x_labels = [];
+for (i = 0; i < 256/10; i++) x_labels[i] = i*10;
+var options = {
+	title: 'Histograma',
+	legend: { position: 'none' },
+	colors: ['green'],
+	chartArea: { width: 300 },
+	hAxis: {
+		ticks: x_labels,
+	},
+	histogram: {
+      bucketSize: 1,
+      maxNumBuckets: 256,
+      minValue: 0,
+      maxValue: 255,
+    },
+
+};
+
+var histo_1;
+var histo_2;
+
 var threshold = 0.5
 var lambda = 1;
 var constant = 25;
@@ -15,8 +39,9 @@ window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 
-	google.charts.load("current", {packages:["corechart"]});
-	//google.charts.setOnLoadCallback(drawChart);
+	histo_1 = new google.visualization.Histogram(document.getElementById('histo_1'));
+	histo_2 = new google.visualization.Histogram(document.getElementById('histo_2'));
+
 }
 
 function handleImage(e){
@@ -28,25 +53,17 @@ function handleImage(e){
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img,0,0);
+
             loadHistogram();
+
+            drawHistogram(histo_1);
         }
+
         img.src = event.target.result;
-				document.querySelector('#origin').setAttribute("src",event.target.result)
+		document.querySelector('#origin').setAttribute("src",event.target.result)
     }
     reader.readAsDataURL(e.target.files[0]);
-
-		var options = {
-			title: 'Histograma ',
-			legend: { position: 'none' },
-		};
-
-		var data = google.visualization.arrayToDataTable(histogramNormalizer)
-
-		histo_1 = new google.visualization.Histogram(document.getElementById('histo_1'));
-		histo_1.draw(data, options);
-
-    histo_2 = new google.visualization.Histogram(document.getElementById('histo_2'));
-    histo_2.draw(data, options);
+		
 }
 
 function reset(){
@@ -54,26 +71,34 @@ function reset(){
 }
 
 function loadHistogram() {
-	histogram = Array.apply(null, Array(256)).map(Number.prototype.valueOf,0);
-	histogramNormalizer = [];
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
+	histogram = [];
+	for (var i = 0; i < 256; i++) histogram[i] = 0;
+	
 	for (var i = 0; i < pix.length; i+=4) {
 		mean = parseInt(getMean(pix, i));
 		histogram[mean] += 1;
 	}
-	sum = 0;
-	for (var i in histogram) sum += histogram[i];
-	sum = parseFloat(sum);
+	histogramNormalizer = [];
+	sum = pix.length/4;
 	acc = 0;
 	for (var i = 0; i < 256; i++) {
 		acc += histogram[i];
-		histogramNormalizer[i] =[i,Math.round(255 * acc/sum)];
+		histogramNormalizer[i] = Math.round(255 * acc/sum);
 	}
 }
 
-function processHistogram(){
-	console.log(getHistogram());
+function drawHistogram(div_to_draw){
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
+	hist_to_draw = [["Pixel Value"]];
+	for (var i = 0; i < pix.length/4; i++) {
+		mean = parseInt(getMean(pix, i*4));
+		hist_to_draw[i+1] = [mean];
+	}
+	data = google.visualization.arrayToDataTable(hist_to_draw)
+	div_to_draw.draw(data, options);
 }
 
 
@@ -86,6 +111,7 @@ function applyFilter(filter,element) {
 		filter(pix, i);
 	}
 	ctx.putImageData(imgd, 0, 0);
+	drawHistogram(histo_2);
 }
 
 function updateTresholdLimiar(element){
