@@ -14,6 +14,9 @@ var pointers = [0,0,0,0]
 window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
+
+	google.charts.load("current", {packages:["corechart"]});
+	//google.charts.setOnLoadCallback(drawChart);
 }
 
 function handleImage(e){
@@ -31,6 +34,19 @@ function handleImage(e){
 				document.querySelector('#origin').setAttribute("src",event.target.result)
     }
     reader.readAsDataURL(e.target.files[0]);
+
+		var options = {
+			title: 'Histograma ',
+			legend: { position: 'none' },
+		};
+
+		var data = google.visualization.arrayToDataTable(histogramNormalizer)
+
+		histo_1 = new google.visualization.Histogram(document.getElementById('histo_1'));
+		histo_1.draw(data, options);
+
+    histo_2 = new google.visualization.Histogram(document.getElementById('histo_2'));
+    histo_2.draw(data, options);
 }
 
 function reset(){
@@ -52,7 +68,7 @@ function loadHistogram() {
 	acc = 0;
 	for (var i = 0; i < 256; i++) {
 		acc += histogram[i];
-		histogramNormalizer[i] = Math.round(255 * acc/sum);
+		histogramNormalizer[i] =[i,Math.round(255 * acc/sum)];
 	}
 }
 
