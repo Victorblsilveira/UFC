@@ -37,8 +37,8 @@ window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 
-	histo_1 = new google.visualization.Histogram(document.getElementById('histo_1'));
-	histo_2 = new google.visualization.Histogram(document.getElementById('histo_2'));
+	histo_1 = new google.visualization.ColumnChart(document.getElementById('histo_1'));
+	histo_2 = new google.visualization.ColumnChart(document.getElementById('histo_2'));
 
 }
 
@@ -80,30 +80,38 @@ function loadHistogram() {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	histogram = [];
-	for (var i = 0; i < 256; i++) histogram[i] = 0;
+	for (var i = 0; i < 256; i++) histogram[i] = [i, 0];
 	
 	for (var i = 0; i < pix.length; i+=4) {
 		mean = parseInt(getMean(pix, i));
-		histogram[mean] += 1;
+		histogram[mean][1] += 1;
 	}
 	histogramNormalizer = [];
 	sum = pix.length/4;
 	acc = 0;
 	for (var i = 0; i < 256; i++) {
-		acc += histogram[i];
+		acc += histogram[i][1];
 		histogramNormalizer[i] = Math.round(255 * acc/sum);
 	}
 }
 
 function drawHistogram(div_to_draw){
-	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
-	var pix = imgd.data;
-	hist_to_draw = [["Pixel Value"]];
-	for (var i = 0; i < pix.length/4; i++) {
-		mean = parseInt(getMean(pix, i*4));
-		hist_to_draw[i+1] = [mean];
-	}
-	data = google.visualization.arrayToDataTable(hist_to_draw)
+	loadHistogram();
+	var options = {
+        title: "Histogram",
+        width: 500,
+        height: 200,
+        legend: { position: "none" },
+    };
+
+	//var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	//var pix = imgd.data;
+	//hist_to_draw = [["Pixel Value"]];
+	//for (var i = 0; i < pix.length/4; i++) {
+	//	mean = parseInt(getMean(pix, i*4));
+	//	hist_to_draw[i+1] = [mean];
+	//}
+	data = google.visualization.arrayToDataTable([["Intensity", "Quantity"]].concat(histogram))
 	div_to_draw.draw(data, options);
 }
 
