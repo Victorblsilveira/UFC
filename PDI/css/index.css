@@ -64,8 +64,9 @@
 }
 
 .image-panel{
-  width: 75%;
+  width: 35%;
   display: inline-block;
+  vertical-align: top;
   text-align: start;
 }
 
@@ -80,9 +81,18 @@
 }
 
 .histogramas{
+  margin-top: 12px;
+  width: 45%;
   display: inline-block;
-  width: 75%;
+  vertical-align: top;
+  text-align: center;
 }
+
+.hist_son {
+  padding-top: 24px;
+  margin-bottom: 48px;
+}
+
 .head{
   text-align: center;
   color: white;

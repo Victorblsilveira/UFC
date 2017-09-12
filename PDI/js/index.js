@@ -7,18 +7,16 @@ var histogramNormalizer;
 google.charts.load("current", {packages:["corechart"]});
 
 var x_labels = [];
-for (i = 0; i < 256/10; i++) x_labels[i] = i*10;
+for (i = 0; i < 256/20; i++) x_labels[i] = i*20;
 var options = {
 	title: 'Histograma',
 	legend: { position: 'none' },
 	colors: ['green'],
-	chartArea: { width: 300 },
+	chartArea: { width: 450 },
 	hAxis: {
 		ticks: x_labels,
 	},
 	histogram: {
-      bucketSize: 1,
-      maxNumBuckets: 256,
       minValue: 0,
       maxValue: 255,
     },
@@ -68,6 +66,14 @@ function handleImage(e){
 
 function reset(){
 	ctx.drawImage(img, 0, 0);
+}
+
+function showGraphs(option){
+	if (option){
+		document.getElementsByClassName("histogramas")[0].classList.remove("hide")
+	}else {
+		document.getElementsByClassName("histogramas")[0].classList.add("hide")
+	}
 }
 
 function loadHistogram() {
@@ -207,14 +213,6 @@ function limiar_apar(pixels, i){
 	P = getPoints();
 	val = (mean < P[0][0]) ? linF1(mean) : (mean > P[1][0]) ? linF3(mean) : linF2(mean);
 	pixels[i] = pixels[i+1] = pixels[i+2] = val;
-}
-
-function showGraphs(option){
-	if (option){
-		document.getElementsByClassName("histogramas")[0].classList.remove("hide")
-	}else {
-		document.getElementsByClassName("histogramas")[0].classList.add("hide")
-	}
 }
 
 function bit_slice(pixels, i) {
