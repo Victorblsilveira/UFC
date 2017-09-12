@@ -52,9 +52,8 @@ function handleImage(e){
             canvas.height = img.height;
             ctx.drawImage(img,0,0);
 
-            loadHistogram();
-
             drawHistogram(histo_1);
+            drawHistogram(histo_2);
         }
 
         img.src = event.target.result;
@@ -66,6 +65,7 @@ function handleImage(e){
 
 function reset(){
 	ctx.drawImage(img, 0, 0);
+	drawHistogram(histo_2);
 }
 
 function showGraphs(option){
