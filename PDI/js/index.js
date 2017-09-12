@@ -4,6 +4,7 @@ var canvas;
 var histogram;
 var histogramNormalizer;
 var matriz = []
+var dimension = 3;
 google.charts.load("current", {packages:["corechart"]});
 
 var options = {
@@ -215,6 +216,31 @@ function normalizeHistogram(pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
 
+function convolution(pixels, i) {
+	p = getIJFromPixel(i);
+	radius = (dimension-1)/2;
+	val = 0;
+	for (x = 0; x < dimension; x++) {
+		for (y = 0; y < dimension; y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				val += getMean(pixels, getPixelIndex(_i, _j)) * matriz[x][y];
+			}
+		}
+	}
+	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val);
+}
+
+function getPixelIndex(i, j) {
+	return (i*canvas.width + j) * 4;
+}
+
+function getIJFromPixel(index) {
+	i = index/4;
+	return [parseInt(i/canvas.width), i%canvas.width];
+}
+
 function updateDimension(event){
 	dimension = parseInt(event.target.value)
 }
@@ -230,7 +256,7 @@ function createMatriz(event){
 	 for(var i=0;i<dimension;i++){
 		 html += '<div class="colunm">'
 		 for(var j=0;j<dimension;j++){
-			 html +=  '<input class="cel" onchange="updateMatriz('+j+','+i+',event)" type="number">'
+			 html +=  '<input class="cel" onchange="updateMatriz('+j+','+i+',event)" type="text">'
 		 }
 		 html += '</div>'
 	 }
@@ -246,15 +272,15 @@ function localNormalizer() {
 	for (var i = 1; i+1 < canvas.height; i+=3) {
 		for (var j = 1; j+1 < canvas.width; j+=3) {
 			indexes = [
-				((i-1)*canvas.width + j-1) * 4,
-				((i-1)*canvas.width +  j ) * 4,
-				((i-1)*canvas.width + j+1) * 4,
-				(( i )*canvas.width + j-1) * 4,
-				(( i )*canvas.width +  j ) * 4,
-				(( i )*canvas.width + j+1) * 4,
-				((i+1)*canvas.width + j-1) * 4,
-				((i+1)*canvas.width +  j ) * 4,
-				((i+1)*canvas.width + j+1) * 4
+				getPixelIndex(i-1 , j-1),
+				getPixelIndex(i-1 ,  j ),
+				getPixelIndex(i-1 , j+1),
+				getPixelIndex( i  , j-1),
+				getPixelIndex( i  ,  j ),
+				getPixelIndex( i  , j+1),
+				getPixelIndex(i+1 , j-1),
+				getPixelIndex(i+1 ,  j ),
+				getPixelIndex(i+1 , j+1),
 			];
 			vec = {};
 			for (k in indexes) vec[indexes[k]] = parseInt(getMean(pix, indexes[k]));
