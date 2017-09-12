@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
   <head>
     <meta charset="utf-8">
@@ -50,18 +51,21 @@
           <button class="filter" onclick="applyFilter(limiar_apar)">Limiar por Partes</button>
           <div class="point">
             <div class="x">
-                X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255">
+                X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255" value="0">
             </div>
             <div class="y">
-                Y1 : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255">
+                Y1 : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255"
+                value="0">
             </div>
           </div>
           <div class="point">
             <div class="x">
-                X2 : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255">
+                X2 : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255"
+                value="255">
             </div>
             <div class="y">
-                Y2 : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255">
+                Y2 : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255"
+                value="255">
             </div>
           </div>
         </div>
@@ -83,7 +87,7 @@
         <h4 class="head">Matriz de Convolução</h4>
         <div class="">
           <h5 class="clear">Dimensão</h5>
-          <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="1" >
+          <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
           <button class="confirm" type="button" name="button" onclick="createMatriz(event)">Create</button>
         </div>
         <div id="matriz" class=""></div>

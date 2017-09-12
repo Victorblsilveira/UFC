@@ -219,20 +219,24 @@ function updateDimension(event){
 	dimension = parseInt(event.target.value)
 }
 
-function updateMatriz(i,j,value){
+function updateMatriz(i,j,event){
+	console.log(event)
 	if (matriz[parseInt(i)] == undefined){matriz[parseInt(i)] = []}
-	matriz[parseInt(i)][parseInt(j)] = value
+	matriz[parseInt(i)][parseInt(j)] = event.target.value
 }
+
 function createMatriz(event){
-	 var html;
+	 var html = "";
 	 for(var i=0;i<dimension;i++){
-		 html += '<div class="colum">'
+		 html += '<div class="colunm">'
 		 for(var j=0;j<dimension;j++){
-			 html +=  '<input onchange="updateMatriz('+i+','+j+','+event.target.value+')" type="number">'
+			 html +=  '<input class="cel" onchange="updateMatriz('+j+','+i+',event)" type="number">'
 		 }
 		 html += '</div>'
 	 }
-	 document.getElementById('matriz').innerHTML = html
+	 var matriz = document.getElementById('matriz')
+	 matriz.innerHTML = html
+	 matriz.value = ''
 }
 
 function localNormalizer() {

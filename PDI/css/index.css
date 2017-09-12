@@ -121,6 +121,20 @@
   margin-left: 10px;
 }
 
+.colunm{
+  display: inline-block;
+  width: 10%;
+}
+
+.cel{
+  width: 100%;
+  display: inline-block;
+}
+
+#matriz{
+  /*overflow: scroll;*/
+}
+
 body{
   /*background: url("../img/background.jpg")*/
   background: #404040;
