@@ -31,6 +31,7 @@ window.onload = function(){
 	histo_1 = new google.visualization.ColumnChart(document.getElementById('histo_1'));
 	histo_2 = new google.visualization.ColumnChart(document.getElementById('histo_2'));
 
+	createMatrix();
 }
 
 function handleImage(e){
@@ -100,8 +101,10 @@ function applyFilter(filter,element) {
 
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
+	var copy = pix.slice();
+
 	for (var i = 0; i < pix.length; i+=4) {
-		filter(pix, i);
+		filter(copy, pix, i);
 	}
 	ctx.putImageData(imgd, 0, 0);
 	drawHistogram(histo_2);
@@ -139,34 +142,34 @@ function getMean(pixels, i) {
 	return (pixels[i] + pixels[i+1] + pixels[i+2])/3
 }
 
-function grayscale(pixels, i) {
-	mean = getMean(pixels, i);
+function grayscale(copy, pixels, i) {
+	mean = getMean(copy, i);
 	pixels[i] = pixels[i+1] = pixels[i+2] = mean;
 }
 
-function negative(pixels, i) {
-	pixels[i] = 255 - pixels[i];
-	pixels[i+1] = 255 - pixels[i+1];
-	pixels[i+2] = 255 - pixels[i+2];
+function negative(copy, pixels, i) {
+	pixels[i] = 255 - copy[i];
+	pixels[i+1] = 255 - copy[i+1];
+	pixels[i+2] = 255 - copy[i+2];
 }
 
-function potenc(pixels, i) {
-	mean = getMean(pixels, i) / 255;
+function potenc(copy, pixels, i) {
+	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = Math.pow(mean, lambda) * 255;
 }
 
-function log(pixels, i) {
-	mean = getMean(pixels, i) / 255;
+function log(copy, pixels, i) {
+	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = constant * Math.log(1+mean) * 255;
 }
 
-function inverse_log(pixels, i) {
-	mean = getMean(pixels, i) / 255;
+function inverse_log(copy, pixels, i) {
+	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = (Math.exp(mean) - 1) / constant * 255;
 }
 
-function limiar(pixels, i) {
-	mean = getMean(pixels, i) / 255;
+function limiar(copy, pixels, i) {
+	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold > mean) ? 255 : 0
 }
 
@@ -195,28 +198,28 @@ function linF3(x) {
 	return (P[0] != 255) ? parseInt((x - P[0]) * ((255 - P[1]) / (255 - P[0])) + P[1]) : P[1];
 }
 
-function limiar_apar(pixels, i){
-	mean = getMean(pixels, i);
+function limiar_apar(copy, pixels, i){
+	mean = getMean(copy, i);
 	P = getPoints();
 	val = (mean < P[0][0]) ? linF1(mean) : (mean > P[1][0]) ? linF3(mean) : linF2(mean);
 	pixels[i] = pixels[i+1] = pixels[i+2] = val;
 }
 
-function bit_slice(pixels, i) {
-	mean = parseInt(getMean(pixels, i));
+function bit_slice(copy, pixels, i) {
+	mean = parseInt(getMean(copy, i));
 	pixels[i] = pixels[i+1] = pixels[i+2] = ((mean & bitSliceValue) === 0) ? 0 : mean;
 }
 
-function subtract(pixels, i) {
+function subtract(copy, pixels, i) {
 	console.log('subtract');
 }
 
-function normalizeHistogram(pixels, i) {
-	mean = parseInt(getMean(pixels, i));
+function normalizeHistogram(copy, pixels, i) {
+	mean = parseInt(getMean(copy, i));
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
 
-function convolution(pixels, i) {
+function convolution(copy, pixels, i) {
 	p = getIJFromPixel(i);
 	radius = (dimension-1)/2;
 	val = 0;
@@ -225,7 +228,7 @@ function convolution(pixels, i) {
 			_i = x - radius + p[0];
 			_j = y - radius + p[1];
 			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				val += getMean(pixels, getPixelIndex(_i, _j)) * matriz[x][y];
+				val += getMean(copy, getPixelIndex(_i, _j)) * matriz[x][y];
 			}
 		}
 	}
@@ -245,18 +248,18 @@ function updateDimension(event){
 	dimension = parseInt(event.target.value)
 }
 
-function updateMatriz(i,j,event){
+function updateMatrix(i,j,event){
 	console.log(event)
 	if (matriz[parseInt(i)] == undefined){matriz[parseInt(i)] = []}
 	matriz[parseInt(i)][parseInt(j)] = event.target.value
 }
 
-function createMatriz(event){
+function createMatrix(){
 	 var html = "";
 	 for(var i=0;i<dimension;i++){
 		 html += '<div class="colunm">'
 		 for(var j=0;j<dimension;j++){
-			 html +=  '<input class="cel" onchange="updateMatriz('+j+','+i+',event)" type="text">'
+			 html +=  '<input class="cel" onchange="updateMatrix('+j+','+i+',event)" type="text">'
 		 }
 		 html += '</div>'
 	 }
