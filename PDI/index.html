@@ -77,9 +77,16 @@
         <button class="filter" onclick="reset()">Reset</button>
 
         <h4 class="head">Outras Opções</h4>
-        <button class="filter" name="button" onclick="showGraphs(true)">Histogramas</button>
-        <button class="filter" onclick="applyFilter(normalizeHistogram)">Normalize Hist.</button>
+        <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
+        <button class="filter" onclick="applyFilter(normalizeHistogramLocaly)">Equalizar Localmente</button>
 
+        <h4 class="head">Matriz de Convolução</h4>
+        <div class="">
+          <h5 class="clear">Dimensão</h5>
+          <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="1" >
+          <button class="confirm" type="button" name="button" onclick="createMatriz(event)">Create</button>
+        </div>
+        <div id="matriz" class=""></div>
       </div>
 
       <div class="image-panel">
@@ -88,8 +95,9 @@
       </div>
 
       <div class="histogramas hide">
-          <button type="button" onclick="showGraphs(false)" name="button">Close</button>
+          <h5 class="reduce">HISTOGRAMAS - Original Image</h5>
           <div id="histo_1" class="hist_son"></div>
+          <h5 class="reduce">HISTOGRAMAS - Image Edited</h5>
           <div id="histo_2" class="hist_son"></div>
       </div>
     </div>

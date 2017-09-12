@@ -3,7 +3,7 @@ var ctx;
 var canvas;
 var histogram;
 var histogramNormalizer;
-
+var matriz = []
 google.charts.load("current", {packages:["corechart"]});
 
 var x_labels = [];
@@ -54,13 +54,14 @@ function handleImage(e){
 
             drawHistogram(histo_1);
             drawHistogram(histo_2);
+						showGraphs(true)
         }
 
         img.src = event.target.result;
 		document.querySelector('#origin').setAttribute("src",event.target.result)
     }
     reader.readAsDataURL(e.target.files[0]);
-		
+
 }
 
 function reset(){
@@ -81,7 +82,7 @@ function loadHistogram() {
 	var pix = imgd.data;
 	histogram = [];
 	for (var i = 0; i < 256; i++) histogram[i] = [i, 0];
-	
+
 	for (var i = 0; i < pix.length; i+=4) {
 		mean = parseInt(getMean(pix, i));
 		histogram[mean][1] += 1;
@@ -236,3 +237,26 @@ function normalizeHistogram(pixels, i) {
 	mean = parseInt(getMean(pixels, i));
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
+
+ function normalizeHistogramLocaly(pixels, i){
+
+ }
+function updateDimension(event){
+	dimension = parseInt(event.target.value)
+}
+
+function updateMatriz(i,j,value){
+	if (matriz[parseInt(i)] == undefined){matriz[parseInt(i)] = []}
+	matriz[parseInt(i)][parseInt(j)] = value
+}
+function createMatriz(event){
+	 var html;
+	 for(var i=0;i<dimension;i++){
+		 html += '<div class="colum">'
+		 for(var j=0;j<dimension;j++){
+			 html +=  '<input onchange="updateMatriz('+i+','+j+','+event.target.value+')" type="number">'
+		 }
+		 html += '</div>'
+	 }
+	 document.getElementById('matriz').innerHTML = html
+ }
