@@ -6,21 +6,11 @@ var histogramNormalizer;
 var matriz = []
 google.charts.load("current", {packages:["corechart"]});
 
-var x_labels = [];
-for (i = 0; i < 256/20; i++) x_labels[i] = i*20;
 var options = {
-	title: 'Histograma',
-	legend: { position: 'none' },
-	colors: ['green'],
-	chartArea: { width: 450 },
-	hAxis: {
-		ticks: x_labels,
-	},
-	histogram: {
-      minValue: 0,
-      maxValue: 255,
-    },
-
+    title: "Histogram",
+    width: 500,
+    height: 200,
+    legend: { position: "none" },
 };
 
 var histo_1;
@@ -98,20 +88,7 @@ function loadHistogram() {
 
 function drawHistogram(div_to_draw){
 	loadHistogram();
-	var options = {
-        title: "Histogram",
-        width: 500,
-        height: 200,
-        legend: { position: "none" },
-    };
 
-	//var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
-	//var pix = imgd.data;
-	//hist_to_draw = [["Pixel Value"]];
-	//for (var i = 0; i < pix.length/4; i++) {
-	//	mean = parseInt(getMean(pix, i*4));
-	//	hist_to_draw[i+1] = [mean];
-	//}
 	data = google.visualization.arrayToDataTable([["Intensity", "Quantity"]].concat(histogram))
 	div_to_draw.draw(data, options);
 }
@@ -238,9 +215,6 @@ function normalizeHistogram(pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
 
- function normalizeHistogramLocaly(pixels, i){
-
- }
 function updateDimension(event){
 	dimension = parseInt(event.target.value)
 }
@@ -259,4 +233,49 @@ function createMatriz(event){
 		 html += '</div>'
 	 }
 	 document.getElementById('matriz').innerHTML = html
- }
+}
+
+function localNormalizer() {
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
+
+	for (var i = 1; i+1 < canvas.height; i+=3) {
+		for (var j = 1; j+1 < canvas.width; j+=3) {
+			indexes = [
+				((i-1)*canvas.width + j-1) * 4,
+				((i-1)*canvas.width +  j ) * 4,
+				((i-1)*canvas.width + j+1) * 4,
+				(( i )*canvas.width + j-1) * 4,
+				(( i )*canvas.width +  j ) * 4,
+				(( i )*canvas.width + j+1) * 4,
+				((i+1)*canvas.width + j-1) * 4,
+				((i+1)*canvas.width +  j ) * 4,
+				((i+1)*canvas.width + j+1) * 4
+			];
+			vec = {};
+			for (k in indexes) vec[indexes[k]] = parseInt(getMean(pix, indexes[k]));
+
+			miniHist = {};
+
+			for (k in vec) {
+				if (!(vec[k] in miniHist)) miniHist[vec[k]] = 0;
+				miniHist[vec[k]] += 1;
+			}
+			miniHistNormalizer = {};
+			acc = 0;
+			for (k in miniHist) {
+				acc += miniHist[k];
+				miniHistNormalizer[k] = Math.round(255 * acc/9);
+			}
+
+			for (k in indexes) {
+				pix[indexes[k]] = pix[indexes[k]+1] = pix[indexes[k]+2] = miniHistNormalizer[vec[indexes[k]]];
+			}
+
+		}
+	}
+
+	ctx.putImageData(imgd, 0, 0);
+	drawHistogram(histo_2);
+
+}
