@@ -250,8 +250,8 @@ function updateDimension(event){
 
 function updateMatrix(i,j,event){
 	console.log(event)
-	if (matriz[parseInt(i)] == undefined){matriz[parseInt(i)] = []}
-	matriz[parseInt(i)][parseInt(j)] = event.target.value
+	if (matriz[i] == undefined) matriz[i] = [];
+	matriz[i][j] = math.eval(event.target.value)
 }
 
 function createMatrix(){
