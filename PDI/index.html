@@ -94,6 +94,8 @@
         </div>
         <div id="matriz" class=""></div>
         <button class="filter" onclick="applyFilter(convolution)">Convolution</button>
+        <button class="filter" onclick="applyFilter(meanFilter)">Mean</button>
+        <button class="filter" onclick="applyFilter(median)">Median</button>
       </div>
 
       <div class="image-panel">
@@ -102,17 +104,20 @@
       </div>
 
       <div class="histogramas hide">
+          <div class="histo_options">
+            <h3 class="head">Tipos Histogramas</h3>
+            <div class="histo_option">Red   <input type="checkbox" onclick=""></div>
+            <div class="histo_option">Green <input type="checkbox" onclick=""></div>
+            <div class="histo_option">Blue  <input type="checkbox" onclick=""></div>
+            <div class="histo_option">Gray  <input type="checkbox" onclick=""></div>
+          </div>
+
           <h5 class="reduce">HISTOGRAMAS - Original Image</h5>
           <div>
             <div id="histo_1" class="hist_son"></div>
           </div>          
           <h5 class="reduce">HISTOGRAMAS - Image Edited</h5>
-          <div>
-            <div class="histo_options">
-              <input class="histo_option" type="checkbox" onclick="">
-              <input class="histo_option" type="checkbox" onclick="">
-              <input class="histo_option" type="checkbox" onclick="">
-            </div>
+          <div>          
             <div id="histo_2" class="hist_son"></div>
           </div>          
       </div>

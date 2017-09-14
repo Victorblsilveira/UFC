@@ -55,12 +55,14 @@
 }
 
 .filter-options{
-  width: 15%;
+  width: 20%;
   height: 90vh;
   display: inline-block;
   vertical-align: top;
   overflow-y: scroll;
   padding-right: 12px;
+  margin-top: 80px;
+
 }
 
 .filter{
@@ -79,7 +81,8 @@
 }
 
 .image-panel{
-  width: 35%;
+  width: 30%;
+  padding-top: 80px;
   display: inline-block;
   vertical-align: top;
   text-align: start;
@@ -101,7 +104,7 @@
 
 .histogramas{
   margin-top: 12px;
-  width: 45%;
+  width: 40%;
   display: inline-block;
   vertical-align: top;
   text-align: center;
@@ -109,6 +112,7 @@
 
 .hist_son {
   padding-top: 24px;
+  padding-left: 48px;
   margin-bottom: 48px;
 }
 
@@ -126,7 +130,7 @@
 
 .colunm{
   display: inline-block;
-  width: 15%;
+  width: 28px;
 }
 
 .cel{
@@ -144,4 +148,19 @@
 body{
   /*background: url("../img/background.jpg")*/
   background: #404040;
+  margin: 0px;
+  margin-top: 12px;
+}
+
+
+.histo_options{
+  width: 100%;
+  display: inline-block;
+}
+
+
+.histo_option{
+  width: 20%;
+  display: inline-block;
+  color: white;
 }

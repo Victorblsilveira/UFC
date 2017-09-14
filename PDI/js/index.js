@@ -81,3 +81,4 @@ function updateConstant(element){
 function updateVariables(event,indexVariable){
 	pointers[indexVariable] = parseInt(event.target.value);
 }
+
