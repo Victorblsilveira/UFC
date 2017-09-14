@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <script type="text/javascript" src="js/math.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript"src="js/operations.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <link rel="stylesheet" href="css/index.css">
     <title>PDI</title>
@@ -102,9 +103,18 @@
 
       <div class="histogramas hide">
           <h5 class="reduce">HISTOGRAMAS - Original Image</h5>
-          <div id="histo_1" class="hist_son"></div>
+          <div>
+            <div id="histo_1" class="hist_son"></div>
+          </div>          
           <h5 class="reduce">HISTOGRAMAS - Image Edited</h5>
-          <div id="histo_2" class="hist_son"></div>
+          <div>
+            <div class="histo_options">
+              <input class="histo_option" type="checkbox" onclick="">
+              <input class="histo_option" type="checkbox" onclick="">
+              <input class="histo_option" type="checkbox" onclick="">
+            </div>
+            <div id="histo_2" class="hist_son"></div>
+          </div>          
       </div>
     </div>
 
