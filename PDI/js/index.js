@@ -98,7 +98,7 @@ function drawHistogram(div_to_draw){
 
 function applyFilter(filter,element) {
 	loadHistogram();
-
+	console.log(filter)
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	var copy = pix.slice();
@@ -217,6 +217,50 @@ function subtract(copy, pixels, i) {
 function normalizeHistogram(copy, pixels, i) {
 	mean = parseInt(getMean(copy, i));
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
+}
+
+function calculateMedian(vec) {
+	vec.sort( function(a,b) {return a - b;} );
+	var half = Math.floor(vec.length/2);
+	if(vec.length % 2)
+        return vec[half];
+    else
+        return (vec[half-1] + vec[half]) / 2.0;
+}
+
+function meanFilter(copy, pixels, i) {
+	p = getIJFromPixel(i);
+	radius = (dimension-1)/2;
+	val = 0;
+	for (x = 0; x < dimension; x++) {
+		for (y = 0; y < dimension; y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				val += getMean(copy, getPixelIndex(_i, _j));
+			}
+		}
+	}
+	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val/(dimension*dimension));
+}
+
+function median(copy, pixels, i) {
+	p = getIJFromPixel(i);
+	radius = (dimension-1)/2;
+	vec = [];
+	pos = 0;
+	for (x = 0; x < dimension; x++) {
+		for (y = 0; y < dimension; y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				vec[pos] = getMean(copy, getPixelIndex(_i, _j));
+				pos++;
+			}
+		}
+	}
+
+	pixels[i] = pixels[i+1] = pixels[i+2] = calculateMedian(vec);
 }
 
 function convolution(copy, pixels, i) {
