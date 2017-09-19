@@ -94,10 +94,11 @@ function normalizeHistogram(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
 
-function convolution(copy, pixels, i) {
+function convolution(copy, pixels, i, matriz_) {
 	p = getIJFromPixel(i);
 	radius = (dimension-1)/2;
 	val = 0;
+	if (matriz_ != undefined){matriz = matriz_}
 	for (x = 0; x < dimension; x++) {
 		for (y = 0; y < dimension; y++) {
 			_i = x - radius + p[0];
@@ -124,6 +125,53 @@ function meanFilter(copy, pixels, i) {
 		}
 	}
 	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val/(dimension*dimension));
+}
+
+function sobelx(copy, pixels, i){
+	var matriz_ = init_mat(3,3);
+	
+	matriz_[0][0] = -1
+	matriz_[0][1] = -2
+	matriz_[0][2] = -1
+	matriz_[1][0] = matriz_[1][2] = matriz_[1][1] = 0
+	matriz_[2][0] = 1
+	matriz_[2][1] = 2
+	matriz_[2][2] = 1
+	
+	convolution(copy,pixels,i,matriz_)
+}
+function init_mat(dx,dy){
+	var matriz_ = []
+	for (i=0;i<dx;i++){
+		matriz_[i] = []
+		for (j=0;j<dy;j++){
+			matriz_[i][j] = 0
+		}
+	}
+	return matriz_
+}
+
+function sobely(copy, pixels, i){
+	var matriz_ = init_mat(3,3);
+	
+	matriz_[0][0] = -1
+	matriz_[0][1] =  0
+	matriz_[0][2] =  1
+	matriz_[1][0] = -2
+	matriz_[1][2] = 0 
+	matriz_[1][1] = 2
+	matriz_[2][0] = -1
+	matriz_[2][1] = 0 
+	matriz_[2][2] = 1
+	
+	convolution(copy,pixels,i,matriz_)	
+}
+
+function sobelSum(copy, pixels, i){
+	pixel_1 =  copy.slice();
+	sobelx(copy, pixel_1, i);
+	sobely(copy, pixels, i);
+	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] + pixel_1[i];
 }
 
 function calculateMedian(vec) {
