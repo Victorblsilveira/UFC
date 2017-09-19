@@ -99,8 +99,8 @@ function convolution(copy, pixels, i, matriz_) {
 	radius = (dimension-1)/2;
 	val = 0;
 	if (matriz_ != undefined){matriz = matriz_}
-	for (x = 0; x < dimension; x++) {
-		for (y = 0; y < dimension; y++) {
+	for (var x = 0; x < dimension; x++) {
+		for (var y = 0; y < dimension; y++) {
 			_i = x - radius + p[0];
 			_j = y - radius + p[1];
 			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
@@ -115,8 +115,8 @@ function meanFilter(copy, pixels, i) {
 	p = getIJFromPixel(i);
 	radius = (dimension-1)/2;
 	val = 0;
-	for (x = 0; x < dimension; x++) {
-		for (y = 0; y < dimension; y++) {
+	for (var x = 0; x < dimension; x++) {
+		for (var y = 0; y < dimension; y++) {
 			_i = x - radius + p[0];
 			_j = y - radius + p[1];
 			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
@@ -142,9 +142,9 @@ function sobelx(copy, pixels, i){
 }
 function init_mat(dx,dy){
 	var matriz_ = []
-	for (i=0;i<dx;i++){
+	for (var i=0;i<dx;i++){
 		matriz_[i] = []
-		for (j=0;j<dy;j++){
+		for (var j=0;j<dy;j++){
 			matriz_[i][j] = 0
 		}
 	}
@@ -168,10 +168,29 @@ function sobely(copy, pixels, i){
 }
 
 function sobelSum(copy, pixels, i){
-	pixel_1 =  copy.slice();
-	sobelx(copy, pixel_1, i);
+	sobelx(copy, pixels, i);
+	aux = pixels[i]
 	sobely(copy, pixels, i);
-	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] + pixel_1[i];
+	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] + aux;
+}
+
+function highBoosting(copy, pixels, i){
+	var c_ = 1;
+	var matriz_ = init_mat(3,3);
+	
+	matriz_[0][0] = 
+	matriz_[0][1] = 
+	matriz_[0][2] = 
+	matriz_[1][0] = 
+	matriz_[1][2] = 
+	matriz_[1][1] = 
+	matriz_[2][0] = 
+	matriz_[2][1] = 
+	matriz_[2][2] = 1/9;
+	
+	convolution(copy,pixels,i,matriz_)
+
+	pixels[i] = pixels[i+1] = pixels[i+2] = getMean(copy, i) + c_ * (getMean(copy, i) - pixels[i]);
 }
 
 function calculateMedian(vec) {
@@ -188,8 +207,8 @@ function median(copy, pixels, i) {
 	radius = (dimension-1)/2;
 	vec = [];
 	pos = 0;
-	for (x = 0; x < dimension; x++) {
-		for (y = 0; y < dimension; y++) {
+	for (var x = 0; x < dimension; x++) {
+		for (var y = 0; y < dimension; y++) {
 			_i = x - radius + p[0];
 			_j = y - radius + p[1];
 			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {

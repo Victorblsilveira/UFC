@@ -56,7 +56,7 @@
 
 .filter-options{
   width: 20%;
-  height: 80vh;
+  height: 70vh;
   display: inline-block;
   vertical-align: top;
   overflow-y: scroll;
@@ -93,8 +93,8 @@
 }
 
 .image{
-    max-width: 400px;
-    max-height: 400px;
+    max-width: 300px;
+    max-height: 300px;
     margin-left:  10px;
 }
 
@@ -123,8 +123,8 @@
 
 
 #canvas{
-  max-height: 400px;
-  max-width: 400px;
+  max-height: 300px;
+  max-width: 300px;
   margin-left: 10px;
 }
 
