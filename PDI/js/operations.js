@@ -348,7 +348,25 @@ function localNormalizer() {
 
 }
 
-function imageReduction() {
+function getMeanInRegion(pix, i, j, size) {
+	let sumR = 0, sumG = 0, sumB = 0, sumA = 0;
+	for (let k = 0; k < size; k++) {
+		for (let l = 0; l < size; l++) {
+			let index = getPixelIndex(i+k, j+l);
+			sumR += pix[index];
+			sumG += pix[index+1];
+			sumB += pix[index+2];
+			sumA += pix[index+3];
+		}
+	}
+	sumR /= (reductionFactor*reductionFactor);
+	sumG /= (reductionFactor*reductionFactor);
+	sumB /= (reductionFactor*reductionFactor);
+	sumA /= (reductionFactor*reductionFactor);
+	return [sumR, sumG, sumB, sumA];
+}
+
+function imageReduction(withMean=false) {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	var w = parseInt(imgd.width/reductionFactor);
@@ -360,21 +378,18 @@ function imageReduction() {
 	for (let i = 0; i < canvas.height; i+=reductionFactor) {
 		for (let j = 0; j < canvas.width; j+=reductionFactor) {
 			let index = getPixelIndex(i, j);
-			new_pix[pos++] = pix[index];
-			new_pix[pos++] = pix[index+1];
-			new_pix[pos++] = pix[index+2];
-			new_pix[pos++] = pix[index+3];
+			calcPix = (withMean)
+				? getMeanInRegion(pix, i, j, reductionFactor) 
+				: [pix[index], pix[index+1], pix[index+2], pix[index+3]];
+			new_pix[pos++] = calcPix[0];
+			new_pix[pos++] = calcPix[1];
+			new_pix[pos++] = calcPix[2];
+			new_pix[pos++] = calcPix[3];
 		}	
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.putImageData(new_imgd, 0, 0);
-}
-
-function imageReductionMean() {
-	dimension = (reductionFactor-1)*2+1;
-	applyFilter(meanFilterColored);
-	imageReduction();
 }
 
 function imageZoom() {
