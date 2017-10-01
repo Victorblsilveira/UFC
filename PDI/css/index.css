@@ -10,18 +10,36 @@ body{
   height: 100vh;
   margin: auto;
   padding: 10px;
+  text-align: center;
+}
+
+.loader{
+  width: 100%;
+  height: 40px;
+  margin-top: 12px;
+  border-width: 0px;
+  text-align: center;
+  color: white;
+}
+
+#image-picker {
+  width: 20%;
+}
+
+.histo_options{
+  width: 50%;
+  float: right;
+}
+
+.histo_option{
+  width: 20%;
+  display: inline-block;
+  color: white;
 }
 
 .content{
-  margin-top: 12px;
+  margin-top: 48px;
   width: 100%;
-}
-
-.histogramas{
-  width: 0%;
-  display: inline-block;
-  float: right;
-  text-align: center;
 }
 
 .filter-options{
@@ -32,19 +50,10 @@ body{
   vertical-align: top;
   overflow-y: scroll;
   padding-right: 12px;
-  margin-top: 80px;
-}
-
-.loader{
-  width: 100%;
-  display: inline-block;
-  border-width: 0px;
-  text-align: center;
-  color: white;
 }
 
 .graphics-container {
-  margin-top: 100px;
+  margin-top: 12px;
   width: 75%;
   float: right;
 }
@@ -157,15 +166,4 @@ body{
   margin-top: 8px;
   margin-bottom: 8px;
   /*overflow: scroll;*/
-}
-
-.histo_options{
-  width: 100%;
-  display: inline-block;
-}
-
-.histo_option{
-  width: 20%;
-  display: inline-block;
-  color: white;
 }

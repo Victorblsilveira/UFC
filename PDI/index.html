@@ -15,11 +15,19 @@
 
       <section class="container">
 
-        <div class="content">
+        <div class='loader'>
+          <input id="image-picker" onchange="handleImage(event)" type="file"/>
 
-          <div class='loader'>
-            <input   onchange="handleImage(event)" type="file"/>
+          <div class="histo_options">
+            <p>Tipos Histogramas</p>
+            <div class="histo_option">Red   <input type="checkbox" onclick=""></div>
+            <div class="histo_option">Green <input type="checkbox" onclick=""></div>
+            <div class="histo_option">Blue  <input type="checkbox" onclick=""></div>
+            <div class="histo_option">Gray  <input type="checkbox" onclick=""></div>
           </div>
+        </div>
+
+        <div class="content">
 
           <div class="filter-options">
             <h4 class="head"> Opções de Filtros</h4>
@@ -84,8 +92,6 @@
               <div class="limit -max">7</div>
             </div>
 
-            <button class="filter" onclick="reset()">Reset</button>
-
             <h4 class="head">Filtros Espaciais</h4>
             <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
             <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
@@ -124,7 +130,7 @@
               </div>
               <div id="histo_1" class="hist_son hide"></div>
             </div>
-            <HR id="h-line" color="red" class="hide" style="margin-top: 12px; margin-bottom: 12px;">
+            <HR id="h-line" color="red" class="hide" style="margin-top: 12px; margin-bottom: 12px;"></HR>
             <div class="image-panel">
               <div class="image-container">
                 <canvas id='canvas' class="image"></canvas>
@@ -135,24 +141,7 @@
 
         </div>
 
-        <!--div class="histogramas hide">
-          <div class="histo_options">
-            <h3 class="head">Tipos Histogramas</h3>
-            <div class="histo_option">Red   <input type="checkbox" onclick=""></div>
-            <div class="histo_option">Green <input type="checkbox" onclick=""></div>
-            <div class="histo_option">Blue  <input type="checkbox" onclick=""></div>
-            <div class="histo_option">Gray  <input type="checkbox" onclick=""></div>
-          </div>
-
-          <h5 class="reduce">HISTOGRAMAS - Original Image</h5>
-          <div>
-            
-          </div>          
-          <h5 class="reduce">HISTOGRAMAS - Image Edited</h5>
-          <div>          
-            
-          </div-->          
-        </div>
+        <button class="filter" onclick="reset()" style="width: 20%; padding: 8px; margin-top: 12px;">Reset</button>
 
       </section>
 
