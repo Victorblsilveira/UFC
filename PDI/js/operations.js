@@ -1,5 +1,6 @@
 
 function applyFilter(filter,element) {
+
 	loadHistogram();
 
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -151,6 +152,7 @@ function meanFilterColored(copy, pixels, i) {
 
 
 function sobelx(copy, pixels, i){
+	dimension = 3;
 	var matriz_ = init_mat(3,3);
 	
 	matriz_[0][0] = -1
@@ -175,6 +177,7 @@ function init_mat(dx,dy){
 }
 
 function sobely(copy, pixels, i){
+	dimension = 3;
 	var matriz_ = init_mat(3,3);
 	
 	matriz_[0][0] = -1
@@ -198,6 +201,7 @@ function sobelSum(copy, pixels, i){
 }
 
 function highBoosting(copy, pixels, i){
+	dimension = 3;
 	var c_ = 1;
 	var matriz_ = init_mat(3,3);
 	
@@ -347,25 +351,52 @@ function localNormalizer() {
 function imageReduction() {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
-	var copy = pix.slice();
+	var w = parseInt(imgd.width/reductionFactor);
+	var h = parseInt(imgd.height/reductionFactor);
+	var new_imgd = ctx.createImageData(w, h);
+	var new_pix = new_imgd.data;
 
+	let pos = 0;
 	for (let i = 0; i < canvas.height; i+=reductionFactor) {
 		for (let j = 0; j < canvas.width; j+=reductionFactor) {
 			let index = getPixelIndex(i, j);
-			let pos = index/reductionFactor;
-			pix[pos] = copy[index];
-			pix[pos+1] = copy[index+1];
-			pix[pos+2] = copy[index+2];
-			pix[pos+3] = copy[index+3];
+			new_pix[pos++] = pix[index];
+			new_pix[pos++] = pix[index+1];
+			new_pix[pos++] = pix[index+2];
+			new_pix[pos++] = pix[index+3];
 		}	
 	}
-	canvas.width /= reductionFactor;
-	canvas.height /= reductionFactor;
-	ctx.putImageData(imgd, 0, 0);
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.putImageData(new_imgd, 0, 0);
 }
 
 function imageReductionMean() {
-	dimension = reductionFactor*2+1;
+	dimension = (reductionFactor-1)*2+1;
 	applyFilter(meanFilterColored);
 	imageReduction();
+}
+
+function imageZoom() {
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
+	var w = parseInt(imgd.width*reductionFactor);
+	var h = parseInt(imgd.height*reductionFactor);
+	var new_imgd = ctx.createImageData(w, h);
+	var new_pix = new_imgd.data;
+
+	let pos = 0;
+	for (let i = 0; i < canvas.height; i++) {
+		for (let j = 0; j < canvas.width; j++) {
+			let index = getPixelIndex(Math.round(i/reductionFactor), Math.round(j/reductionFactor));
+			new_pix[pos++] = pix[index];
+			new_pix[pos++] = pix[index+1];
+			new_pix[pos++] = pix[index+2];	
+			new_pix[pos++] = pix[index+3];
+		}
+		pos += 4*canvas.width*(reductionFactor-1);
+	}
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.putImageData(new_imgd, 0, 0);
 }

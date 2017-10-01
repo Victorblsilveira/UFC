@@ -1,7 +1,5 @@
 var img = new Image();
 var ctx;
-var originalHeight;
-var originalWidth;
 var canvas;
 var histogram;
 var histogramNormalizer;
@@ -86,7 +84,7 @@ function updateVariables(event,indexVariable){
 }
 
 function getPixelIndex(i, j) {
-	return (i*canvas.width + j) * 4;
+	return parseInt((i*canvas.width + j) * 4);
 }
 
 function getIJFromPixel(index) {
