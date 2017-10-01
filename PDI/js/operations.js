@@ -127,6 +127,29 @@ function meanFilter(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val/(dimension*dimension));
 }
 
+function meanFilterColored(copy, pixels, i) {
+	p = getIJFromPixel(i);
+	radius = (dimension-1)/2;
+	valR = 0;
+	valG = 0;
+	valB = 0;
+	for (var x = 0; x < dimension; x++) {
+		for (var y = 0; y < dimension; y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				valR += copy[getPixelIndex(_i, _j)];
+				valG += copy[getPixelIndex(_i, _j)+1];
+				valB += copy[getPixelIndex(_i, _j)+2];
+			}
+		}
+	}
+	pixels[i] = parseInt(valR/(dimension*dimension));
+	pixels[i+1] = parseInt(valG/(dimension*dimension));
+	pixels[i+2] = parseInt(valB/(dimension*dimension));
+}
+
+
 function sobelx(copy, pixels, i){
 	var matriz_ = init_mat(3,3);
 	
@@ -219,25 +242,6 @@ function median(copy, pixels, i) {
 	}
 
 	pixels[i] = pixels[i+1] = pixels[i+2] = calculateMedian(vec);
-}
-
-function getPixelIndex(i, j) {
-	return (i*canvas.width + j) * 4;
-}
-
-function getIJFromPixel(index) {
-	i = index/4;
-	return [parseInt(i/canvas.width), i%canvas.width];
-}
-
-function updateDimension(event){
-	dimension = parseInt(event.target.value)
-}
-
-function updateMatrix(i,j,event){
-	console.log(event)
-	if (matriz[i] == undefined) matriz[i] = [];
-	matriz[i][j] = math.eval(event.target.value)
 }
 
 function createMatrix(){
@@ -338,4 +342,30 @@ function localNormalizer() {
 	ctx.putImageData(imgd, 0, 0);
 	drawHistogram(histo_2);
 
+}
+
+function imageReduction() {
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
+	var copy = pix.slice();
+
+	for (let i = 0; i < canvas.height; i+=reductionFactor) {
+		for (let j = 0; j < canvas.width; j+=reductionFactor) {
+			let index = getPixelIndex(i, j);
+			let pos = index/reductionFactor;
+			pix[pos] = copy[index];
+			pix[pos+1] = copy[index+1];
+			pix[pos+2] = copy[index+2];
+			pix[pos+3] = copy[index+3];
+		}	
+	}
+	canvas.width /= reductionFactor;
+	canvas.height /= reductionFactor;
+	ctx.putImageData(imgd, 0, 0);
+}
+
+function imageReductionMean() {
+	dimension = reductionFactor*2+1;
+	applyFilter(meanFilterColored);
+	imageReduction();
 }

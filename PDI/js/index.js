@@ -1,10 +1,13 @@
 var img = new Image();
 var ctx;
+var originalHeight;
+var originalWidth;
 var canvas;
 var histogram;
 var histogramNormalizer;
 var matriz = []
 var dimension = 3;
+var reductionFactor = 2;
 google.charts.load("current", {packages:["corechart"]});
 
 var options = {
@@ -82,3 +85,25 @@ function updateVariables(event,indexVariable){
 	pointers[indexVariable] = parseInt(event.target.value);
 }
 
+function getPixelIndex(i, j) {
+	return (i*canvas.width + j) * 4;
+}
+
+function getIJFromPixel(index) {
+	i = index/4;
+	return [parseInt(i/canvas.width), i%canvas.width];
+}
+
+function updateDimension(event){
+	dimension = parseInt(event.target.value)
+}
+
+function updateReductionFactor(event){
+	reductionFactor = parseInt(event.target.value)
+}
+
+function updateMatrix(i,j,event){
+	console.log(event)
+	if (matriz[i] == undefined) matriz[i] = [];
+	matriz[i][j] = math.eval(event.target.value)
+}
