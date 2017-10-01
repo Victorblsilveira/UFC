@@ -1,3 +1,40 @@
+body{
+  /*background: url("../img/background.jpg")*/
+  background: #404040;
+  margin: 0px;
+  overflow-y: hidden;
+}
+
+.container {
+  width: 90%;
+  height: 100vh;
+  margin: auto;
+  padding: 10px;
+}
+
+.content{
+  margin-top: 12px;
+  width: 100%;
+}
+
+.histogramas{
+  width: 0%;
+  display: inline-block;
+  float: right;
+  text-align: center;
+}
+
+.filter-options{
+  width: 22%;
+  height: 70vh;
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+  overflow-y: scroll;
+  padding-right: 12px;
+  margin-top: 80px;
+}
+
 .loader{
   width: 100%;
   display: inline-block;
@@ -6,9 +43,31 @@
   color: white;
 }
 
-.content{
-  padding-top: 20px;
-  text-align: center;
+.graphics-container {
+  margin-top: 100px;
+  width: 75%;
+  float: right;
+}
+
+.image-panel{
+  overflow: hidden;
+  margin: auto;
+}
+
+.image-container{
+  width: 40%;
+  margin-left: 10px;
+  float: left;
+}
+
+.image {
+  max-height: 220px;
+  max-width: 280px; 
+}
+
+.hist_son {
+  width: 50%;
+  float: right;
 }
 
 .slidebar{
@@ -54,17 +113,6 @@
   vertical-align: super;
 }
 
-.filter-options{
-  width: 20%;
-  height: 70vh;
-  display: inline-block;
-  vertical-align: top;
-  overflow-y: scroll;
-  padding-right: 12px;
-  margin-top: 80px;
-
-}
-
 .filter{
     width: 100%;
     display: inline-block;
@@ -80,52 +128,18 @@
     transition: 0.4;
 }
 
-.image-panel{
-  width: 30%;
-  padding-top: 80px;
-  display: inline-block;
-  vertical-align: top;
-  text-align: start;
-}
 .reduce{
     margin-bottom: 0px;
     color: white;
-}
-
-.image{
-    max-width: 300px;
-    max-height: 300px;
-    margin-left:  10px;
 }
 
 .hide{
   opacity: 0;
 }
 
-.histogramas{
-  margin-top: 12px;
-  width: 40%;
-  display: inline-block;
-  vertical-align: top;
-  text-align: center;
-}
-
-.hist_son {
-  padding-top: 24px;
-  padding-left: 48px;
-  margin-bottom: 48px;
-}
-
 .head{
   text-align: center;
   color: white;
-}
-
-
-#canvas{
-  max-height: 300px;
-  max-width: 300px;
-  margin-left: 10px;
 }
 
 .colunm{
@@ -145,19 +159,10 @@
   /*overflow: scroll;*/
 }
 
-body{
-  /*background: url("../img/background.jpg")*/
-  background: #404040;
-  margin: 0px;
-  margin-top: 12px;
-}
-
-
 .histo_options{
   width: 100%;
   display: inline-block;
 }
-
 
 .histo_option{
   width: 20%;

@@ -35,17 +35,42 @@ window.onload = function(){
 	createMatrix();
 }
 
+function handleImage(e){
+		console.log(e);
+
+    var reader = new FileReader();
+    reader.onload = function(event){
+        img.onload = function(){
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0);
+
+            document.getElementById("h-line").classList.remove("hide");
+
+            drawHistogram(histo_1);
+            drawHistogram(histo_2);
+			showGraphs(true)
+        }
+
+        img.src = event.target.result;
+		document.querySelector('#origin').setAttribute("src",event.target.result)
+    }
+    reader.readAsDataURL(e.target.files[0]);
+
+}
+
 function reset(){
 	ctx.drawImage(img, 0, 0);
 	drawHistogram(histo_2);
 }
 
 function showGraphs(option){
-	if (option){
-		document.getElementsByClassName("histogramas")[0].classList.remove("hide")
-	}else {
-		document.getElementsByClassName("histogramas")[0].classList.add("hide")
+	var vec = document.getElementsByClassName("hist_son")
+	for (let i = 0; i < vec.length; i++) {
+		if (option) vec[i].classList.remove("hide");
+		else vec[i].classList.add("hide");
 	}
+	
 }
 
 function drawHistogram(div_to_draw){

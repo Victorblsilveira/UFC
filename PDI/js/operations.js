@@ -281,28 +281,6 @@ function loadHistogram() {
 	}
 }
 
-function handleImage(e){
-		console.log(e);
-
-    var reader = new FileReader();
-    reader.onload = function(event){
-        img.onload = function(){
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img,0,0);
-
-            drawHistogram(histo_1);
-            drawHistogram(histo_2);
-						showGraphs(true)
-        }
-
-        img.src = event.target.result;
-		document.querySelector('#origin').setAttribute("src",event.target.result)
-    }
-    reader.readAsDataURL(e.target.files[0]);
-
-}
-
 function localNormalizer() {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
