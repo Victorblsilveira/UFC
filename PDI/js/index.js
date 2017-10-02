@@ -29,7 +29,7 @@ window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 
-	$("#filters-simple").show(10);
+	$("#filters-simple").slideDown();
 
 	histo_1 = new google.visualization.ColumnChart(document.getElementById('histo_1'));
 	histo_2 = new google.visualization.ColumnChart(document.getElementById('histo_2'));
@@ -38,7 +38,11 @@ window.onload = function(){
 }
 
 function handleImage(e){
-		console.log(e);
+
+	let splt = e.target.value.split('\\').join('/').split('/');
+	let filename = splt[splt.length - 1];
+
+	$('#image-picker-label').text(filename);
 
     var reader = new FileReader();
     reader.onload = function(event){
@@ -55,16 +59,17 @@ function handleImage(e){
         }
 
         img.src = event.target.result;
-		document.querySelector('#origin').setAttribute("src",event.target.result)
+		$('#origin').attr("src",img.src);
     }
     reader.readAsDataURL(e.target.files[0]);
 
 }
 
 function onFilterBlockClick(elementId) {
-	let isOpen = $("#" + elementId).is(":visible");
-	$(".filter-block").hide(200);
-	if (!isOpen) $("#" + elementId).show(200);
+	let id = "#" + elementId; 
+	let isOpen = $(id).is(":visible");
+	$(".filter-block").slideUp();
+	if (!isOpen) $(id).slideDown();
 }
 
 function reset(){
@@ -73,8 +78,13 @@ function reset(){
 }
 
 function showGraphs(option){
-	if (option) $(".hist_son").removeClass("hide");
-	else $(".hist_son").addClass("hide");
+	if (option) {
+		$(".hist_son").removeClass("hide");
+		$(".histo_options").removeClass("hide");
+	} else {
+		$(".hist_son").addClass("hide");
+		$(".histo_options".addClass("hide"));
+	}
 }
 
 function drawHistogram(div_to_draw){

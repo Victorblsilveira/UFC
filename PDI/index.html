@@ -16,11 +16,22 @@
 
       <section class="container">
 
-        <div class="filter-options">
+      	<div id="menu">
+      		
+      		<label class="head-wrapper" id="image-picker-label" class="head" for="image-picker">
+      			<img id="img-icon" src="img_icon.png"/>
+      			Escolher Imagem
+      		</label>
+        	<input id="image-picker" onchange="handleImage(event)" type="file" />
 
-            <input id="image-picker" onchange="handleImage(event)" type="file"/>
+        	<HR color="grey" style="padding-top: 1px; padding-bottom: 1px; margin-top: 24px;"></HR>
 
-            <button class="head" onclick="onFilterBlockClick('filters-simple')"><strong>Filtros Simples</strong></button>
+	        <div class="filter-options">
+
+	        	<div class="head-wrapper" onclick="onFilterBlockClick('filters-simple')">
+	            <label class="head" >Filtros Simples</label>
+	            <b class="caret"></b>
+	          </div>
             <div id="filters-simple" class="filter-block">
 
               <button class="filter" onclick="applyFilter(grayscale,this)">Grayscale</button>
@@ -85,7 +96,10 @@
 
             </div>
 
-            <button class="head" onclick="onFilterBlockClick('filters-spacial')"><strong>Filtros Espaciais</strong></button>
+            <div class="head-wrapper" onclick="onFilterBlockClick('filters-spacial')">
+	            <label class="head" >Filtros Espaciais</label>
+	            <b class="caret"></b>
+	          </div>
             <div id="filters-spacial" class="filter-block">
 
               <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
@@ -93,7 +107,10 @@
 
             </div>
 
-            <button class="head" onclick="onFilterBlockClick('filters-convolution')"><strong>Convoluções</strong></button>
+            <div class="head-wrapper" onclick="onFilterBlockClick('filters-convolution')">
+	            <label class="head" >Convoluções</label>
+	            <b class="caret"></b>
+	          </div>
             <div id="filters-convolution" class="filter-block">
 
               <div class="">
@@ -112,7 +129,10 @@
 
             </div>
 
-            <button class="head" onclick="onFilterBlockClick('filters-other')"><strong>Outras Opções</strong></button>
+            <div class="head-wrapper" onclick="onFilterBlockClick('filters-other')">
+	            <label class="head" >Outras Opções</label>
+	            <b class="caret"></b>
+	          </div>
             <div id="filters-other" class="filter-block">
 
               <div class="">
@@ -125,20 +145,19 @@
 
             </div>
 
-          </div>
+	      	</div>
 
-        <div class='loader'>
+	    	</div>
 
-          <div class="histo_options">
+        <div class="content">
+
+        	<div class="histo_options hide">
             <p>Tipos Histogramas</p>
             <div class="histo_option">Red   <input type="checkbox" onclick=""></div>
             <div class="histo_option">Green <input type="checkbox" onclick=""></div>
             <div class="histo_option">Blue  <input type="checkbox" onclick=""></div>
             <div class="histo_option">Gray  <input type="checkbox" onclick=""></div>
           </div>
-        </div>
-
-        <div class="content">
 
           <div class="graphics-container">
             <div class="image-panel">
@@ -156,9 +175,11 @@
             </div>
           </div>
 
-        </div>
+          <div id="reset-wrapper">
+          	<button id="reset-button" class="filter" onclick="reset()">Reset</button>
+        	</div>
 
-        <button class="filter" onclick="reset()" style="width: 20%; padding: 8px; margin-top: 12px;">Reset</button>
+        </div>
 
       </section>
 
