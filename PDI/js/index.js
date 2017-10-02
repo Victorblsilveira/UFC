@@ -29,6 +29,8 @@ window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 
+	$("#filters-simple").show(10);
+
 	histo_1 = new google.visualization.ColumnChart(document.getElementById('histo_1'));
 	histo_2 = new google.visualization.ColumnChart(document.getElementById('histo_2'));
 
@@ -45,7 +47,7 @@ function handleImage(e){
             canvas.height = img.height;
             ctx.drawImage(img,0,0);
 
-            document.getElementById("h-line").classList.remove("hide");
+            $("#h-line").removeClass("hide");
 
             drawHistogram(histo_1);
             drawHistogram(histo_2);
@@ -59,18 +61,20 @@ function handleImage(e){
 
 }
 
+function onFilterBlockClick(elementId) {
+	let isOpen = $("#" + elementId).is(":visible");
+	$(".filter-block").hide(200);
+	if (!isOpen) $("#" + elementId).show(200);
+}
+
 function reset(){
 	ctx.drawImage(img, 0, 0);
 	drawHistogram(histo_2);
 }
 
 function showGraphs(option){
-	var vec = document.getElementsByClassName("hist_son")
-	for (let i = 0; i < vec.length; i++) {
-		if (option) vec[i].classList.remove("hide");
-		else vec[i].classList.add("hide");
-	}
-	
+	if (option) $(".hist_son").removeClass("hide");
+	else $(".hist_son").addClass("hide");
 }
 
 function drawHistogram(div_to_draw){

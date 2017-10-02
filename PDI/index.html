@@ -3,6 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <script src="js/jquery-3.2.1.js"></script>
         <script type="text/javascript" src="js/math.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript"src="js/operations.js"></script>
@@ -15,8 +16,118 @@
 
       <section class="container">
 
+        <div class="filter-options">
+
+            <input id="image-picker" onchange="handleImage(event)" type="file"/>
+
+            <button class="head" onclick="onFilterBlockClick('filters-simple')"><strong>Filtros Simples</strong></button>
+            <div id="filters-simple" class="filter-block">
+
+              <button class="filter" onclick="applyFilter(grayscale,this)">Grayscale</button>
+
+              <button class="filter" onclick="applyFilter(negative)">Negative</button>
+
+              <div class="">
+                <button class="filter" onclick="applyFilter(potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
+                <div class="limit -min">0.1</div>
+                <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
+                <div class="limit -max">10</div>
+              </div>
+
+              <div class="">
+                <button class="filter" onclick="applyFilter(log)">Log (C=<span id='range_log'>11</span>)</button>
+                <div class="limit -min">1</div>
+                <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
+                <div class="limit -max">20</div>
+              </div>
+
+
+              <button class="filter" onclick="applyFilter(inverse_log)">Inverse Log</button>
+
+              <div class="">
+                <button class="filter" onclick="applyFilter(limiar)">Limiar : <span id='range_limiar'>0.5</span>
+                </button>
+                <div class="limit -min">0</div>
+                <input class="slidebar" type="range"  min="0" max="1000" onmousemove="updateTresholdLimiar(event)"/>
+                <div class="limit -max">1</div>
+              </div>
+
+              <div class="">
+                <button class="filter" onclick="applyFilter(limiar_apar)">Limiar por Partes</button>
+                <div class="point">
+                  <div class="x">
+                      X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255" value="0">
+                  </div>
+                  <div class="y">
+                      Y1 : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255"
+                      value="0">
+                  </div>
+                </div>
+                <div class="point">
+                  <div class="x">
+                      X2 : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255"
+                      value="255">
+                  </div>
+                  <div class="y">
+                      Y2 : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255"
+                      value="255">
+                  </div>
+                </div>
+              </div>
+
+              <div class="">
+                <button class="filter" onclick="applyFilter(bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
+                </button>
+                <div class="limit -min">0</div>
+                <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
+                <div class="limit -max">7</div>
+              </div>
+
+            </div>
+
+            <button class="head" onclick="onFilterBlockClick('filters-spacial')"><strong>Filtros Espaciais</strong></button>
+            <div id="filters-spacial" class="filter-block">
+
+              <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
+              <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
+
+            </div>
+
+            <button class="head" onclick="onFilterBlockClick('filters-convolution')"><strong>Convoluções</strong></button>
+            <div id="filters-convolution" class="filter-block">
+
+              <div class="">
+                <h5 class="clear">Dimensão</h5>
+                <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
+                <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
+              </div>
+              <div id="matriz" class=""></div>
+              <button class="filter" onclick="applyFilter(convolution)">Convolution</button>
+              <button class="filter" onclick="applyFilter(meanFilter)">Mean</button>
+              <button class="filter" onclick="applyFilter(median)">Median</button>
+              <button class="filter" onclick="applyFilter(sobelx)">Sobel-x</button>
+              <button class="filter" onclick="applyFilter(sobely)">Sobel-y</button>
+              <button class="filter" onclick="applyFilter(sobelSum)">SobelSum</button>
+              <button class="filter" onclick="applyFilter(highBoosting)">HighBoosting</button>
+
+            </div>
+
+            <button class="head" onclick="onFilterBlockClick('filters-other')"><strong>Outras Opções</strong></button>
+            <div id="filters-other" class="filter-block">
+
+              <div class="">
+                <h5 class="clear">Factor of Reduction</h5>
+                <input class="mat" type="number" onchange="updateReductionFactor(event)" step="1" min="1" value="2" >
+              </div>
+              <button class="filter" onclick="imageReduction()">Reduce Image</button>
+              <button class="filter" onclick="imageReduction(true)">Reduce With Mean</button>
+              <button class="filter" onclick="imageZoom()">Zoom</button>
+
+            </div>
+
+          </div>
+
         <div class='loader'>
-          <input id="image-picker" onchange="handleImage(event)" type="file"/>
 
           <div class="histo_options">
             <p>Tipos Histogramas</p>
@@ -28,100 +139,6 @@
         </div>
 
         <div class="content">
-
-          <div class="filter-options">
-            <h4 class="head"> Opções de Filtros</h4>
-
-            <button class="filter" onclick="applyFilter(grayscale,this)">Grayscale</button>
-
-            <button class="filter" onclick="applyFilter(negative)">Negative</button>
-
-            <div class="">
-              <button class="filter" onclick="applyFilter(potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
-              <div class="limit -min">0.1</div>
-              <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
-              <div class="limit -max">10</div>
-            </div>
-
-            <div class="">
-              <button class="filter" onclick="applyFilter(log)">Log (C=<span id='range_log'>11</span>)</button>
-              <div class="limit -min">1</div>
-              <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
-              <div class="limit -max">20</div>
-            </div>
-
-
-            <button class="filter" onclick="applyFilter(inverse_log)">Inverse Log</button>
-
-            <div class="">
-              <button class="filter" onclick="applyFilter(limiar)">Limiar : <span id='range_limiar'>0.5</span>
-              </button>
-              <div class="limit -min">0</div>
-              <input class="slidebar" type="range"  min="0" max="1000" onmousemove="updateTresholdLimiar(event)"/>
-              <div class="limit -max">1</div>
-            </div>
-
-            <div class="">
-              <button class="filter" onclick="applyFilter(limiar_apar)">Limiar por Partes</button>
-              <div class="point">
-                <div class="x">
-                    X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255" value="0">
-                </div>
-                <div class="y">
-                    Y1 : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255"
-                    value="0">
-                </div>
-              </div>
-              <div class="point">
-                <div class="x">
-                    X2 : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255"
-                    value="255">
-                </div>
-                <div class="y">
-                    Y2 : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255"
-                    value="255">
-                </div>
-              </div>
-            </div>
-
-            <div class="">
-              <button class="filter" onclick="applyFilter(bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
-              </button>
-              <div class="limit -min">0</div>
-              <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
-              <div class="limit -max">7</div>
-            </div>
-
-            <h4 class="head">Filtros Espaciais</h4>
-            <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
-            <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
-
-            <h4 class="head">Matriz de Convolução</h4>
-            <div class="">
-              <h5 class="clear">Dimensão</h5>
-              <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
-              <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
-            </div>
-            <div id="matriz" class=""></div>
-            <button class="filter" onclick="applyFilter(convolution)">Convolution</button>
-            <button class="filter" onclick="applyFilter(meanFilter)">Mean</button>
-            <button class="filter" onclick="applyFilter(median)">Median</button>
-            <button class="filter" onclick="applyFilter(sobelx)">Sobel-x</button>
-            <button class="filter" onclick="applyFilter(sobely)">Sobel-y</button>
-            <button class="filter" onclick="applyFilter(sobelSum)">SobelSum</button>
-            <button class="filter" onclick="applyFilter(highBoosting)">HighBoosting</button>
-
-            <h4 class="head">Outras Opções</h4>
-
-            <div class="">
-              <h5 class="clear">Factor of Reduction</h5>
-              <input class="mat" type="number" onchange="updateReductionFactor(event)" step="1" min="1" value="2" >
-            </div>
-            <button class="filter" onclick="imageReduction()">Reduce Image</button>
-            <button class="filter" onclick="imageReduction(true)">Reduce With Mean</button>
-            <button class="filter" onclick="imageZoom()">Zoom</button>
-
-          </div>
 
           <div class="graphics-container">
             <div class="image-panel">

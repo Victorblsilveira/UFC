@@ -23,7 +23,9 @@ body{
 }
 
 #image-picker {
-  width: 20%;
+  padding-bottom: 24px;
+  width: 100%;
+  color: white;
 }
 
 .histo_options{
@@ -43,13 +45,14 @@ body{
 }
 
 .filter-options{
-  width: 22%;
-  height: 70vh;
+  width: 20%;
+  height: 95vh;
+  float: left;
   display: inline-block;
   text-align: center;
-  vertical-align: top;
-  overflow-y: scroll;
-  padding-right: 12px;
+  vertical-align: middle;
+  overflow: hide;
+  padding-top: 12px;
 }
 
 .graphics-container {
@@ -122,6 +125,12 @@ body{
   vertical-align: super;
 }
 
+.filter-block {
+  display: none;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 .filter{
     width: 100%;
     display: inline-block;
@@ -147,8 +156,12 @@ body{
 }
 
 .head{
+  padding: 12px;
+  width: 100%;
+  background: aqua;
   text-align: center;
-  color: white;
+  border: 3px solid;
+  border-radius: 12px;
 }
 
 .colunm{
