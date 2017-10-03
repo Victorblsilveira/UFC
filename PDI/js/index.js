@@ -25,9 +25,17 @@ var bitSlicePos = 4;
 var bitSliceValue = Math.pow(2, bitSlicePos);
 var pointers = [0,0,0,0]
 
+var meanMatrix = Matrix.getMeanMatrix(3)
+var gaussianMatrix = Matrix.getGaussian();
+var highPassMatrix = Matrix.getHighPass();
+var sobelXMatrix = Matrix.getSobelX();
+var sobelYMatrix = Matrix.getSobelY();
+
 window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
+
+	console.log(Matrix.getGaussian())
 
 	$("#filters-simple").slideDown();
 
@@ -134,6 +142,7 @@ function getIJFromPixel(index) {
 function updateDimension(event){
 	dimension = parseInt(event.target.value)
 	matriz = new Matrix(dimension);
+	meanMatrix = Matrix.getMeanMatrix(dimension);
 }
 
 function updateReductionFactor(event){

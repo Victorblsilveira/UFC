@@ -113,7 +113,7 @@ function convolution(copy, pixels, i, matriz_) {
 }
 
 function meanFilter(copy, pixels, i) {
-	convolution(copy, pixels, i, Matrix.getMeanMatrix(dimension))
+	convolution(copy, pixels, i, meanMatrix)
 }
 
 function meanFilterColored(copy, pixels, i) {
@@ -139,28 +139,26 @@ function meanFilterColored(copy, pixels, i) {
 }
 
 function highPass(copy, pixels, i){
-	convolution(copy,pixels,i,Matrix.getHighPass())
+	convolution(copy,pixels,i,highPassMatrix)
 }
 
 function lowPass(copy, pixels, i){
-	convolution(copy,pixels,i,Matrix.getGaussian())
+	convolution(copy,pixels,i,gaussianMatrix)
 }
 
 function bandReject(copy, pixels, i){
-	convolution(copy, pixels, i, Matrix.sum(Matrix.getHighPass(), Matrix.getGaussian()))
-}
-
-function bandPass(copy, pixels, i){
-	highPass(copy, pixels, i)
-	lowPass(copy, pixels, i)
+	lowPass(copy, pixels, i);
+	aux = pixels[i]
+	highPass(copy, pixels, i);
+	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] + aux;
 }
 
 function sobelx(copy, pixels, i){
-	convolution(copy,pixels,i,Matrix.getSobelX())
+	convolution(copy,pixels,i,sobelXMatrix)
 }
 
 function sobely(copy, pixels, i){
-	convolution(copy,pixels,i,Matrix.getSobelY())
+	convolution(copy,pixels,i,sobelYMatrix)
 }
 
 function sobelSum(copy, pixels, i){
@@ -172,7 +170,7 @@ function sobelSum(copy, pixels, i){
 
 function highBoosting(copy, pixels, i){
 	var c_ = 1;
-	convolution(copy,pixels,i,Matrix.getMeanMatrix(dimension))
+	convolution(copy,pixels,i, meanMatrix)
 	pixels[i] = pixels[i+1] = pixels[i+2] = getMean(copy, i) + c_ * (getMean(copy, i) - pixels[i]);
 }
 

@@ -67,14 +67,17 @@ Matrix.getGaussian = function(dim) {
 	if (dim == undefined) dim = 3;
 	let m = new Matrix(dim);
 	let r = (m.getDim()-1)/2;
+	let sigma = 1;
 	for (let i = 0; i < m.getDim(); i++) {
 		for (let j = 0; j < m.getDim(); j++) {
 			let y = i-r;
 			let x = j-r;
-			let g = 1/(2*Math.PI) * Math.exp(-(x*x + y*y)/2)
+			let g = 1/(2*Math.PI*sigma*sigma) * Math.exp(-(x*x + y*y)/(2*sigma*sigma))
 			m.set(i, j, g);
 		}
 	}
+
+	m.normalize();
 
 	return m;
 };
