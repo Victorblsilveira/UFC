@@ -34,29 +34,29 @@
 	          </div>
             <div id="filters-simple" class="filter-block">
 
-              <button class="filter" onclick="applyFilter(grayscale,this)">Grayscale</button>
+              <button class="filter" onclick="applyFilter(event, this, grayscale,this)">Grayscale</button>
 
-              <button class="filter" onclick="applyFilter(negative)">Negative</button>
+              <button class="filter" onclick="applyFilter(event, this, negative)">Negative</button>
 
               <div class="">
-                <button class="filter" onclick="applyFilter(potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
+                <button class="filter" onclick="applyFilter(event, this, potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
                 <div class="limit -min">0.1</div>
                 <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
                 <div class="limit -max">10</div>
               </div>
 
               <div class="">
-                <button class="filter" onclick="applyFilter(log)">Log (C=<span id='range_log'>11</span>)</button>
+                <button class="filter" onclick="applyFilter(event, this, log)">Log (C=<span id='range_log'>11</span>)</button>
                 <div class="limit -min">1</div>
                 <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
                 <div class="limit -max">20</div>
               </div>
 
 
-              <button class="filter" onclick="applyFilter(inverse_log)">Inverse Log</button>
+              <button class="filter" onclick="applyFilter(event, this, inverse_log)">Inverse Log</button>
 
               <div class="">
-                <button class="filter" onclick="applyFilter(limiar)">Limiar : <span id='range_limiar'>0.5</span>
+                <button class="filter" onclick="applyFilter(event, this, limiar)">Limiar : <span id='range_limiar'>0.5</span>
                 </button>
                 <div class="limit -min">0</div>
                 <input class="slidebar" type="range"  min="0" max="1000" onmousemove="updateTresholdLimiar(event)"/>
@@ -64,7 +64,7 @@
               </div>
 
               <div class="">
-                <button class="filter" onclick="applyFilter(limiar_apar)">Limiar por Partes</button>
+                <button class="filter" onclick="applyFilter(event, this, limiar_apar)">Limiar por Partes</button>
                 <div class="point">
                   <div class="x">
                       X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255" value="0">
@@ -87,7 +87,7 @@
               </div>
 
               <div class="">
-                <button class="filter" onclick="applyFilter(bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
+                <button class="filter" onclick="applyFilter(event, this, bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
                 </button>
                 <div class="limit -min">0</div>
                 <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
@@ -102,7 +102,7 @@
 	          </div>
             <div id="filters-spacial" class="filter-block">
 
-              <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
+              <button class="filter" onclick="applyFilter(event, this, normalizeHistogram)">Equalizar</button>
               <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
 
             </div>
@@ -114,10 +114,10 @@
 
             <div id="filters-frequency" class="filter-block">
 
-              <button class="filter" onclick="applyFilter(highPass)">Passa Alta</button>
-              <button class="filter" onclick="applyFilter(lowPass)">Passa Baixa</button>
-              <button class="filter" onclick="applyFilter(bandReject)">Rejeita Faixa</button>
-              <button class="filter" onclick="applyFilter(lowPass); applyFilter(highPass)">Passa Faixa</button>
+              <button class="filter" onclick="applyFilter(event, this, highPass)">Passa Alta</button>
+              <button class="filter" onclick="applyFilter(event, this, lowPass)">Passa Baixa</button>
+              <button class="filter" onclick="applyFilter(event, this, bandReject)">Rejeita Faixa</button>
+              <button class="filter" onclick="applyFilter(event, this, lowPass); applyFilter(event, this, highPass)">Passa Faixa</button>
 
             </div>
 
@@ -133,13 +133,13 @@
                 <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
               </div>
               <div id="matriz" class=""></div>
-              <button class="filter" onclick="applyFilter(convolution)">Convolution</button>
-              <button class="filter" onclick="applyFilter(meanFilter)">Mean</button>
-              <button class="filter" onclick="applyFilter(median)">Median</button>
-              <button class="filter" onclick="applyFilter(sobelx)">Sobel-x</button>
-              <button class="filter" onclick="applyFilter(sobely)">Sobel-y</button>
-              <button class="filter" onclick="applyFilter(sobelSum)">SobelSum</button>
-              <button class="filter" onclick="applyFilter(highBoosting)">HighBoosting</button>
+              <button class="filter" onclick="applyFilter(event, this, convolution)">Convolution</button>
+              <button class="filter" onclick="applyFilter(event, this, meanFilter)">Mean</button>
+              <button class="filter" onclick="applyFilter(event, this, median)">Median</button>
+              <button class="filter" onclick="applyFilter(event, this, sobelx)">Sobel-x</button>
+              <button class="filter" onclick="applyFilter(event, this, sobely)">Sobel-y</button>
+              <button class="filter" onclick="applyFilter(event, this, sobelSum)">SobelSum</button>
+              <button class="filter" onclick="applyFilter(event, this, highBoosting)">HighBoosting</button>
 
             </div>
 

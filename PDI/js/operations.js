@@ -1,8 +1,9 @@
 
-function applyFilter(filter,element) {
-
+function applyFilter(event, element, filter) {
+	event.stopPropagation()
+	//element.classList.add('loading')
 	loadHistogram();
-
+	console.log(element.classList)
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	var copy = pix.slice();
@@ -12,6 +13,10 @@ function applyFilter(filter,element) {
 	}
 	ctx.putImageData(imgd, 0, 0);
 	drawHistogram(histo_2);
+	//setTimeout(function(){
+	//	element.classList.remove('loading')
+	//},3000)
+	
 }
 
 function getMean(pixels, i) {

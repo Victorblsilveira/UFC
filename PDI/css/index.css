@@ -177,9 +177,10 @@ body{
   display: inline-block;
   margin-bottom: 5px;
   border-width: 0px;
-  background-color: cornflowerblue;
+  background-color: #3b5075;
   color: white;
   overflow: hidden;
+  border-radius: 4px;
 }
 
 .filter:hover{
@@ -225,4 +226,16 @@ body{
 	width: 200px;
 	padding: 8px; 
 	border-radius: 8px;
+}
+
+.loading {
+	background-image: url(../img/loading.png);
+	background-repeat: no-repeat;
+	animation: spin 2s linear infinite;
+
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
