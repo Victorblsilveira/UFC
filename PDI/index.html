@@ -17,7 +17,6 @@
       <section class="container">
 
       	<div id="menu">
-      		
       		<label class="head-wrapper" id="image-picker-label" class="head" for="image-picker">
       			<img id="img-icon" src="img_icon.png"/>
       			Escolher Imagem
@@ -104,6 +103,20 @@
 
               <button class="filter" onclick="applyFilter(normalizeHistogram)">Equalizar</button>
               <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
+
+            </div>
+
+            <div class="head-wrapper" onclick="onFilterBlockClick('filters-frequency')">
+	            <label class="head" >Filtros na Frequência</label>
+	            <b class="caret"></b>
+	          </div>
+
+            <div id="filters-frequency" class="filter-block">
+
+              <button class="filter" onclick="applyFilter(highPass)">Passa Alta</button>
+              <button class="filter" onclick="applyFilter(lowPass)">Passa Baixa</button>
+              <button class="filter" onclick="applyFilter(bandReject)">Rejeita Faixa</button>
+              <button class="filter" onclick="applyFilter(bandPass)">Passa Faixa</button>
 
             </div>
 

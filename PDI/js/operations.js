@@ -151,10 +151,57 @@ function meanFilterColored(copy, pixels, i) {
 }
 
 
+function highPass(copy, pixels, i){
+	dimension = 3;
+	var matriz_ = init_mat(3,3);
+
+	matriz_[0][0] = matriz_[0][2] = matriz_[2][2] = matriz_[2][0] = 0
+  matriz_[0][1] = matriz_[1][0] = matriz_[1][2] = matriz_[2][1] = -1/4
+	matriz_[1][1] = 2
+
+	convolution(copy,pixels,i,matriz_)
+}
+
+function lowPass(copy, pixels, i){
+	dimension = 5;
+	var matriz_ = init_mat(5,5,1/25);
+	convolution(copy,pixels,i,matriz_)
+}
+
+function sumM(a,b){
+ var result = init_mat(a.length,a.length);
+ if (a.length != b.length) {return}
+ for (var i in a){
+	 for (var j in a[i]){
+		 if (a[i].length != b[i].length) {return}
+		 result[i][j] = a[i][j] + b[i][j]
+	 }
+ }
+ return result
+}
+
+function genMatriz(){
+	var matriz_ = init_mat(3,3)
+		matriz_[0][0] = matriz_[0][2] = matriz_[2][2] = matriz_[2][0] = 0
+	  matriz_[0][1] = matriz_[1][0] = matriz_[1][2] = matriz_[2][1] = -1/4
+		matriz_[1][1] = 2
+	return sumM(matriz_, init_mat(3,3,1/3))
+}
+
+function bandReject(copy, pixels, i){
+	var matriz_ = genMatriz()
+	convolution(copy, pixels, i, matriz_)
+}
+
+function bandPass(copy, pixels, i){
+	highPass(copy, pixels, i)
+	lowPass(copy, pixels, i)
+}
+
 function sobelx(copy, pixels, i){
 	dimension = 3;
 	var matriz_ = init_mat(3,3);
-	
+
 	matriz_[0][0] = -1
 	matriz_[0][1] = -2
 	matriz_[0][2] = -1
@@ -162,15 +209,17 @@ function sobelx(copy, pixels, i){
 	matriz_[2][0] = 1
 	matriz_[2][1] = 2
 	matriz_[2][2] = 1
-	
+
 	convolution(copy,pixels,i,matriz_)
 }
-function init_mat(dx,dy){
+
+function init_mat(dx,dy, value){
 	var matriz_ = []
+	var init_val = value != undefined ? value : 0
 	for (var i=0;i<dx;i++){
 		matriz_[i] = []
 		for (var j=0;j<dy;j++){
-			matriz_[i][j] = 0
+			matriz_[i][j] = init_val
 		}
 	}
 	return matriz_
@@ -179,18 +228,18 @@ function init_mat(dx,dy){
 function sobely(copy, pixels, i){
 	dimension = 3;
 	var matriz_ = init_mat(3,3);
-	
+
 	matriz_[0][0] = -1
 	matriz_[0][1] =  0
 	matriz_[0][2] =  1
 	matriz_[1][0] = -2
-	matriz_[1][2] = 0 
+	matriz_[1][2] = 0
 	matriz_[1][1] = 2
 	matriz_[2][0] = -1
-	matriz_[2][1] = 0 
+	matriz_[2][1] = 0
 	matriz_[2][2] = 1
-	
-	convolution(copy,pixels,i,matriz_)	
+
+	convolution(copy,pixels,i,matriz_)
 }
 
 function sobelSum(copy, pixels, i){
@@ -203,18 +252,8 @@ function sobelSum(copy, pixels, i){
 function highBoosting(copy, pixels, i){
 	dimension = 3;
 	var c_ = 1;
-	var matriz_ = init_mat(3,3);
-	
-	matriz_[0][0] = 
-	matriz_[0][1] = 
-	matriz_[0][2] = 
-	matriz_[1][0] = 
-	matriz_[1][2] = 
-	matriz_[1][1] = 
-	matriz_[2][0] = 
-	matriz_[2][1] = 
-	matriz_[2][2] = 1/9;
-	
+	var matriz_ = init_mat(3,3,1/9);
+
 	convolution(copy,pixels,i,matriz_)
 
 	pixels[i] = pixels[i+1] = pixels[i+2] = getMean(copy, i) + c_ * (getMean(copy, i) - pixels[i]);
@@ -357,13 +396,13 @@ function imageReduction(withMean=false) {
 		for (let j = 0; j < canvas.width; j+=reductionFactor) {
 			let index = getPixelIndex(i, j);
 			calcPix = (withMean)
-				? getMeanInRegion(pix, i, j, reductionFactor) 
+				? getMeanInRegion(pix, i, j, reductionFactor)
 				: [pix[index], pix[index+1], pix[index+2], pix[index+3]];
 			new_pix[pos++] = calcPix[0];
 			new_pix[pos++] = calcPix[1];
 			new_pix[pos++] = calcPix[2];
 			new_pix[pos++] = calcPix[3];
-		}	
+		}
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -384,7 +423,7 @@ function imageZoom() {
 			let index = getPixelIndex(Math.round(i/reductionFactor), Math.round(j/reductionFactor));
 			new_pix[pos++] = pix[index];
 			new_pix[pos++] = pix[index+1];
-			new_pix[pos++] = pix[index+2];	
+			new_pix[pos++] = pix[index+2];
 			new_pix[pos++] = pix[index+3];
 		}
 		pos += 4*canvas.width*(reductionFactor-1);
