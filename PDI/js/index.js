@@ -3,8 +3,8 @@ var ctx;
 var canvas;
 var histogram;
 var histogramNormalizer;
-var matriz = []
 var dimension = 3;
+var matrix = new Matrix(3);
 var reductionFactor = 2;
 google.charts.load("current", {packages:["corechart"]});
 
@@ -133,6 +133,7 @@ function getIJFromPixel(index) {
 
 function updateDimension(event){
 	dimension = parseInt(event.target.value)
+	matriz = new Matrix(dimension);
 }
 
 function updateReductionFactor(event){
@@ -140,7 +141,5 @@ function updateReductionFactor(event){
 }
 
 function updateMatrix(i,j,event){
-	console.log(event)
-	if (matriz[i] == undefined) matriz[i] = [];
-	matriz[i][j] = math.eval(event.target.value)
+	matriz.set(i, j, math.eval(event.target.value));
 }

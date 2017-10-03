@@ -96,16 +96,16 @@ function normalizeHistogram(copy, pixels, i) {
 }
 
 function convolution(copy, pixels, i, matriz_) {
-	p = getIJFromPixel(i);
-	radius = (dimension-1)/2;
-	val = 0;
-	if (matriz_ != undefined){matriz = matriz_}
-	for (var x = 0; x < dimension; x++) {
-		for (var y = 0; y < dimension; y++) {
+	if (matriz_ == undefined) matriz_ = matriz;
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let val = 0;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
 			_i = x - radius + p[0];
 			_j = y - radius + p[1];
 			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				val += getMean(copy, getPixelIndex(_i, _j)) * matriz[x][y];
+				val += getMean(copy, getPixelIndex(_i, _j)) * matriz_.get(x, y);
 			}
 		}
 	}
@@ -113,19 +113,7 @@ function convolution(copy, pixels, i, matriz_) {
 }
 
 function meanFilter(copy, pixels, i) {
-	p = getIJFromPixel(i);
-	radius = (dimension-1)/2;
-	val = 0;
-	for (var x = 0; x < dimension; x++) {
-		for (var y = 0; y < dimension; y++) {
-			_i = x - radius + p[0];
-			_j = y - radius + p[1];
-			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				val += getMean(copy, getPixelIndex(_i, _j));
-			}
-		}
-	}
-	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val/(dimension*dimension));
+	convolution(copy, pixels, i, Matrix.getMeanMatrix(dimension))
 }
 
 function meanFilterColored(copy, pixels, i) {
@@ -150,47 +138,16 @@ function meanFilterColored(copy, pixels, i) {
 	pixels[i+2] = parseInt(valB/(dimension*dimension));
 }
 
-
 function highPass(copy, pixels, i){
-	dimension = 3;
-	var matriz_ = init_mat(3,3);
-
-	matriz_[0][0] = matriz_[0][2] = matriz_[2][2] = matriz_[2][0] = 0
-  matriz_[0][1] = matriz_[1][0] = matriz_[1][2] = matriz_[2][1] = -1/4
-	matriz_[1][1] = 2
-
-	convolution(copy,pixels,i,matriz_)
+	convolution(copy,pixels,i,Matrix.getHighPass())
 }
 
 function lowPass(copy, pixels, i){
-	dimension = 5;
-	var matriz_ = init_mat(5,5,1/25);
-	convolution(copy,pixels,i,matriz_)
-}
-
-function sumM(a,b){
- var result = init_mat(a.length,a.length);
- if (a.length != b.length) {return}
- for (var i in a){
-	 for (var j in a[i]){
-		 if (a[i].length != b[i].length) {return}
-		 result[i][j] = a[i][j] + b[i][j]
-	 }
- }
- return result
-}
-
-function genMatriz(){
-	var matriz_ = init_mat(3,3)
-		matriz_[0][0] = matriz_[0][2] = matriz_[2][2] = matriz_[2][0] = 0
-	  matriz_[0][1] = matriz_[1][0] = matriz_[1][2] = matriz_[2][1] = -1/4
-		matriz_[1][1] = 2
-	return sumM(matriz_, init_mat(3,3,1/3))
+	convolution(copy,pixels,i,Matrix.getGaussian())
 }
 
 function bandReject(copy, pixels, i){
-	var matriz_ = genMatriz()
-	convolution(copy, pixels, i, matriz_)
+	convolution(copy, pixels, i, Matrix.sum(Matrix.getHighPass(), Matrix.getGaussian()))
 }
 
 function bandPass(copy, pixels, i){
@@ -199,47 +156,11 @@ function bandPass(copy, pixels, i){
 }
 
 function sobelx(copy, pixels, i){
-	dimension = 3;
-	var matriz_ = init_mat(3,3);
-
-	matriz_[0][0] = -1
-	matriz_[0][1] = -2
-	matriz_[0][2] = -1
-	matriz_[1][0] = matriz_[1][2] = matriz_[1][1] = 0
-	matriz_[2][0] = 1
-	matriz_[2][1] = 2
-	matriz_[2][2] = 1
-
-	convolution(copy,pixels,i,matriz_)
-}
-
-function init_mat(dx,dy, value){
-	var matriz_ = []
-	var init_val = value != undefined ? value : 0
-	for (var i=0;i<dx;i++){
-		matriz_[i] = []
-		for (var j=0;j<dy;j++){
-			matriz_[i][j] = init_val
-		}
-	}
-	return matriz_
+	convolution(copy,pixels,i,Matrix.getSobelX())
 }
 
 function sobely(copy, pixels, i){
-	dimension = 3;
-	var matriz_ = init_mat(3,3);
-
-	matriz_[0][0] = -1
-	matriz_[0][1] =  0
-	matriz_[0][2] =  1
-	matriz_[1][0] = -2
-	matriz_[1][2] = 0
-	matriz_[1][1] = 2
-	matriz_[2][0] = -1
-	matriz_[2][1] = 0
-	matriz_[2][2] = 1
-
-	convolution(copy,pixels,i,matriz_)
+	convolution(copy,pixels,i,Matrix.getSobelY())
 }
 
 function sobelSum(copy, pixels, i){
@@ -250,12 +171,8 @@ function sobelSum(copy, pixels, i){
 }
 
 function highBoosting(copy, pixels, i){
-	dimension = 3;
 	var c_ = 1;
-	var matriz_ = init_mat(3,3,1/9);
-
-	convolution(copy,pixels,i,matriz_)
-
+	convolution(copy,pixels,i,Matrix.getMeanMatrix(dimension))
 	pixels[i] = pixels[i+1] = pixels[i+2] = getMean(copy, i) + c_ * (getMean(copy, i) - pixels[i]);
 }
 
