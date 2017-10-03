@@ -232,6 +232,8 @@ body{
 	background-image: url(../img/loading.png);
 	background-repeat: no-repeat;
 	animation: spin 2s linear infinite;
+	width: 10px;
+	height: 10px;
 
 }
 

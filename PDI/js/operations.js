@@ -1,7 +1,7 @@
 
 function applyFilter(event, element, filter) {
 	event.stopPropagation()
-	//element.classList.add('loading')
+	element.classList.add('loading')
 	loadHistogram();
 	console.log(element.classList)
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -11,11 +11,13 @@ function applyFilter(event, element, filter) {
 	for (var i = 0; i < pix.length; i+=4) {
 		filter(copy, pix, i);
 	}
+
 	ctx.putImageData(imgd, 0, 0);
 	drawHistogram(histo_2);
-	//setTimeout(function(){
-	//	element.classList.remove('loading')
-	//},3000)
+	setTimeout(function(){
+		element.classList.remove('loading')
+	},2000)
+	//element.classList.remove('loading')
 	
 }
 
