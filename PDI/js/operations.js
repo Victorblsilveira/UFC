@@ -329,3 +329,12 @@ function counterHarmonic(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = vecCounterHarmonicMean(getPixRegionVec(copy, i, dimension), counterHarmonicFactor);
 }
 
+function maxFilter(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecMax(getPixRegionVec(copy, i, dimension));
+}
+
+function minFilter(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecMin(getPixRegionVec(copy, i, dimension));
+}
+
+

@@ -14,6 +14,14 @@ function getPixRegionVec(pix, i, dim) {
 	return vec;
 }
 
+function vecMax(vec) {
+	return vec.reduce(function(a, b) {return (a>=b)?a:b});
+}
+
+function vecMin(vec) {
+	return vec.reduce(function(a, b) {return (a<=b)?a:b});
+}
+
 function vecMean(vec) {
 	return vecCounterHarmonicMean(vec, 0);
 }
