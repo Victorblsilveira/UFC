@@ -7,6 +7,7 @@ var dimension = 3;
 var matrix = new Matrix(3);
 var reductionFactor = 2;
 var counterHarmonicFactor = 0;
+var alphaTrimFactor = 0;
 google.charts.load("current", {packages:["corechart"]});
 
 var options = {
@@ -144,6 +145,11 @@ function updateDimension(event){
 	dimension = parseInt(event.target.value)
 	matriz = new Matrix(dimension);
 	meanMatrix = Matrix.getMeanMatrix(dimension);
+
+	alphaTrimFactor = Math.min(alphaTrimFactor, dimension*dimension-1)
+	$('#alpha_trim_slide').attr("max", dimension*dimension-1)
+	$('#alpha_trim_slide').attr("value", alphaTrimFactor)
+	$('#alpha_trim_max').text(dimension*dimension-1);
 }
 
 function updateReductionFactor(event){
@@ -153,6 +159,11 @@ function updateReductionFactor(event){
 function updateCounterHarmonicFactor(event) {
 	counterHarmonicFactor = parseInt(event.target.value)
 	document.getElementById("range_harmonic").innerHTML= counterHarmonicFactor;
+}
+
+function updateAlphaTrimFactor(event) {
+	alphaTrimFactor = parseInt(event.target.value)
+	document.getElementById("range_alpha_trim").innerHTML= alphaTrimFactor;
 }
 
 function updateMatrix(i,j,event){

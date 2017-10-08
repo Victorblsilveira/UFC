@@ -60,3 +60,15 @@ function vecCounterHarmonicMean(vec, q) {
 	}
 	return num/den;
 }
+
+function vecAlphaTrim(vec, d) {
+	vec.sort( function(a,b) {return a - b;} );
+	let alpha = parseInt(d/2);
+	let sum = 0;
+	for (let i in vec) {
+		if (i >= alpha && i <= vec.length-1-alpha) {
+			sum += vec[i];
+		}
+	}
+	return sum / (vec.length - alpha*2);
+}

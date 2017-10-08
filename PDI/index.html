@@ -153,6 +153,13 @@
               <button class="filter" onclick="applyFilter(event, this, minFilter)">Min Filter</button>
               <button class="filter" onclick="applyFilter(event, this, midPointFilter)">Mid Point Filter</button>
 
+              <div class="limit -min">0</div>
+                <input id="alpha_trim_slide" class="slidebar" type="range" min="0" max="8" value="0" onmousemove="updateAlphaTrimFactor(event)"/>
+              <div id="alpha_trim_max" class="limit -max">8</div>
+              <button class="filter" onclick="applyFilter(event, this, alphaTrimFilter)">
+                Alpha Trim: (d=<span id='range_alpha_trim'>0</span>)
+              </button>
+
             </div>
 
             <div class="head-wrapper" onclick="onFilterBlockClick('filters-other')">

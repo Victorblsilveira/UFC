@@ -341,3 +341,7 @@ function midPointFilter(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = vecMidPoint(getPixRegionVec(copy, i, dimension));
 }
 
+function alphaTrimFilter(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecAlphaTrim(getPixRegionVec(copy, i, dimension), alphaTrimFactor);
+}
+
