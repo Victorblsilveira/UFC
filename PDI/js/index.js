@@ -6,6 +6,7 @@ var histogramNormalizer;
 var dimension = 3;
 var matrix = new Matrix(3);
 var reductionFactor = 2;
+var counterHarmonicFactor = 0;
 google.charts.load("current", {packages:["corechart"]});
 
 var options = {
@@ -149,6 +150,25 @@ function updateReductionFactor(event){
 	reductionFactor = parseInt(event.target.value)
 }
 
+function updateCounterHarmonicFactor(event) {
+	counterHarmonicFactor = parseInt(event.target.value)
+	document.getElementById("range_harmonic").innerHTML= counterHarmonicFactor;
+}
+
 function updateMatrix(i,j,event){
 	matriz.set(i, j, math.eval(event.target.value));
+}
+
+function createMatrix(){
+	 var html = "";
+	 for(var i=0;i<dimension;i++){
+		 html += '<div class="colunm">'
+		 for(var j=0;j<dimension;j++){
+			 html +=  '<input class="cel" onchange="updateMatrix('+j+','+i+',event)" type="text">'
+		 }
+		 html += '</div>'
+	 }
+	 var matriz = document.getElementById('matriz')
+	 matriz.innerHTML = html
+	 matriz.value = ''
 }

@@ -7,7 +7,8 @@
         <script type="text/javascript" src="js/matrix.js"></script>
         <script type="text/javascript" src="js/math.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript"src="js/operations.js"></script>
+        <script type="text/javascript" src="js/vec_operations.js"></script>
+        <script type="text/javascript" src="js/operations.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <link rel="stylesheet" href="css/index.css">
         <title>PDI</title>
@@ -96,14 +97,24 @@
 
             </div>
 
-            <div class="head-wrapper" onclick="onFilterBlockClick('filters-spacial')">
+            <div class="head-wrapper" onclick="onFilterBlockClick('filters-convolution')">
 	            <label class="head" >Filtros Espaciais</label>
 	            <b class="caret"></b>
 	          </div>
-            <div id="filters-spacial" class="filter-block">
+            <div id="filters-convolution" class="filter-block">
 
-              <button class="filter" onclick="applyFilter(event, this, normalizeHistogram)">Equalizar</button>
-              <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
+              <div class="">
+                <h5 class="clear">Dimensão</h5>
+                <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
+                <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
+              </div>
+              <div id="matriz" class=""></div>
+              <button class="filter" onclick="applyFilter(event, this, convolution)">Convolution</button>
+              <button class="filter" onclick="applyFilter(event, this, meanFilter)">Mean</button>
+              <button class="filter" onclick="applyFilter(event, this, sobelx)">Sobel-x</button>
+              <button class="filter" onclick="applyFilter(event, this, sobely)">Sobel-y</button>
+              <button class="filter" onclick="applyFilter(event, this, sobelSum)">SobelSum</button>
+              <button class="filter" onclick="applyFilter(event, this, highBoosting)">HighBoosting</button>
 
             </div>
 
@@ -121,25 +132,22 @@
 
             </div>
 
-            <div class="head-wrapper" onclick="onFilterBlockClick('filters-convolution')">
-	            <label class="head" >Convoluções</label>
+            <div class="head-wrapper" onclick="onFilterBlockClick('filters-improver')">
+	            <label class="head" >Melhoramento de Imagens</label>
 	            <b class="caret"></b>
 	          </div>
-            <div id="filters-convolution" class="filter-block">
+            <div id="filters-improver" class="filter-block">
 
-              <div class="">
-                <h5 class="clear">Dimensão</h5>
-                <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
-                <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
-              </div>
-              <div id="matriz" class=""></div>
-              <button class="filter" onclick="applyFilter(event, this, convolution)">Convolution</button>
-              <button class="filter" onclick="applyFilter(event, this, meanFilter)">Mean</button>
+              <button class="filter" onclick="applyFilter(event, this, normalizeHistogram)">Equalizar</button>
+              <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
               <button class="filter" onclick="applyFilter(event, this, median)">Median</button>
-              <button class="filter" onclick="applyFilter(event, this, sobelx)">Sobel-x</button>
-              <button class="filter" onclick="applyFilter(event, this, sobely)">Sobel-y</button>
-              <button class="filter" onclick="applyFilter(event, this, sobelSum)">SobelSum</button>
-              <button class="filter" onclick="applyFilter(event, this, highBoosting)">HighBoosting</button>
+              <button class="filter" onclick="applyFilter(event, this, geometric)">Geometric Mean</button>
+              <button class="filter" onclick="applyFilter(event, this, harmonic)">Harmonic Mean</button>
+
+              <div class="limit -min">-10</div>
+                <input class="slidebar" type="range"  min="-10" max="10" value="0" onmousemove="updateCounterHarmonicFactor(event)"/>
+              <div class="limit -max">10</div>
+              <button class="filter" onclick="applyFilter(event, this, counterHarmonic)">Counter Harmonic: (Q=<span id='range_harmonic'>0</span>)</button>
 
             </div>
 

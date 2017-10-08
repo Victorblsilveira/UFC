@@ -17,7 +17,7 @@ function applyFilter(event, element, filter) {
 	setTimeout(function(){
 		element.classList.remove('loading')
 	},2000)
-	//element.classList.remove('loading')
+	element.classList.remove('loading')
 	
 }
 
@@ -181,46 +181,8 @@ function highBoosting(copy, pixels, i){
 	pixels[i] = pixels[i+1] = pixels[i+2] = getMean(copy, i) + c_ * (getMean(copy, i) - pixels[i]);
 }
 
-function calculateMedian(vec) {
-	vec.sort( function(a,b) {return a - b;} );
-	var half = Math.floor(vec.length/2);
-	if(vec.length % 2)
-        return vec[half];
-    else
-        return (vec[half-1] + vec[half]) / 2.0;
-}
-
 function median(copy, pixels, i) {
-	p = getIJFromPixel(i);
-	radius = (dimension-1)/2;
-	vec = [];
-	pos = 0;
-	for (var x = 0; x < dimension; x++) {
-		for (var y = 0; y < dimension; y++) {
-			_i = x - radius + p[0];
-			_j = y - radius + p[1];
-			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				vec[pos] = getMean(copy, getPixelIndex(_i, _j));
-				pos++;
-			}
-		}
-	}
-
-	pixels[i] = pixels[i+1] = pixels[i+2] = calculateMedian(vec);
-}
-
-function createMatrix(){
-	 var html = "";
-	 for(var i=0;i<dimension;i++){
-		 html += '<div class="colunm">'
-		 for(var j=0;j<dimension;j++){
-			 html +=  '<input class="cel" onchange="updateMatrix('+j+','+i+',event)" type="text">'
-		 }
-		 html += '</div>'
-	 }
-	 var matriz = document.getElementById('matriz')
-	 matriz.innerHTML = html
-	 matriz.value = ''
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecMedian(getPixRegionVec(copy, i, dimension));
 }
 
 function loadHistogram() {
@@ -354,3 +316,16 @@ function imageZoom() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.putImageData(new_imgd, 0, 0);
 }
+
+function geometric(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecGeometricMean(getPixRegionVec(copy, i, dimension));
+}
+
+function harmonic(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecHarmonicMean(getPixRegionVec(copy, i, dimension));
+}
+
+function counterHarmonic(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecCounterHarmonicMean(getPixRegionVec(copy, i, dimension), counterHarmonicFactor);
+}
+
