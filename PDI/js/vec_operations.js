@@ -22,6 +22,10 @@ function vecMin(vec) {
 	return vec.reduce(function(a, b) {return (a<=b)?a:b});
 }
 
+function vecMidPoint(vec) {
+	return (vecMin(vec)+vecMax(vec))/2;
+}
+
 function vecMean(vec) {
 	return vecCounterHarmonicMean(vec, 0);
 }
@@ -40,7 +44,7 @@ function vecGeometricMean(vec) {
 	for (let i in vec) {
 		mul *= vec[i];
 	}
-	return Math.pow(mul, 1/vec.length);
+	return Math.pow(mul, 1./vec.length);
 }
 
 function vecHarmonicMean(vec) {

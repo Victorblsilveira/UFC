@@ -337,4 +337,7 @@ function minFilter(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = vecMin(getPixRegionVec(copy, i, dimension));
 }
 
+function midPointFilter(copy, pixels, i) {
+	pixels[i] = pixels[i+1] = pixels[i+2] = vecMidPoint(getPixRegionVec(copy, i, dimension));
+}
 
