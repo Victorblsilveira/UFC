@@ -8,7 +8,7 @@ var matrix = new Matrix(3);
 var reductionFactor = 2;
 var counterHarmonicFactor = 0;
 var alphaTrimFactor = 0;
-var maxWindowSize = 25;
+var maxWindowSize = 9;
 google.charts.load("current", {packages:["corechart"]});
 
 var options = {
@@ -38,7 +38,7 @@ window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 
-	console.log(Matrix.getGaussian())
+	console.log(vecVariance([0,0,0,0,0.9361, 1, 0, 1, 1]));
 
 	$("#filters-simple").slideDown();
 
@@ -158,8 +158,8 @@ function updateReductionFactor(event){
 }
 
 function updateCounterHarmonicFactor(event) {
-	counterHarmonicFactor = parseInt(event.target.value)
-	document.getElementById("range_harmonic").innerHTML= counterHarmonicFactor;
+	counterHarmonicFactor = parseFloat(event.target.value)/2;
+	document.getElementById("range_harmonic").innerHTML = counterHarmonicFactor.toFixed(1);
 }
 
 function updateAlphaTrimFactor(event) {

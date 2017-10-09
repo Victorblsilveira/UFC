@@ -49,8 +49,8 @@ var Matrix = function(dim, start) {
 	self.getMean = function(){
 		var matriz_ = new Matrix(self.dim)
 		var sum = 0;
-		for (let i = 0; i < m1.getDim(); i++)
-			for (let j = 0; j < m1.getDim(); j++)
+		for (let i in self.matrix)
+			for (let j in self.matrix[i])
 				sum += self.matrix[i][j];
 
 		return sum / (dimension * dimension)

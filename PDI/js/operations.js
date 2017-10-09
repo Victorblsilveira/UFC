@@ -374,35 +374,24 @@ function levelB(pix, i, zMin, zMax, zMed) {
 	return zMed;
 }
 
-function adaptiveNoise(copy, pixels, i){
+function adaptiveNoise() {
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
 
-	var localMean;
-	var noiseVariance;
-	var localVariance;
-
-	localMean, localVariance, noiseVariance = meanMatrixValue(copy, pixels, i)
-	localVariance = Math.max(noiseVariance, localVariance);
-
-	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] - (noiseVariance/localVariance)*(pixels[i] - localMean);
-}
-
-function meanMatrixValue(copy, pixels, i){
-	var matriz_ = new Matrix(dimension, 1/(dimension*dimension))
-	let p = getIJFromPixel(i);
-	let radius = (matriz_.getDim()-1)/2;
-	let mean = 0;
-	var variance = 0;
-	var varianceMatriz = new Matrix(dimension,0);
-	for (let x = 0; x < matriz_.getDim(); x++) {
-		for (let y = 0; y < matriz_.getDim(); y++) {
-			_i = x - radius + p[0];
-			_j = y - radius + p[1];
-			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				mean = getMean(copy, getPixelIndex(_i, _j)) * matriz_.get(x, y);
-				variance = copy[getPixelIndex(_i, _j)] - (mean * mean)
-				varianceMatriz.set(x,y,variance)
-			}
-		}
+	variances = [];
+	for (let i = 0; i < pix.length/4; i++) {
+		vec = getPixRegionVec(pix, i*4, dimension);
+		variances[i] = vecVariance(vec);
 	}
-	return mean, variance, varianceMatriz.getMean()
+	overallNoise = vecMean(variances);
+
+	for (let i = 0; i < pix.length/4; i++) {
+		vec = getPixRegionVec(pix, i*4, dimension);
+		variances[i] = Math.max(variances[i], overallNoise);
+		b = getMean(pix, i*4);
+		pix[i*4] = pix[i*4+1] = pix[i*4+2] = b - (variances[i]/overallNoise) * (b - vecMean(vec));
+	}
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.putImageData(imgd, 0, 0);
 }

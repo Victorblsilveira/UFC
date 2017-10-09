@@ -144,10 +144,10 @@
               <button class="filter" onclick="applyFilter(event, this, geometric)">Geometric Mean</button>
               <button class="filter" onclick="applyFilter(event, this, harmonic)">Harmonic Mean</button>
               <button class="filter" onclick="applyFilter(event, this, adaptiveMedian)">Adaptive Median</button>
-              <button class="filter" onclick="applyFilter(event, this, adaptiveNoise)">Adaptive Local Noise</button>
+              <button class="filter" onclick="adaptiveNoise()">Adaptive Local Noise</button>
 
               <div class="limit -min">-10</div>
-                <input class="slidebar" type="range"  min="-10" max="10" value="0" onmousemove="updateCounterHarmonicFactor(event)"/>
+                <input class="slidebar" type="range"  min="-20" max="20" value="0" onmousemove="updateCounterHarmonicFactor(event)"/>
               <div class="limit -max">10</div>
               <button class="filter" onclick="applyFilter(event, this, counterHarmonic)">Counter Harmonic: (Q=<span id='range_harmonic'>0</span>)</button>
 

@@ -72,3 +72,15 @@ function vecAlphaTrim(vec, d) {
 	}
 	return sum / (vec.length - alpha*2);
 }
+
+function vecVariance(vec) {
+	return vecMean(vecSquared(vec)) - Math.pow(vecMean(vec), 2);
+}
+
+function vecSquared(vec) {
+	let newVec = [];
+	for (let i in vec) {
+		newVec[i] = vec[i] * vec[i];
+	}
+	return newVec;
+}
