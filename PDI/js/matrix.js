@@ -111,3 +111,25 @@ Matrix.getSobelY = function() {
 
 	return matriz_;
 };
+
+
+Matrix.getMean = function(){
+	var matriz_ = new Matrix(self.dim)
+	var sum = 0;
+	for (let i = 0; i < m1.getDim(); i++)
+		for (let j = 0; j < m1.getDim(); j++)
+		sum += self.matrix[i][j];
+
+	return sum / (dimension * dimension)
+}
+
+Matrix.getMeadian = function(){
+	var vector = []
+	for (let i = 0; i < self.dim; i++)
+		for (let j = 0; j < self.dim; j++)
+			vector.push(self.matrix[i][j])
+
+	vector.length % 2 != 0
+		return vector[(vector.length+1)/2]
+	return ((vector[vector.length/2]+vector[(vector.length/2)+1])/2)
+}
