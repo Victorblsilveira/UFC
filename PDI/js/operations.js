@@ -351,15 +351,27 @@ function alphaTrimFilter(copy, pixels, i) {
 }
 
 function adaptiveMedian(copy, pixels, i){
+	pixels[i] = pixels[i+1] = pixels[i+2] = levelA(copy, i, 3);
+}
 
-		var localMean;
-		var localMedian;
-		var noiseVariance;
-		var localVariance;
+function levelA(pix, i, dim) {
+	vec = getPixRegionVec(pix, i, dim);
+	zMin = vecMin(vec);
+	zMax = vecMax(vec);
+	zMed = vecMedian(vec);
+	A1 = zMed - zMin;
+	A2 = zMed - zMax;
+	if (A1 > 0 && A2 < 0) return levelB(pix, i, zMin, zMax, zMed);
+	if (dim + 2 <= maxWindowSize) return levelA(pix, i, dim + 2);
+	return getMean(pix, i);
+}
 
-  	localMean, localMedian, localVariance, noiseVariance = meanMatrixValue(copy, pixels)
-
-		pixels[i] = pixels[i+1] = pixels[i+2] = localMedian
+function levelB(pix, i, zMin, zMax, zMed) {
+	z = getMean(pix, i);
+	B1 = z - zMin;
+	B2 = z - zMax;
+	if (B1 > 0 && B2 < 0) return z;
+	return zMed;
 }
 
 function adaptiveNoise(copy, pixels, i){
@@ -369,9 +381,9 @@ function adaptiveNoise(copy, pixels, i){
 	var localVariance;
 
 	localMean, localVariance, noiseVariance = meanMatrixValue(copy, pixels, i)
-	localVariance = noiseVariance > localVariance ? noiseVariance : localVariance
+	localVariance = Math.max(noiseVariance, localVariance);
 
-	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] - (noiseVariance/localVariance)*(pixels[i] - localMean)
+	pixels[i] = pixels[i+1] = pixels[i+2] = pixels[i] - (noiseVariance/localVariance)*(pixels[i] - localMean);
 }
 
 function meanMatrixValue(copy, pixels, i){
@@ -392,27 +404,5 @@ function meanMatrixValue(copy, pixels, i){
 			}
 		}
 	}
-	return mean, variance, varianceMatriz.getMean
-}
-
-
-function medianMatrixValue(copy,pixels){
-	var matriz_ = Matriz.getMeanMatrix(dimension)
-	let p = getIJFromPixel(i);
-	let radius = (matriz_.getDim()-1)/2;
-	let mean = 0;
-	var varianceMatriz = new Matriz(dimension,0);
-	for (let x = 0; x < dimension; x++) {
-		for (let y = 0; y < dimension; y++) {
-			_i = x - radius + p[0];
-			_j = y - radius + p[1];
-			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				median = getMeadian(copy, getPixelIndex(_i, _j)) ;
-				mean = getMean(copy, getPixelIndex(_i, _j)) * matriz_.get(x, y);
-				variance = copy[getPixelIndex(_i, _j)] - (mean * mean)
-				varianceMatriz.set(x,y,variance)
-			}
-		}
-	}
-	return mean, median, variance, varianceMatriz.getMeadian
+	return mean, variance, varianceMatriz.getMean()
 }

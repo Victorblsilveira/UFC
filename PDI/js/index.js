@@ -8,6 +8,7 @@ var matrix = new Matrix(3);
 var reductionFactor = 2;
 var counterHarmonicFactor = 0;
 var alphaTrimFactor = 0;
+var maxWindowSize = 25;
 google.charts.load("current", {packages:["corechart"]});
 
 var options = {
