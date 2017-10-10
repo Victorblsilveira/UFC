@@ -389,7 +389,7 @@ function adaptiveNoise() {
 		vec = getPixRegionVec(pix, i*4, dimension);
 		variances[i] = Math.max(variances[i], overallNoise);
 		b = getMean(pix, i*4);
-		pix[i*4] = pix[i*4+1] = pix[i*4+2] = b - (variances[i]/overallNoise) * (b - vecMean(vec));
+		pix[i*4] = pix[i*4+1] = pix[i*4+2] = b - (overallNoise/variances[i]) * (b - vecMean(vec));
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
