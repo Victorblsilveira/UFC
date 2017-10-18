@@ -4,10 +4,13 @@
     <head>
         <meta charset="utf-8">
         <script src="js/jquery-3.2.1.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+
         <script type="text/javascript" src="js/matrix.js"></script>
         <script type="text/javascript" src="js/math.js"></script>
         <script type="text/javascript" src="js/wheel.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript" src="js/color_operations.js"></script>
         <script type="text/javascript" src="js/vec_operations.js"></script>
         <script type="text/javascript" src="js/operations.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -200,6 +203,25 @@
                       <div><label>HEX</label> <input type="text" id="hexVal" /></div>
                   </div>
               </div>
+
+              <div>
+              	<div class="sliders-container">
+              		<input id="r_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateR, event)"/>
+              		<input id="g_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateG, event)"/>
+              		<input id="b_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateB, event)"/>
+              	</div>
+              	<div class="sliders-container">
+              		<input id="h_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateH, event)"/>
+              		<input id="s_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateS, event)"/>
+              		<input id="i_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateI, event)"/>
+              	</div>
+              	<div class="sliders-container">
+              		<input id="c_slide" class="slidebar" type="range" min="0" max="255" value="255" onmousemove="updateColors(updateC, event)"/>
+              		<input id="m_slide" class="slidebar" type="range" min="0" max="255" value="255" onmousemove="updateColors(updateM, event)"/>
+              		<input id="y_slide" class="slidebar" type="range" min="0" max="255" value="255" onmousemove="updateColors(updateY, event)"/>
+              	</div>
+              </div>
+
             </div>
 	      	</div>
 

@@ -34,11 +34,15 @@ var highPassMatrix = Matrix.getHighPass();
 var sobelXMatrix = Matrix.getSobelX();
 var sobelYMatrix = Matrix.getSobelY();
 
+var rgb = [0, 0, 0];
+var hsi = [0, 0, 0];
+var cmy = [255, 255, 255];
+
 window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 
-	console.log(vecVariance([0,0,0,0,0.9361, 1, 0, 1, 1]));
+	console.log(rgb, hsi, cmy);
 
 	$("#filters-simple").slideDown();
 
@@ -46,6 +50,8 @@ window.onload = function(){
 	histo_2 = new google.visualization.ColumnChart(document.getElementById('histo_2'));
 
 	createMatrix();
+
+	$(initializeColorSlides);
 }
 
 function handleImage(e){
@@ -183,4 +189,81 @@ function createMatrix(){
 	 var matriz = document.getElementById('matriz')
 	 matriz.innerHTML = html
 	 matriz.value = ''
+}
+
+function updateColors(func, event) {
+	func(event);
+	updateColorSlides();
+}
+
+function updateR(event) {
+	rgb[0] = +event.target.value;
+	hsi = RGBtoHSI(rgb);
+	cmy = colorNegative(rgb);
+}
+function updateG(event) {
+	rgb[1] = +event.target.value;
+	hsi = RGBtoHSI(rgb);
+	cmy = colorNegative(rgb);
+}
+function updateB(event) {
+	rgb[2] = +event.target.value;
+	hsi = RGBtoHSI(rgb);
+	cmy = colorNegative(rgb);
+}
+
+function updateH(event) {
+	hsi[0] = +event.target.value;
+	rgb = HSItoRGB(hsi);
+	cmy = colorNegative(rgb);
+}
+function updateS(event) {
+	hsi[1] = +event.target.value;
+	rgb = HSItoRGB(hsi);
+	cmy = colorNegative(rgb);
+}
+function updateI(event) {
+	hsi[2] = +event.target.value;
+	rgb = HSItoRGB(hsi);
+	cmy = colorNegative(rgb);
+}
+
+function updateC(event) {
+	cmy[0] = +event.target.value;
+	rgb = colorNegative(cmy);
+	hsi = RGBtoHSI(rgb);
+}
+function updateM(event) {
+	cmy[1] = +event.target.value;
+	rgb = colorNegative(cmy);
+	hsi = RGBtoHSI(rgb);
+}
+function updateY(event) {
+	cmy[2] = +event.target.value;
+	rgb = colorNegative(cmy);
+	hsi = RGBtoHSI(rgb);
+}
+
+function initializeColorSlides() {
+	$('#r_slide').slider({value: 0});
+	$('#g_slide').slider({value: 0});
+	$('#b_slide').slider({value: 0});
+	$('#h_slide').slider({value: 0});
+	$('#s_slide').slider({value: 0});
+	$('#i_slide').slider({value: 0});
+	$('#c_slide').slider({value: 255});
+	$('#m_slide').slider({value: 255});
+	$('#y_slide').slider({value: 255});
+}
+
+function updateColorSlides() {
+	$('#r_slide').val(rgb[0]);
+	$('#g_slide').val(rgb[1]);
+	$('#b_slide').val(rgb[2]);
+	$('#h_slide').val(hsi[0]);
+	$('#s_slide').val(hsi[1]);
+	$('#i_slide').val(hsi[2]);
+	$('#c_slide').val(cmy[0]);
+	$('#m_slide').val(cmy[1]);
+	$('#y_slide').val(cmy[2]);
 }

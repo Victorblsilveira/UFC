@@ -22,8 +22,8 @@ body{
 
 .head-wrapper {
 	width: 200px;
-	padding-top: 12px;
-	padding-bottom: 12px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 	text-align: center;
 	color: #888888;
 	font-weight: bold;
@@ -240,4 +240,9 @@ body{
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.sliders-container {
+	width: 30%;
+	display: inline-block;
 }
