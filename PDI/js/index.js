@@ -83,7 +83,7 @@ function handleImage(e){
 }
 
 function onFilterBlockClick(elementId) {
-	let id = "#" + elementId; 
+	let id = "#" + elementId;
 	let isOpen = $(id).is(":visible");
 	$(".filter-block").slideUp();
 	if (!isOpen) $(id).slideDown();
@@ -199,48 +199,54 @@ function updateColors(func, event) {
 function updateR(event) {
 	rgb[0] = +event.target.value;
 	hsi = RGBtoHSI(rgb);
-	cmy = colorNegative(rgb);
+  cmy = RGBtoCMY(rgb)
+	//cmy = colorNegative(rgb);
 }
 function updateG(event) {
 	rgb[1] = +event.target.value;
 	hsi = RGBtoHSI(rgb);
-	cmy = colorNegative(rgb);
+  cmy = RGBtoCMY(rgb)
+	//cmy = colorNegative(rgb);
 }
 function updateB(event) {
 	rgb[2] = +event.target.value;
 	hsi = RGBtoHSI(rgb);
-	cmy = colorNegative(rgb);
+  cmy = RGBtoCMY(rgb)
+	//cmy = colorNegative(rgb);
 }
 
 function updateH(event) {
 	hsi[0] = +event.target.value;
 	rgb = HSItoRGB(hsi);
-	cmy = colorNegative(rgb);
+  cmy = RGBtoCMY(rgb)
+	//cmy = colorNegative(rgb);
 }
 function updateS(event) {
 	hsi[1] = +event.target.value;
 	rgb = HSItoRGB(hsi);
-	cmy = colorNegative(rgb);
+  cmy = RGBtoCMY(rgb)
+	//cmy = colorNegative(rgb);
 }
 function updateI(event) {
 	hsi[2] = +event.target.value;
 	rgb = HSItoRGB(hsi);
-	cmy = colorNegative(rgb);
+  cmy = RGBtoCMY(rgb)
+	//cmy = colorNegative(rgb);
 }
 
 function updateC(event) {
-	cmy[0] = +event.target.value;
-	rgb = colorNegative(cmy);
+	cmy[0] = 1 - parseInt(event.target.value)/255;
+	rgb = CMYtoRGB(cmy);
 	hsi = RGBtoHSI(rgb);
 }
 function updateM(event) {
-	cmy[1] = +event.target.value;
-	rgb = colorNegative(cmy);
+	cmy[1] = 1 - parseInt(event.target.value)/255;
+	rgb = CMYtoRGB(cmy);
 	hsi = RGBtoHSI(rgb);
 }
 function updateY(event) {
-	cmy[2] = +event.target.value;
-	rgb = colorNegative(cmy);
+	cmy[2] = 1 - parseInt(event.target.value)/255;
+	rgb = CMYtoRGB(cmy);
 	hsi = RGBtoHSI(rgb);
 }
 
@@ -263,7 +269,7 @@ function updateColorSlides() {
 	$('#h_slide').val(hsi[0]);
 	$('#s_slide').val(hsi[1]);
 	$('#i_slide').val(hsi[2]);
-	$('#c_slide').val(cmy[0]);
-	$('#m_slide').val(cmy[1]);
-	$('#y_slide').val(cmy[2]);
+	$('#c_slide').val((1-cmy[0])*255);
+	$('#m_slide').val((1-cmy[1])*255);
+	$('#y_slide').val((1-cmy[2])*255);
 }

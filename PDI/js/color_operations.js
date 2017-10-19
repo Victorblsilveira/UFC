@@ -51,3 +51,10 @@ function roundVec(x, y, z) {
 	return [Math.round(x), Math.round(y), Math.round(z)];
 }
 
+function RGBtoCMY(rgb){
+	return roundVec(1-(rgb[0]/255.0), 1-(rgb[1]/255.0), 1-(rgb[2]/255.0))
+}
+
+function CMYtoRGB(cmy){
+	return roundVec((1-cmy[0])*255, (1-cmy[1])*255, (1-cmy[2])*255)
+}
