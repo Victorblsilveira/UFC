@@ -442,3 +442,42 @@ function adaptiveNoise() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.putImageData(imgd, 0, 0);
 }
+//Equivalente a Filtro de Média qnd fator de redução < 1
+// E ao laplaciano qnd fator de redução > 1
+function intReduction(copy, pixels, i){
+   var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	 HSI[2] = HSI[2] * 0.95
+	 let RGB = HSItoRGB(HSI)
+	 pixels[i] 	 = RGB[0]
+	 pixels[i+1] = RGB[1]
+	 pixels[i+2] = RGB[2]
+}
+
+function intImprovment(copy, pixels, i){
+   var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	 HSI[2] = HSI[2] * 1.05
+	 let RGB = HSItoRGB(HSI)
+	 pixels[i] 	 = RGB[0]
+	 pixels[i+1] = RGB[1]
+	 pixels[i+2] = RGB[2]
+}
+
+function hubImprovment(copy, pixels, i){
+	var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	HSI[0] = HSI[0] > 0 ? HSI[0]*2 : 1
+	let RGB = HSItoRGB(HSI)
+	pixels[i] 	= RGB[0]
+	pixels[i+1] = RGB[1]
+	pixels[i+2] = RGB[2]
+}
+
+function hsiNoiseRed(copy, pixels, i){
+	var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	HSI[0] = 0
+	HSI[1] = 0
+	HSI[2] = HSI[2] * 1.10
+	let RGB = HSItoRGB(HSI)
+	pixels[i] 	= RGB[0]
+	pixels[i+1] = RGB[1]
+	pixels[i+2] = RGB[2]
+}
