@@ -41,14 +41,32 @@ function potenc(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = Math.pow(mean, lambda) * 255;
 }
 
+function potencColor(copy, pixels, i) {
+	pixels[i] = Math.pow(copy[i] / 255, lambda) * 255;
+	pixels[i+1] = Math.pow(copy[i+1] / 255, lambda) * 255;
+	pixels[i+2] = Math.pow(copy[i+2] / 255, lambda) * 255;
+}
+
 function log(copy, pixels, i) {
 	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = constant * Math.log(1+mean) * 255;
 }
 
+function logColor(copy, pixels, i) {
+	pixels[i] = constant * Math.log(1+copy[i]/255) * 255;
+	pixels[i+1] = constant * Math.log(1+copy[i+1]/255) * 255;
+	pixels[i+2] = constant * Math.log(1+copy[i+2]/255) * 255;
+}
+
 function inverse_log(copy, pixels, i) {
 	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = (Math.exp(mean) - 1) / constant * 255;
+}
+
+function inverse_logColor(copy, pixels, i) {
+	pixels[i] = (Math.exp(copy[i]/255) - 1) / constant * 255;
+	pixels[i+1] = (Math.exp(copy[i+1]/255) - 1) / constant * 255;
+	pixels[i+2] = (Math.exp(copy[i+2]/255) - 1) / constant * 255;
 }
 
 function limiar(copy, pixels, i) {
@@ -100,6 +118,12 @@ function subtract(copy, pixels, i) {
 function normalizeHistogram(copy, pixels, i) {
 	mean = parseInt(getMean(copy, i));
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
+}
+
+function normalizeHistogramColor(copy, pixels, i) {
+	pixels[i] = histogramNormalizerR[copy[i]];
+	pixels[i+1] = histogramNormalizerG[copy[i+1]];
+	pixels[i+2] = histogramNormalizerB[copy[i+2]];
 }
 
 function convolution(copy, pixels, i, matriz_) {
@@ -194,18 +218,41 @@ function loadHistogram() {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	histogram = [];
-	for (var i = 0; i < 256; i++) histogram[i] = [i, 0];
+	histogramR = [];
+	histogramG = [];
+	histogramB = [];
+	for (var i = 0; i < 256; i++) {
+		histogram[i] = [i, 0];
+		histogramR[i] = [i, 0];
+		histogramG[i] = [i, 0];
+		histogramB[i] = [i, 0];
+	}
 
 	for (var i = 0; i < pix.length; i+=4) {
 		mean = parseInt(getMean(pix, i));
 		histogram[mean][1] += 1;
+		histogramR[pix[i]][1] += 1;
+		histogramG[pix[i+1]][1] += 1;
+		histogramB[pix[i+2]][1] += 1;
 	}
 	histogramNormalizer = [];
+	histogramNormalizerR = [];
+	histogramNormalizerG = [];
+	histogramNormalizerB = [];
 	sum = pix.length/4;
 	acc = 0;
+	accR = 0;
+	accG = 0;
+	accB = 0;
 	for (var i = 0; i < 256; i++) {
 		acc += histogram[i][1];
+		accR += histogramR[i][1];
+		accG += histogramG[i][1];
+		accB += histogramB[i][1];
 		histogramNormalizer[i] = Math.round(255 * acc/sum);
+		histogramNormalizerR[i] = Math.round(255 * accR/sum);
+		histogramNormalizerG[i] = Math.round(255 * accG/sum);
+		histogramNormalizerB[i] = Math.round(255 * accB/sum);
 	}
 }
 

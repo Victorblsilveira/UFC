@@ -187,14 +187,14 @@
 
 
             <div class="head-wrapper" onclick="onFilterBlockClick('color-wheel')">
-	            <label class="head" >Color Wheel</label>
+	            <label class="head" >Color Operations</label>
 	            <b class="caret"></b>
 	          </div>
             <div id='color-wheel' class="filter-block">
-              <div class="preview"></div>
+              <div id="preview" class="preview"></div>
               <!-- colorpicker element -->
               <div class="colorpicker" style="display:none">
-                  <canvas id="picker" var="1" width="300" height="300"></canvas>
+                  <canvas id="picker" var="4" width="300" height="300"></canvas>
                   <div class="controls">
                       <div><label>R</label> <input type="text" id="rVal" /></div>
                       <div><label>G</label> <input type="text" id="gVal" /></div>
@@ -206,21 +206,82 @@
 
               <div>
               	<div class="sliders-container">
-              		<input id="r_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateR, event)"/>
-              		<input id="g_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateG, event)"/>
-              		<input id="b_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateB, event)"/>
+              		<div class="color-slide">
+              			<h5>R:</h5>
+	              		<input id="r_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateR, event)"/>
+	              	</div>
+              		<div class="color-slide">
+              			<h5>G:</h5>
+	              		<input id="g_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateG, event)"/>
+	              	</div>
+              		<div class="color-slide">
+              			<h5>B:</h5>
+	              		<input id="b_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateB, event)"/>
+	              	</div>
               	</div>
               	<div class="sliders-container">
-              		<input id="h_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateH, event)"/>
-              		<input id="s_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateS, event)"/>
-              		<input id="i_slide" class="slidebar" type="range" min="0" max="255" value="0" onmousemove="updateColors(updateI, event)"/>
+              		<div class="color-slide">
+              			<h5>H:</h5>
+	              		<input id="h_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateH, event)"/>
+	              	</div>
+              		<div class="color-slide">
+              			<h5>S:</h5>
+	              		<input id="s_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateS, event)"/>
+	              	</div>
+              		<div class="color-slide">
+              			<h5>I:</h5>
+	              		<input id="i_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateI, event)"/>
+	              	</div>
               	</div>
               	<div class="sliders-container">
-              		<input id="c_slide" class="slidebar" type="range" min="0" max="255" value="255" onmousemove="updateColors(updateC, event)"/>
-              		<input id="m_slide" class="slidebar" type="range" min="0" max="255" value="255" onmousemove="updateColors(updateM, event)"/>
-              		<input id="y_slide" class="slidebar" type="range" min="0" max="255" value="255" onmousemove="updateColors(updateY, event)"/>
+              		<div class="color-slide">
+              			<h5>C:</h5>
+	              		<input id="c_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateC, event)"/>
+	              	</div>
+              		<div class="color-slide">
+
+              			<h5>M:</h5>
+	              		<input id="m_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateM, event)"/>
+	              	</div>
+              		<div class="color-slide">
+              			<h5>Y:</h5>
+	              		<input id="y_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateY, event)"/>
+	              	</div>
               	</div>
               </div>
+
+              <div>
+	              <div class="limit -min">0</div>
+	              <input class="slidebar" type="range" min="0" max="500" value="250" onmousemove="updateChromaValue(event)" style="margin-top: 12px;"/>
+	              <div class="limit -max">50</div>
+
+	              <label class="head-wrapper" id="image-picker-label2" class="head" for="image-picker2">
+			      			<img id="img-icon" src="img_icon.png"/>
+			      			Escolher Substituto
+			      		</label>
+			        	<input id="image-picker2" onchange="handleImage2(event)" type="file" />
+			        	<button class="filter" onclick="runChroma()">Run Chroma</button>
+
+			        	<div class="">
+	                <button class="filter" onclick="applyFilter(event, this, potencColor)">Potency(C) (lambda=<span id='range_potenc'>1.00</span>)</button>
+	                <div class="limit -min">0.1</div>
+	                <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
+	                <div class="limit -max">10</div>
+	              </div>
+
+	              <div class="">
+	                <button class="filter" onclick="applyFilter(event, this, logColor)">Log(C) (C=<span id='range_log'>11</span>)</button>
+	                <div class="limit -min">1</div>
+	                <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
+	                <div class="limit -max">20</div>
+	              </div>
+
+
+	              <button class="filter" onclick="applyFilter(event, this, inverse_logColor)">Inverse Log(C)</button>
+
+	              <button class="filter" onclick="applyFilter(event, this, normalizeHistogramColor)">Equalizar(C)</button>
+	            </div>
+
 
             </div>
 	      	</div>

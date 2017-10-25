@@ -10,10 +10,12 @@ function RGBtoHSI(rgb) {
 		: (cMax == r) ? 60 * (((g-b)/delta)%6)
 		: (cMax == g) ? 60 * (((b-r)/delta) + 2)
 		: 60 * (((r-g)/delta) + 4);
+	H = H<0 ? H+360 : H;
 	H /= 360;
 	S = (cMax == 0) ? 0 : delta/cMax;
+	//S = cMean < 0.5 ? delta/(cMax+cMin) : delta / (2 - cMax - cMin);
 	I = (r+g+b)/3;
-	return roundVec(H*255, S*255, I*255);
+	return [H*255, S*255, I*255];
 }
 
 function toRad(theta) {
@@ -22,39 +24,38 @@ function toRad(theta) {
 
 function HSItoRGB(hsi) {
 	h = hsi[0]*360/255;
-	s = hsi[1]/255;
-	i = hsi[2]/255;
-	x1 = (1-s)/3;
-	x2 = (1 + s*Math.cos(toRad(h))/Math.cos(toRad(60-h)))/3;
-	x3 = 1-x1-x2;
+	s = Math.min(hsi[1]/255, 1);
+	i = Math.min(hsi[2]/255, 1);
+	if (s == 0) return [i*255, i*255, i*255];
 	if (h < 120) {
-		b = x1;
-		r = x2;
-		g = x3;
+		b = (1-s)/3;
+		r = (1 + s*Math.cos(toRad(h))/Math.cos(toRad(60-h)))/3;
+		g = 1-r-b;
 	} else if (h < 240) {
-		r = x1;
-		g = x2;
-		b = x3;
+		h -= 120;
+		r = (1-s)/3;
+		g = (1 + s*Math.cos(toRad(h))/Math.cos(toRad(60-h)))/3;
+		b = 1-g-r;
 	} else {
-		g = x1;
-		b = x2;
-		r = x3;
+		h -= 240;
+		g = (1-s)/3;
+		b = (1 + s*Math.cos(toRad(h))/Math.cos(toRad(60-h)))/3;
+		r = 1-b-g;
 	}
-	return roundVec(3*i*r*255, 3*i*g*255, 3*i*b*255);
+	r = Math.max(0, Math.min(r, 1));
+	g = Math.max(0, Math.min(g, 1));
+	b = Math.max(0, Math.min(b, 1));
+	return [3*i*r*255, 3*i*g*255, 3*i*b*255];
 }
 
 function colorNegative(xyz) {
-	return roundVec(255-xyz[0], 255-xyz[1], 255-xyz[2]);
-}
-
-function roundVec(x, y, z) {
-	return [Math.round(x), Math.round(y), Math.round(z)];
+	return [255-xyz[0], 255-xyz[1], 255-xyz[2]];
 }
 
 function RGBtoCMY(rgb){
-	return roundVec(1-(rgb[0]/255.0), 1-(rgb[1]/255.0), 1-(rgb[2]/255.0))
+	return colorNegative(rgb);
 }
 
 function CMYtoRGB(cmy){
-	return roundVec((1-cmy[0])*255, (1-cmy[1])*255, (1-cmy[2])*255)
+	return colorNegative(cmy);
 }

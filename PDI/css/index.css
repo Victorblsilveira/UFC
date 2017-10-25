@@ -50,7 +50,21 @@ body{
 	vertical-align: middle;
 }
 
+#image-picker-label2 {
+	width: 200px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	display: inline-table;
+	vertical-align: middle;
+}
+
 #image-picker {
+  width: 100%;
+  color: white;
+  display: none;
+}
+
+#image-picker2 {
   width: 100%;
   color: white;
   display: none;
@@ -243,6 +257,24 @@ body{
 }
 
 .sliders-container {
-	width: 30%;
+	width: 32%;
 	display: inline-block;
+}
+
+.color-slide {
+	display: inline-table;
+	vertical-align: middle;
+}
+
+#preview {
+	display: inline-block;
+	margin: 0px 10px;
+}
+
+h5 {
+	width: 20px;
+	color: white;
+	display: inline-table;
+	vertical-align: super;
+	padding-right: 2px;
 }

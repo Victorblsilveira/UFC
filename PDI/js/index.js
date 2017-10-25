@@ -1,8 +1,17 @@
 var img = new Image();
 var ctx;
 var canvas;
+
 var histogram;
 var histogramNormalizer;
+
+var histogramR;
+var histogramNormalizerR;
+var histogramG;
+var histogramNormalizerG;
+var histogramB;
+var histogramNormalizerB;
+
 var dimension = 3;
 var matrix = new Matrix(3);
 var reductionFactor = 2;
@@ -37,12 +46,12 @@ var sobelYMatrix = Matrix.getSobelY();
 var rgb = [0, 0, 0];
 var hsi = [0, 0, 0];
 var cmy = [255, 255, 255];
+var chromaValue = 25;
+var chromaPath;
 
 window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
-
-	console.log(rgb, hsi, cmy);
 
 	$("#filters-simple").slideDown();
 
@@ -80,6 +89,11 @@ function handleImage(e){
     }
     reader.readAsDataURL(e.target.files[0]);
 
+}
+
+function handleImage2(e){
+	chromaPath = './img/' +  e.target.files[0].name;
+	console.log(chromaPath);
 }
 
 function onFilterBlockClick(elementId) {
@@ -191,63 +205,58 @@ function createMatrix(){
 	 matriz.value = ''
 }
 
+function updatePreview(rgb){
+	$('#preview').css('backgroundColor', "rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+")");
+}
+
 function updateColors(func, event) {
+	event.stopPropagation()
 	func(event);
+	updateBasedOnRGB();
+}
+
+function updateBasedOnRGB() {
+	hsi = RGBtoHSI(rgb);
+	cmy = RGBtoCMY(rgb);
 	updateColorSlides();
+	updatePreview(rgb);
+	//console.log(hsi);
 }
 
 function updateR(event) {
-	rgb[0] = +event.target.value;
-	hsi = RGBtoHSI(rgb);
-  cmy = RGBtoCMY(rgb)
-	//cmy = colorNegative(rgb);
+	rgb[0] = event.target.value/1000;
 }
 function updateG(event) {
-	rgb[1] = +event.target.value;
-	hsi = RGBtoHSI(rgb);
-  cmy = RGBtoCMY(rgb)
-	//cmy = colorNegative(rgb);
+	rgb[1] = event.target.value/1000;
 }
 function updateB(event) {
-	rgb[2] = +event.target.value;
-	hsi = RGBtoHSI(rgb);
-  cmy = RGBtoCMY(rgb)
-	//cmy = colorNegative(rgb);
+	rgb[2] = event.target.value/1000;
 }
 
 function updateH(event) {
-	hsi[0] = +event.target.value;
+	hsi[0] = event.target.value/1000;
 	rgb = HSItoRGB(hsi);
-  cmy = RGBtoCMY(rgb)
-	//cmy = colorNegative(rgb);
 }
 function updateS(event) {
-	hsi[1] = +event.target.value;
+	hsi[1] = event.target.value/1000;
 	rgb = HSItoRGB(hsi);
-  cmy = RGBtoCMY(rgb)
-	//cmy = colorNegative(rgb);
 }
 function updateI(event) {
-	hsi[2] = +event.target.value;
+	hsi[2] = event.target.value/1000;
 	rgb = HSItoRGB(hsi);
-  cmy = RGBtoCMY(rgb)
-	//cmy = colorNegative(rgb);
 }
 
 function updateC(event) {
-	cmy[0] = 1 - parseInt(event.target.value)/255;
+	cmy[0] = event.target.value/1000;
 	rgb = CMYtoRGB(cmy);
-	hsi = RGBtoHSI(rgb);
 }
 function updateM(event) {
-	cmy[1] = 1 - parseInt(event.target.value)/255;
-	rgb = CMYtoRGB(cmy);
-	hsi = RGBtoHSI(rgb);
+	cmy[1] = event.target.value/1000;
+	rgb = CMYtoRGB(cmy)
 }
 function updateY(event) {
-	cmy[2] = 1 - parseInt(event.target.value)/255;
+	cmy[2] = event.target.value/1000;
 	rgb = CMYtoRGB(cmy);
-	hsi = RGBtoHSI(rgb);
 }
 
 function initializeColorSlides() {
@@ -257,19 +266,47 @@ function initializeColorSlides() {
 	$('#h_slide').slider({value: 0});
 	$('#s_slide').slider({value: 0});
 	$('#i_slide').slider({value: 0});
-	$('#c_slide').slider({value: 255});
-	$('#m_slide').slider({value: 255});
-	$('#y_slide').slider({value: 255});
+	$('#c_slide').slider({value: 255000});
+	$('#m_slide').slider({value: 255000});
+	$('#y_slide').slider({value: 255000});
 }
 
 function updateColorSlides() {
-	$('#r_slide').val(rgb[0]);
-	$('#g_slide').val(rgb[1]);
-	$('#b_slide').val(rgb[2]);
-	$('#h_slide').val(hsi[0]);
-	$('#s_slide').val(hsi[1]);
-	$('#i_slide').val(hsi[2]);
-	$('#c_slide').val((1-cmy[0])*255);
-	$('#m_slide').val((1-cmy[1])*255);
-	$('#y_slide').val((1-cmy[2])*255);
+	$('#r_slide').val(rgb[0]*1000);
+	$('#g_slide').val(rgb[1]*1000);
+	$('#b_slide').val(rgb[2]*1000);
+	$('#h_slide').val(hsi[0]*1000);
+	$('#s_slide').val(hsi[1]*1000);
+	$('#i_slide').val(hsi[2]*1000);
+	$('#c_slide').val(cmy[0]*1000);
+	$('#m_slide').val(cmy[1]*1000);
+	$('#y_slide').val(cmy[2]*1000);
 }
+
+function updateChromaValue(event) {
+	chromaValue = event.target.value/10;
+}
+
+function runChroma() {
+	if (chromaPath != undefined) {
+
+		var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		var pix = imgd.data;
+
+		for (var i = 0; i < pix.length; i+=4) {
+			let aux = RGBtoHSI([pix[i], pix[i+1], pix[i+2]]);
+			let weights = [20, 5, 1];
+			let weightSum = weights[0]+weights[1]+weights[2];
+			let diff =(Math.abs(hsi[0]-aux[0])*weights[0] + Math.abs(hsi[1]-aux[1])*weights[1] + Math.abs(hsi[2]-aux[2])*weights[2])/weightSum;
+			if (diff < chromaValue) {
+				pix[i+3] = 0;
+			}
+		}
+
+		ctx.putImageData(imgd, 0, 0);
+
+		$('#canvas').css('background-image', 'url(' + chromaPath + ')');
+	}
+}
+
+
