@@ -143,8 +143,34 @@ function convolution(copy, pixels, i, matriz_) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val);
 }
 
+function convolution_hsi(copy, pixels, i, matriz_) {
+	if (matriz_ == undefined) matriz_ = matriz;
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let val = 0;
+	let hsi = RGBtoHSI(p)
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				hsi[2] += hsi[2] * matriz_.get(x, y);
+			}
+		}
+	}
+	let result = HSItoRGB(hsi)
+	pixels[i] = result[0]
+	pixels[i+1] = result[1]
+	pixels[i+2] = result[2]
+}
+
+
 function meanFilter(copy, pixels, i) {
 	convolution(copy, pixels, i, meanMatrix)
+}
+
+function meanHsi(copy, pixels, i){
+	convolution_hsi(copy, pixels, i, meanMatrix)
 }
 
 function meanFilterColored(copy, pixels, i) {
@@ -460,15 +486,6 @@ function intImprovment(copy, pixels, i){
 	 pixels[i] 	 = RGB[0]
 	 pixels[i+1] = RGB[1]
 	 pixels[i+2] = RGB[2]
-}
-
-function hubImprovment(copy, pixels, i){
-	var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
-	HSI[0] = HSI[0] > 0 ? HSI[0]*2 : 1
-	let RGB = HSItoRGB(HSI)
-	pixels[i] 	= RGB[0]
-	pixels[i+1] = RGB[1]
-	pixels[i+2] = RGB[2]
 }
 
 function hsiNoiseRed(copy, pixels, i){
