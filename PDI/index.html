@@ -21,7 +21,7 @@
 
     <body>
 
-      <section class="container">
+      <section class="container scrollbar" id="style-1">
 
       	<div id="menu">
       		<label class="head-wrapper" id="image-picker-label" class="head" for="image-picker">
@@ -30,7 +30,7 @@
       		</label>
         	<input id="image-picker" onchange="handleImage(event)" type="file" />
 
-        	<HR color="grey" style="padding-top: 1px; padding-bottom: 1px; margin-top: 24px;"></HR>
+        	<HR color="grey" style="padding-top: 1px; padding-bottom: 1px; margin-top: 24px; width: 115%;"></HR>
 
 	        <div class="filter-options">
 
@@ -285,7 +285,13 @@
 
                 <button class="filter" onclick="applyFilter(event, this, intImprovment)">Aumento de Brilho</button>
 
+                <button class="filter" onclick="applyFilter(event, this, meanFilterColored)">RGB Mean</button>
+
                 <button class="filter" onclick="applyFilter(event, this, meanHsi)">HSI Mean</button>
+
+                <button class="filter" onclick="applyFilter(event, this, laplacianRgb)">RGB Laplacian</button>
+
+                <button class="filter" onclick="applyFilter(event, this, laplacianHsi)">HSI Laplacian</button>
 	            </div>
 
 

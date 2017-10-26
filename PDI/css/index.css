@@ -18,6 +18,10 @@ body{
 	padding-top: 24px;
 	text-align: center;
 	float: left;
+	overflow-y: scroll;
+	direction: rtl;
+    margin-left: -25px;
+    padding-left: 30px;
 }
 
 .head-wrapper {

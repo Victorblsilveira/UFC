@@ -1,3 +1,4 @@
+var laplacianMatrix;
 
 function applyFilter(event, element, filter) {
 	event.stopPropagation()
@@ -145,25 +146,59 @@ function convolution(copy, pixels, i, matriz_) {
 
 function convolution_hsi(copy, pixels, i, matriz_) {
 	if (matriz_ == undefined) matriz_ = matriz;
+	let rgb_central = [copy[i], copy[i+1], copy[i+2]];
+	let hsi_central = RGBtoHSI(rgb_central);
 	let p = getIJFromPixel(i);
 	let radius = (matriz_.getDim()-1)/2;
-	let val = 0;
-	let hsi = RGBtoHSI(p)
+	let valH = 0;
+	let valS = 0;
+	let valI = 0;
 	for (let x = 0; x < matriz_.getDim(); x++) {
 		for (let y = 0; y < matriz_.getDim(); y++) {
 			_i = x - radius + p[0];
 			_j = y - radius + p[1];
 			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
-				hsi[2] += hsi[2] * matriz_.get(x, y);
+				let idx = getPixelIndex(_i, _j);
+				let _rgb = [copy[idx], copy[idx+1], copy[idx+2]];
+				var _hsi = RGBtoHSI(_rgb);
+				valH += _hsi[0] * matriz_.get(x, y);
+				valS += _hsi[1] * matriz_.get(x, y);
+				valI += _hsi[2] * matriz_.get(x, y);
 			}
 		}
 	}
-	let result = HSItoRGB(hsi)
+	//hsi_central[0] = valH;
+	//hsi_central[1] = valS;
+	hsi_central[2] = valI;
+	let result = HSItoRGB(hsi_central);
 	pixels[i] = result[0]
 	pixels[i+1] = result[1]
 	pixels[i+2] = result[2]
 }
 
+function convolution_rgb(copy, pixels, i, matriz_) {
+	if (matriz_ == undefined) matriz_ = matriz;
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let valR = 0;
+	let valG = 0;
+	let valB = 0;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				let idx = getPixelIndex(_i, _j);
+				valR += copy[idx] * matriz_.get(x, y);
+				valG += copy[idx+1] * matriz_.get(x, y);
+				valB += copy[idx+2] * matriz_.get(x, y);
+			}
+		}
+	}
+	pixels[i] = valR;
+	pixels[i+1] = valG;
+	pixels[i+2] = valB;
+}
 
 function meanFilter(copy, pixels, i) {
 	convolution(copy, pixels, i, meanMatrix)
@@ -171,6 +206,20 @@ function meanFilter(copy, pixels, i) {
 
 function meanHsi(copy, pixels, i){
 	convolution_hsi(copy, pixels, i, meanMatrix)
+}
+
+function laplacianHsi(copy, pixels, i){
+	convolution_hsi(copy, pixels, i, highPassMatrix)
+	pixels[i] += copy[i];
+	pixels[i+1] += copy[i+1];
+	pixels[i+2] += copy[i+2];
+}
+
+function laplacianRgb(copy, pixels, i){
+	convolution_rgb(copy, pixels, i, highPassMatrix)
+	pixels[i] += copy[i];
+	pixels[i+1] += copy[i+1];
+	pixels[i+2] += copy[i+2];
 }
 
 function meanFilterColored(copy, pixels, i) {
