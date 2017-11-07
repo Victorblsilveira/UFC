@@ -519,13 +519,47 @@ function adaptiveNoise() {
 }
 
 function haarTransform(){
+	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	var pix = imgd.data;
+	var new_imgd = ctx.createImageData(w, h);
+	var new_pix = new_imgd.data;
 
+	let pos = 0;
+	for (let i = 0; i < canvas.height; i+=) {
+		for (let j = 0; j < canvas.width; j+=) {
+			getPixRegionVec(p)
+	}
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.putImageData(new_imgd, 0, 0);
 }
 
 
 function haarInverse(){
 
 }
+
+function waveletTransform(array){
+	var wave;
+	for (let j = 0; j<array.length; j++){
+		wave = calcCof(array)
+	}	
+}
+
+function calcCof(array){
+	var resolution = array.length
+	var arr = []
+	var result = []
+
+	array.for (let i = 0; i < array.length; i=i+2) {
+		arr.push((array[i] +  array[i+1])/2)
+		result.push(array[i] - )
+	};
+
+	if (resolution == 1) return result
+	return calcCof(resolution-1,arr).concat(result)
+}
+
 //Equivalente a Filtro de Média qnd fator de redução < 1
 // E ao laplaciano qnd fator de redução > 1
 function intReduction(copy, pixels, i){
