@@ -1,3 +1,4 @@
+var laplacianMatrix;
 
 function applyFilter(event, element, filter) {
 	event.stopPropagation()
@@ -41,14 +42,32 @@ function potenc(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = Math.pow(mean, lambda) * 255;
 }
 
+function potencColor(copy, pixels, i) {
+	pixels[i] = Math.pow(copy[i] / 255, lambda) * 255;
+	pixels[i+1] = Math.pow(copy[i+1] / 255, lambda) * 255;
+	pixels[i+2] = Math.pow(copy[i+2] / 255, lambda) * 255;
+}
+
 function log(copy, pixels, i) {
 	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = constant * Math.log(1+mean) * 255;
 }
 
+function logColor(copy, pixels, i) {
+	pixels[i] = constant * Math.log(1+copy[i]/255) * 255;
+	pixels[i+1] = constant * Math.log(1+copy[i+1]/255) * 255;
+	pixels[i+2] = constant * Math.log(1+copy[i+2]/255) * 255;
+}
+
 function inverse_log(copy, pixels, i) {
 	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = (Math.exp(mean) - 1) / constant * 255;
+}
+
+function inverse_logColor(copy, pixels, i) {
+	pixels[i] = (Math.exp(copy[i]/255) - 1) / constant * 255;
+	pixels[i+1] = (Math.exp(copy[i+1]/255) - 1) / constant * 255;
+	pixels[i+2] = (Math.exp(copy[i+2]/255) - 1) / constant * 255;
 }
 
 function limiar(copy, pixels, i) {
@@ -102,6 +121,12 @@ function normalizeHistogram(copy, pixels, i) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = histogramNormalizer[mean];
 }
 
+function normalizeHistogramColor(copy, pixels, i) {
+	pixels[i] = histogramNormalizerR[copy[i]];
+	pixels[i+1] = histogramNormalizerG[copy[i+1]];
+	pixels[i+2] = histogramNormalizerB[copy[i+2]];
+}
+
 function convolution(copy, pixels, i, matriz_) {
 	if (matriz_ == undefined) matriz_ = matriz;
 	let p = getIJFromPixel(i);
@@ -119,8 +144,82 @@ function convolution(copy, pixels, i, matriz_) {
 	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val);
 }
 
+function convolution_hsi(copy, pixels, i, matriz_) {
+	if (matriz_ == undefined) matriz_ = matriz;
+	let rgb_central = [copy[i], copy[i+1], copy[i+2]];
+	let hsi_central = RGBtoHSI(rgb_central);
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let valH = 0;
+	let valS = 0;
+	let valI = 0;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				let idx = getPixelIndex(_i, _j);
+				let _rgb = [copy[idx], copy[idx+1], copy[idx+2]];
+				var _hsi = RGBtoHSI(_rgb);
+				valH += _hsi[0] * matriz_.get(x, y);
+				valS += _hsi[1] * matriz_.get(x, y);
+				valI += _hsi[2] * matriz_.get(x, y);
+			}
+		}
+	}
+	//hsi_central[0] = valH;
+	//hsi_central[1] = valS;
+	hsi_central[2] = valI;
+	let result = HSItoRGB(hsi_central);
+	pixels[i] = result[0]
+	pixels[i+1] = result[1]
+	pixels[i+2] = result[2]
+}
+
+function convolution_rgb(copy, pixels, i, matriz_) {
+	if (matriz_ == undefined) matriz_ = matriz;
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let valR = 0;
+	let valG = 0;
+	let valB = 0;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width) {
+				let idx = getPixelIndex(_i, _j);
+				valR += copy[idx] * matriz_.get(x, y);
+				valG += copy[idx+1] * matriz_.get(x, y);
+				valB += copy[idx+2] * matriz_.get(x, y);
+			}
+		}
+	}
+	pixels[i] = valR;
+	pixels[i+1] = valG;
+	pixels[i+2] = valB;
+}
+
 function meanFilter(copy, pixels, i) {
 	convolution(copy, pixels, i, meanMatrix)
+}
+
+function meanHsi(copy, pixels, i){
+	convolution_hsi(copy, pixels, i, meanMatrix)
+}
+
+function laplacianHsi(copy, pixels, i){
+	convolution_hsi(copy, pixels, i, highPassMatrix)
+	pixels[i] += copy[i];
+	pixels[i+1] += copy[i+1];
+	pixels[i+2] += copy[i+2];
+}
+
+function laplacianRgb(copy, pixels, i){
+	convolution_rgb(copy, pixels, i, highPassMatrix)
+	pixels[i] += copy[i];
+	pixels[i+1] += copy[i+1];
+	pixels[i+2] += copy[i+2];
 }
 
 function meanFilterColored(copy, pixels, i) {
@@ -194,18 +293,41 @@ function loadHistogram() {
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
 	histogram = [];
-	for (var i = 0; i < 256; i++) histogram[i] = [i, 0];
+	histogramR = [];
+	histogramG = [];
+	histogramB = [];
+	for (var i = 0; i < 256; i++) {
+		histogram[i] = [i, 0];
+		histogramR[i] = [i, 0];
+		histogramG[i] = [i, 0];
+		histogramB[i] = [i, 0];
+	}
 
 	for (var i = 0; i < pix.length; i+=4) {
 		mean = parseInt(getMean(pix, i));
 		histogram[mean][1] += 1;
+		histogramR[pix[i]][1] += 1;
+		histogramG[pix[i+1]][1] += 1;
+		histogramB[pix[i+2]][1] += 1;
 	}
 	histogramNormalizer = [];
+	histogramNormalizerR = [];
+	histogramNormalizerG = [];
+	histogramNormalizerB = [];
 	sum = pix.length/4;
 	acc = 0;
+	accR = 0;
+	accG = 0;
+	accB = 0;
 	for (var i = 0; i < 256; i++) {
 		acc += histogram[i][1];
+		accR += histogramR[i][1];
+		accG += histogramG[i][1];
+		accB += histogramB[i][1];
 		histogramNormalizer[i] = Math.round(255 * acc/sum);
+		histogramNormalizerR[i] = Math.round(255 * accR/sum);
+		histogramNormalizerG[i] = Math.round(255 * accG/sum);
+		histogramNormalizerB[i] = Math.round(255 * accB/sum);
 	}
 }
 
@@ -404,3 +526,34 @@ function haarTransform(){
 function haarInverse(){
 
 }
+//Equivalente a Filtro de Média qnd fator de redução < 1
+// E ao laplaciano qnd fator de redução > 1
+function intReduction(copy, pixels, i){
+   var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	 HSI[2] = HSI[2] * 0.95
+	 let RGB = HSItoRGB(HSI)
+	 pixels[i] 	 = RGB[0]
+	 pixels[i+1] = RGB[1]
+	 pixels[i+2] = RGB[2]
+}
+
+function intImprovment(copy, pixels, i){
+   var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	 HSI[2] = HSI[2] * 1.05
+	 let RGB = HSItoRGB(HSI)
+	 pixels[i] 	 = RGB[0]
+	 pixels[i+1] = RGB[1]
+	 pixels[i+2] = RGB[2]
+}
+
+function hsiNoiseRed(copy, pixels, i){
+	var HSI = RGBtoHSI([pixels[i],pixels[i+1],pixels[i+2]])
+	HSI[0] = 0
+	HSI[1] = 0
+	HSI[2] = HSI[2] * 1.10
+	let RGB = HSItoRGB(HSI)
+	pixels[i] 	= RGB[0]
+	pixels[i+1] = RGB[1]
+	pixels[i+2] = RGB[2]
+}
+
