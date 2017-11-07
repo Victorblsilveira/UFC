@@ -22,284 +22,284 @@
     <body>
 
       <section class="container scrollbar" id="style-1">
+        <div class='sup'>
+        	<div id="menu">
+        		<label class="head-wrapper" id="image-picker-label" class="head" for="image-picker">
+        			<img id="img-icon" src="img_icon.png"/>
+        			Escolher Imagem
+        		</label>
+          	<input id="image-picker" onchange="handleImage(event)" type="file" />
 
-      	<div id="menu">
-      		<label class="head-wrapper" id="image-picker-label" class="head" for="image-picker">
-      			<img id="img-icon" src="img_icon.png"/>
-      			Escolher Imagem
-      		</label>
-        	<input id="image-picker" onchange="handleImage(event)" type="file" />
+          	<HR color="grey" style="padding-top: 1px; padding-bottom: 1px; margin-top: 24px; width: 115%;"></HR>
 
-        	<HR color="grey" style="padding-top: 1px; padding-bottom: 1px; margin-top: 24px; width: 115%;"></HR>
+  	        <div class="filter-options">
 
-	        <div class="filter-options">
+  	        	<div class="head-wrapper" onclick="onFilterBlockClick('filters-simple')">
+  	            <label class="head" >Filtros Simples</label>
+  	            <b class="caret"></b>
+  	          </div>
+              <div id="filters-simple" class="filter-block">
 
-	        	<div class="head-wrapper" onclick="onFilterBlockClick('filters-simple')">
-	            <label class="head" >Filtros Simples</label>
-	            <b class="caret"></b>
-	          </div>
-            <div id="filters-simple" class="filter-block">
+                <button class="filter" onclick="applyFilter(event, this, grayscale,this)">Grayscale</button>
 
-              <button class="filter" onclick="applyFilter(event, this, grayscale,this)">Grayscale</button>
+                <button class="filter" onclick="applyFilter(event, this, negative)">Negative</button>
 
-              <button class="filter" onclick="applyFilter(event, this, negative)">Negative</button>
+                <div class="">
+                  <button class="filter" onclick="applyFilter(event, this, potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
+                  <div class="limit -min">0.1</div>
+                  <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
+                  <div class="limit -max">10</div>
+                </div>
 
-              <div class="">
-                <button class="filter" onclick="applyFilter(event, this, potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
-                <div class="limit -min">0.1</div>
-                <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
+                <div class="">
+                  <button class="filter" onclick="applyFilter(event, this, log)">Log (C=<span id='range_log'>11</span>)</button>
+                  <div class="limit -min">1</div>
+                  <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
+                  <div class="limit -max">20</div>
+                </div>
+
+
+                <button class="filter" onclick="applyFilter(event, this, inverse_log)">Inverse Log</button>
+
+                <div class="">
+                  <button class="filter" onclick="applyFilter(event, this, limiar)">Limiar : <span id='range_limiar'>0.5</span>
+                  </button>
+                  <div class="limit -min">0</div>
+                  <input class="slidebar" type="range"  min="0" max="1000" onmousemove="updateTresholdLimiar(event)"/>
+                  <div class="limit -max">1</div>
+                </div>
+
+                <div class="">
+                  <button class="filter" onclick="applyFilter(event, this, limiar_apar)">Limiar por Partes</button>
+                  <div class="point">
+                    <div class="x">
+                        X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255" value="0">
+                    </div>
+                    <div class="y">
+                        Y1 : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255"
+                        value="0">
+                    </div>
+                  </div>
+                  <div class="point">
+                    <div class="x">
+                        X2 : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255"
+                        value="255">
+                    </div>
+                    <div class="y">
+                        Y2 : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255"
+                        value="255">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="">
+                  <button class="filter" onclick="applyFilter(event, this, bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
+                  </button>
+                  <div class="limit -min">0</div>
+                  <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
+                  <div class="limit -max">7</div>
+                </div>
+
+              </div>
+
+              <div class="head-wrapper" onclick="onFilterBlockClick('filters-convolution')">
+  	            <label class="head" >Filtros Espaciais</label>
+  	            <b class="caret"></b>
+  	          </div>
+              <div id="filters-convolution" class="filter-block">
+
+                <div class="">
+                  <h5 class="clear">Dimensão</h5>
+                  <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
+                  <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
+                </div>
+                <div id="matriz" class=""></div>
+                <button class="filter" onclick="applyFilter(event, this, convolution)">Convolution</button>
+                <button class="filter" onclick="applyFilter(event, this, meanFilter)">Mean</button>
+                <button class="filter" onclick="applyFilter(event, this, sobelx)">Sobel-x</button>
+                <button class="filter" onclick="applyFilter(event, this, sobely)">Sobel-y</button>
+                <button class="filter" onclick="applyFilter(event, this, sobelSum)">SobelSum</button>
+                <button class="filter" onclick="applyFilter(event, this, highBoosting)">HighBoosting</button>
+
+              </div>
+
+              <div class="head-wrapper" onclick="onFilterBlockClick('filters-frequency')">
+  	            <label class="head" >Filtros na Frequência</label>
+  	            <b class="caret"></b>
+  	          </div>
+
+              <div id="filters-frequency" class="filter-block">
+
+                <button class="filter" onclick="applyFilter(event, this, highPass)">Passa Alta</button>
+                <button class="filter" onclick="applyFilter(event, this, lowPass)">Passa Baixa</button>
+                <button class="filter" onclick="applyFilter(event, this, bandReject)">Rejeita Faixa</button>
+                <button class="filter" onclick="applyFilter(event, this, lowPass); applyFilter(event, this, highPass)">Passa Faixa</button>
+
+              </div>
+
+              <div class="head-wrapper" onclick="onFilterBlockClick('filters-improver')">
+  	            <label class="head" >Melhoramento de Imagens</label>
+  	            <b class="caret"></b>
+  	          </div>
+              <div id="filters-improver" class="filter-block">
+
+                <button class="filter" onclick="applyFilter(event, this, normalizeHistogram)">Equalizar</button>
+                <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
+                <button class="filter" onclick="applyFilter(event, this, median)">Median</button>
+                <button class="filter" onclick="applyFilter(event, this, geometric)">Geometric Mean</button>
+                <button class="filter" onclick="applyFilter(event, this, harmonic)">Harmonic Mean</button>
+                <button class="filter" onclick="applyFilter(event, this, adaptiveMedian)">Adaptive Median</button>
+                <button class="filter" onclick="adaptiveNoise()">Adaptive Local Noise</button>
+
+                <div class="limit -min">-10</div>
+                  <input class="slidebar" type="range"  min="-20" max="20" value="0" onmousemove="updateCounterHarmonicFactor(event)"/>
                 <div class="limit -max">10</div>
-              </div>
+                <button class="filter" onclick="applyFilter(event, this, counterHarmonic)">Counter Harmonic: (Q=<span id='range_harmonic'>0</span>)</button>
 
-              <div class="">
-                <button class="filter" onclick="applyFilter(event, this, log)">Log (C=<span id='range_log'>11</span>)</button>
-                <div class="limit -min">1</div>
-                <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
-                <div class="limit -max">20</div>
-              </div>
+                <button class="filter" onclick="applyFilter(event, this, maxFilter)">Max Filter</button>
+                <button class="filter" onclick="applyFilter(event, this, minFilter)">Min Filter</button>
+                <button class="filter" onclick="applyFilter(event, this, midPointFilter)">Mid Point Filter</button>
 
-
-              <button class="filter" onclick="applyFilter(event, this, inverse_log)">Inverse Log</button>
-
-              <div class="">
-                <button class="filter" onclick="applyFilter(event, this, limiar)">Limiar : <span id='range_limiar'>0.5</span>
-                </button>
                 <div class="limit -min">0</div>
-                <input class="slidebar" type="range"  min="0" max="1000" onmousemove="updateTresholdLimiar(event)"/>
-                <div class="limit -max">1</div>
-              </div>
-
-              <div class="">
-                <button class="filter" onclick="applyFilter(event, this, limiar_apar)">Limiar por Partes</button>
-                <div class="point">
-                  <div class="x">
-                      X1 : <input class="pointer x" type="number" onchange="updateVariables(event,0)" name="quantity" min="0" max="255" value="0">
-                  </div>
-                  <div class="y">
-                      Y1 : <input class="pointer x" type="number" onchange="updateVariables(event,1)" name="quantity" min="0" max="255"
-                      value="0">
-                  </div>
-                </div>
-                <div class="point">
-                  <div class="x">
-                      X2 : <input class="pointer x" type="number" onchange="updateVariables(event,2)" name="quantity" min="0" max="255"
-                      value="255">
-                  </div>
-                  <div class="y">
-                      Y2 : <input class="pointer x" type="number"  onchange="updateVariables(event,3)" name="quantity" min="0" max="255"
-                      value="255">
-                  </div>
-                </div>
-              </div>
-
-              <div class="">
-                <button class="filter" onclick="applyFilter(event, this, bit_slice)">Bit Slice : <span id='range_bitslice'>4</span>
+                  <input id="alpha_trim_slide" class="slidebar" type="range" min="0" max="8" value="0" onmousemove="updateAlphaTrimFactor(event)"/>
+                <div id="alpha_trim_max" class="limit -max">8</div>
+                <button class="filter" onclick="applyFilter(event, this, alphaTrimFilter)">
+                  Alpha Trim: (d=<span id='range_alpha_trim'>0</span>)
                 </button>
-                <div class="limit -min">0</div>
-                <input class="slidebar" type="range" min="0" max="7" onchange="updateTresholdBitSlice(event)"/>
-                <div class="limit -max">7</div>
+
               </div>
 
-            </div>
+              <div class="head-wrapper" onclick="onFilterBlockClick('filters-other')">
+  	            <label class="head" >Outras Opções</label>
+  	            <b class="caret"></b>
+  	          </div>
+              <div id="filters-other" class="filter-block">
 
-            <div class="head-wrapper" onclick="onFilterBlockClick('filters-convolution')">
-	            <label class="head" >Filtros Espaciais</label>
-	            <b class="caret"></b>
-	          </div>
-            <div id="filters-convolution" class="filter-block">
+                <div class="">
+                  <h5 class="clear">Factor of Reduction</h5>
+                  <input class="mat" type="number" onchange="updateReductionFactor(event)" step="1" min="1" value="2" >
+                </div>
+                <button class="filter" onclick="imageReduction()">Reduce Image</button>
+                <button class="filter" onclick="imageReduction(true)">Reduce With Mean</button>
+                <button class="filter" onclick="imageZoom()">Zoom</button>
 
-              <div class="">
-                <h5 class="clear">Dimensão</h5>
-                <input class="mat" type="number" onchange="updateDimension(event)" step="2" min="3" max="9" value="3" >
-                <button class="confirm" type="button" name="button" onclick="createMatrix()">Create</button>
-              </div>
-              <div id="matriz" class=""></div>
-              <button class="filter" onclick="applyFilter(event, this, convolution)">Convolution</button>
-              <button class="filter" onclick="applyFilter(event, this, meanFilter)">Mean</button>
-              <button class="filter" onclick="applyFilter(event, this, sobelx)">Sobel-x</button>
-              <button class="filter" onclick="applyFilter(event, this, sobely)">Sobel-y</button>
-              <button class="filter" onclick="applyFilter(event, this, sobelSum)">SobelSum</button>
-              <button class="filter" onclick="applyFilter(event, this, highBoosting)">HighBoosting</button>
-
-            </div>
-
-            <div class="head-wrapper" onclick="onFilterBlockClick('filters-frequency')">
-	            <label class="head" >Filtros na Frequência</label>
-	            <b class="caret"></b>
-	          </div>
-
-            <div id="filters-frequency" class="filter-block">
-
-              <button class="filter" onclick="applyFilter(event, this, highPass)">Passa Alta</button>
-              <button class="filter" onclick="applyFilter(event, this, lowPass)">Passa Baixa</button>
-              <button class="filter" onclick="applyFilter(event, this, bandReject)">Rejeita Faixa</button>
-              <button class="filter" onclick="applyFilter(event, this, lowPass); applyFilter(event, this, highPass)">Passa Faixa</button>
-
-            </div>
-
-            <div class="head-wrapper" onclick="onFilterBlockClick('filters-improver')">
-	            <label class="head" >Melhoramento de Imagens</label>
-	            <b class="caret"></b>
-	          </div>
-            <div id="filters-improver" class="filter-block">
-
-              <button class="filter" onclick="applyFilter(event, this, normalizeHistogram)">Equalizar</button>
-              <button class="filter" onclick="localNormalizer()">Local Normalizer</button>
-              <button class="filter" onclick="applyFilter(event, this, median)">Median</button>
-              <button class="filter" onclick="applyFilter(event, this, geometric)">Geometric Mean</button>
-              <button class="filter" onclick="applyFilter(event, this, harmonic)">Harmonic Mean</button>
-              <button class="filter" onclick="applyFilter(event, this, adaptiveMedian)">Adaptive Median</button>
-              <button class="filter" onclick="adaptiveNoise()">Adaptive Local Noise</button>
-
-              <div class="limit -min">-10</div>
-                <input class="slidebar" type="range"  min="-20" max="20" value="0" onmousemove="updateCounterHarmonicFactor(event)"/>
-              <div class="limit -max">10</div>
-              <button class="filter" onclick="applyFilter(event, this, counterHarmonic)">Counter Harmonic: (Q=<span id='range_harmonic'>0</span>)</button>
-
-              <button class="filter" onclick="applyFilter(event, this, maxFilter)">Max Filter</button>
-              <button class="filter" onclick="applyFilter(event, this, minFilter)">Min Filter</button>
-              <button class="filter" onclick="applyFilter(event, this, midPointFilter)">Mid Point Filter</button>
-
-              <div class="limit -min">0</div>
-                <input id="alpha_trim_slide" class="slidebar" type="range" min="0" max="8" value="0" onmousemove="updateAlphaTrimFactor(event)"/>
-              <div id="alpha_trim_max" class="limit -max">8</div>
-              <button class="filter" onclick="applyFilter(event, this, alphaTrimFilter)">
-                Alpha Trim: (d=<span id='range_alpha_trim'>0</span>)
-              </button>
-
-            </div>
-
-            <div class="head-wrapper" onclick="onFilterBlockClick('filters-other')">
-	            <label class="head" >Outras Opções</label>
-	            <b class="caret"></b>
-	          </div>
-            <div id="filters-other" class="filter-block">
-
-              <div class="">
-                <h5 class="clear">Factor of Reduction</h5>
-                <input class="mat" type="number" onchange="updateReductionFactor(event)" step="1" min="1" value="2" >
-              </div>
-              <button class="filter" onclick="imageReduction()">Reduce Image</button>
-              <button class="filter" onclick="imageReduction(true)">Reduce With Mean</button>
-              <button class="filter" onclick="imageZoom()">Zoom</button>
-
-            </div>
-
-
-            <div class="head-wrapper" onclick="onFilterBlockClick('color-wheel')">
-	            <label class="head" >Color Operations</label>
-	            <b class="caret"></b>
-	          </div>
-            <div id='color-wheel' class="filter-block">
-              <div id="preview" class="preview"></div>
-              <!-- colorpicker element -->
-              <div class="colorpicker" style="display:none">
-                  <canvas id="picker" var="4" width="300" height="300"></canvas>
-                  <div class="controls">
-                      <div><label>R</label> <input type="text" id="rVal" /></div>
-                      <div><label>G</label> <input type="text" id="gVal" /></div>
-                      <div><label>B</label> <input type="text" id="bVal" /></div>
-                      <div><label>RGB</label> <input type="text" id="rgbVal" /></div>
-                      <div><label>HEX</label> <input type="text" id="hexVal" /></div>
-                  </div>
               </div>
 
-              <div>
-              	<div class="sliders-container">
-              		<div class="color-slide">
-              			<h5>R:</h5>
-	              		<input id="r_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateR, event)"/>
-	              	</div>
-              		<div class="color-slide">
-              			<h5>G:</h5>
-	              		<input id="g_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateG, event)"/>
-	              	</div>
-              		<div class="color-slide">
-              			<h5>B:</h5>
-	              		<input id="b_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateB, event)"/>
-	              	</div>
-              	</div>
-              	<div class="sliders-container">
-              		<div class="color-slide">
-              			<h5>H:</h5>
-	              		<input id="h_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateH, event)"/>
-	              	</div>
-              		<div class="color-slide">
-              			<h5>S:</h5>
-	              		<input id="s_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateS, event)"/>
-	              	</div>
-              		<div class="color-slide">
-              			<h5>I:</h5>
-	              		<input id="i_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateI, event)"/>
-	              	</div>
-              	</div>
-              	<div class="sliders-container">
-              		<div class="color-slide">
-              			<h5>C:</h5>
-	              		<input id="c_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateC, event)"/>
-	              	</div>
-              		<div class="color-slide">
 
-              			<h5>M:</h5>
-	              		<input id="m_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateM, event)"/>
-	              	</div>
-              		<div class="color-slide">
-              			<h5>Y:</h5>
-	              		<input id="y_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateY, event)"/>
-	              	</div>
-              	</div>
+              <div class="head-wrapper" onclick="onFilterBlockClick('color-wheel')">
+  	            <label class="head" >Color Operations</label>
+  	            <b class="caret"></b>
+  	          </div>
+              <div id='color-wheel' class="filter-block">
+                <div id="preview" class="preview"></div>
+                <!-- colorpicker element -->
+                <div class="colorpicker" style="display:none">
+                    <canvas id="picker" var="4" width="300" height="300"></canvas>
+                    <div class="controls">
+                        <div><label>R</label> <input type="text" id="rVal" /></div>
+                        <div><label>G</label> <input type="text" id="gVal" /></div>
+                        <div><label>B</label> <input type="text" id="bVal" /></div>
+                        <div><label>RGB</label> <input type="text" id="rgbVal" /></div>
+                        <div><label>HEX</label> <input type="text" id="hexVal" /></div>
+                    </div>
+                </div>
+
+                <div>
+                	<div class="sliders-container">
+                		<div class="color-slide">
+                			<h5>R:</h5>
+  	              		<input id="r_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateR, event)"/>
+  	              	</div>
+                		<div class="color-slide">
+                			<h5>G:</h5>
+  	              		<input id="g_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateG, event)"/>
+  	              	</div>
+                		<div class="color-slide">
+                			<h5>B:</h5>
+  	              		<input id="b_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateB, event)"/>
+  	              	</div>
+                	</div>
+                	<div class="sliders-container">
+                		<div class="color-slide">
+                			<h5>H:</h5>
+  	              		<input id="h_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateH, event)"/>
+  	              	</div>
+                		<div class="color-slide">
+                			<h5>S:</h5>
+  	              		<input id="s_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateS, event)"/>
+  	              	</div>
+                		<div class="color-slide">
+                			<h5>I:</h5>
+  	              		<input id="i_slide" class="slidebar" type="range" min="0" max="255000" value="0" onmousemove="updateColors(updateI, event)"/>
+  	              	</div>
+                	</div>
+                	<div class="sliders-container">
+                		<div class="color-slide">
+                			<h5>C:</h5>
+  	              		<input id="c_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateC, event)"/>
+  	              	</div>
+                		<div class="color-slide">
+
+                			<h5>M:</h5>
+  	              		<input id="m_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateM, event)"/>
+  	              	</div>
+                		<div class="color-slide">
+                			<h5>Y:</h5>
+  	              		<input id="y_slide" class="slidebar" type="range" min="0" max="255000" value="255000" onmousemove="updateColors(updateY, event)"/>
+  	              	</div>
+                	</div>
+                </div>
+
+                <div>
+  	              <div class="limit -min">0</div>
+  	              <input class="slidebar" type="range" min="0" max="500" value="250" onmousemove="updateChromaValue(event)" style="margin-top: 12px;"/>
+  	              <div class="limit -max">50</div>
+
+  	              <label class="head-wrapper" id="image-picker-label2" class="head" for="image-picker2">
+  			      			<img id="img-icon" src="img_icon.png"/>
+  			      			Escolher Substituto
+  			      		</label>
+  			        	<input id="image-picker2" onchange="handleImage2(event)" type="file" />
+  			        	<button class="filter" onclick="runChroma()">Run Chroma</button>
+
+  			        	<div class="">
+  	                <button class="filter" onclick="applyFilter(event, this, potencColor)">Potency(C) (lambda=<span id='range_potenc'>1.00</span>)</button>
+  	                <div class="limit -min">0.1</div>
+  	                <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
+  	                <div class="limit -max">10</div>
+  	              </div>
+
+  	              <div class="">
+  	                <button class="filter" onclick="applyFilter(event, this, logColor)">Log(C) (C=<span id='range_log'>11</span>)</button>
+  	                <div class="limit -min">1</div>
+  	                <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
+  	                <div class="limit -max">20</div>
+  	              </div>
+
+
+  	              <button class="filter" onclick="applyFilter(event, this, inverse_logColor)">Inverse Log(C)</button>
+
+  	              <button class="filter" onclick="applyFilter(event, this, normalizeHistogramColor)">Equalizar(C)</button>
+
+                  <button class="filter" onclick="applyFilter(event, this, intReduction)">Redução de Brilho</button>
+
+                  <button class="filter" onclick="applyFilter(event, this, intImprovment)">Aumento de Brilho</button>
+
+                  <button class="filter" onclick="applyFilter(event, this, meanFilterColored)">RGB Mean</button>
+
+                  <button class="filter" onclick="applyFilter(event, this, meanHsi)">HSI Mean</button>
+
+                  <button class="filter" onclick="applyFilter(event, this, laplacianRgb)">RGB Laplacian</button>
+
+                  <button class="filter" onclick="applyFilter(event, this, laplacianHsi)">HSI Laplacian</button>
+  	            </div>
+
+
               </div>
+  	      	</div>
 
-              <div>
-	              <div class="limit -min">0</div>
-	              <input class="slidebar" type="range" min="0" max="500" value="250" onmousemove="updateChromaValue(event)" style="margin-top: 12px;"/>
-	              <div class="limit -max">50</div>
-
-	              <label class="head-wrapper" id="image-picker-label2" class="head" for="image-picker2">
-			      			<img id="img-icon" src="img_icon.png"/>
-			      			Escolher Substituto
-			      		</label>
-			        	<input id="image-picker2" onchange="handleImage2(event)" type="file" />
-			        	<button class="filter" onclick="runChroma()">Run Chroma</button>
-
-			        	<div class="">
-	                <button class="filter" onclick="applyFilter(event, this, potencColor)">Potency(C) (lambda=<span id='range_potenc'>1.00</span>)</button>
-	                <div class="limit -min">0.1</div>
-	                <input class="slidebar" type="range"  min="1" max="38" onmousemove="updateLambda(event)"/>
-	                <div class="limit -max">10</div>
-	              </div>
-
-	              <div class="">
-	                <button class="filter" onclick="applyFilter(event, this, logColor)">Log(C) (C=<span id='range_log'>11</span>)</button>
-	                <div class="limit -min">1</div>
-	                <input class="slidebar" type="range"  min="1" max="20" onmousemove="updateConstant(event)"/>
-	                <div class="limit -max">20</div>
-	              </div>
-
-
-	              <button class="filter" onclick="applyFilter(event, this, inverse_logColor)">Inverse Log(C)</button>
-
-	              <button class="filter" onclick="applyFilter(event, this, normalizeHistogramColor)">Equalizar(C)</button>
-
-                <button class="filter" onclick="applyFilter(event, this, intReduction)">Redução de Brilho</button>
-
-                <button class="filter" onclick="applyFilter(event, this, intImprovment)">Aumento de Brilho</button>
-
-                <button class="filter" onclick="applyFilter(event, this, meanFilterColored)">RGB Mean</button>
-
-                <button class="filter" onclick="applyFilter(event, this, meanHsi)">HSI Mean</button>
-
-                <button class="filter" onclick="applyFilter(event, this, laplacianRgb)">RGB Laplacian</button>
-
-                <button class="filter" onclick="applyFilter(event, this, laplacianHsi)">HSI Laplacian</button>
-	            </div>
-
-
-            </div>
-	      	</div>
-
-	    	</div>
-
+  	    	</div>
+        </div>
         <div class="content">
 
         	<div class="histo_options hide">
