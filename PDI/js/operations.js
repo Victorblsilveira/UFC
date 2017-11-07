@@ -395,3 +395,12 @@ function adaptiveNoise() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.putImageData(imgd, 0, 0);
 }
+
+function haarTransform(){
+
+}
+
+
+function haarInverse(){
+
+}
