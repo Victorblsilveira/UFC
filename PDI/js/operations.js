@@ -70,6 +70,20 @@ function inverse_logColor(copy, pixels, i) {
 	pixels[i+2] = (Math.exp(copy[i+2]/255) - 1) / constant * 255;
 }
 
+function sepia(copy,pixels, i){
+	var tr = 0.393*pixels[i] + 0.769*pixels[i+1] + 0.189*pixels[i+2]
+	var tg = 0.349*pixels[i] + 0.686*pixels[i+1] + 0.168*pixels[i+2]
+	var tb = 0.272*pixels[i] + 0.534*pixels[i+1] + 0.131*pixels[i+2]
+
+	tr = tr>255 ? 255 : parseInt(tr)
+	tg = tg>255 ? 255 : parseInt(tg)
+	tb = tb>255 ? 255 : parseInt(tb)
+
+	pixels[i] = tr
+	pixels[i+1] = tg
+	pixels[i+2] = tb
+}
+
 function limiar(copy, pixels, i) {
 	mean = getMean(copy, i) / 255;
 	pixels[i] = pixels[i+1] = pixels[i+2] = (threshold > mean) ? 255 : 0
@@ -525,9 +539,10 @@ function haarTransform(){
 	var new_pix = new_imgd.data;
 
 	let pos = 0;
-	for (let i = 0; i < canvas.height; i+=) {
-		for (let j = 0; j < canvas.width; j+=) {
+	for (let i = 0; i < canvas.height; i++) {
+		for (let j = 0; j < canvas.width; j++) {
 			getPixRegionVec(p)
+		}
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -543,7 +558,7 @@ function waveletTransform(array){
 	var wave;
 	for (let j = 0; j<array.length; j++){
 		wave = calcCof(array)
-	}	
+	}
 }
 
 function calcCof(array){
@@ -590,4 +605,3 @@ function hsiNoiseRed(copy, pixels, i){
 	pixels[i+1] = RGB[1]
 	pixels[i+2] = RGB[2]
 }
-
