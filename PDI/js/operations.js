@@ -518,46 +518,60 @@ function adaptiveNoise() {
 	ctx.putImageData(imgd, 0, 0);
 }
 
+
+
+var haar_level = 0
 function haarTransform(){
+	haar_level+=1
 	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
-	var new_imgd = ctx.createImageData(w, h);
-	var new_pix = new_imgd.data;
+	//var new_imgd = ctx.createImageData(w, h);
+	waveletTransform(pix, haar_level)
 
-	let pos = 0;
-	for (let i = 0; i < canvas.height; i+=) {
-		for (let j = 0; j < canvas.width; j+=) {
-			getPixRegionVec(p)
-	}
+	
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.putImageData(new_imgd, 0, 0);
+	ctx.putImageData(imgd, 0, 0);
 }
 
 
 function haarInverse(){
+	//haar_level-=1
 
 }
 
-function waveletTransform(array){
-	var wave;
-	for (let j = 0; j<array.length; j++){
-		wave = calcCof(array)
-	}	
+function waveletTransform(matrix, level) {
+	for (let i = 0; i < matrix.length; i++) {
+		matrix[i] = calcCoefRows(matrix, i, level);
+	}
+	for (let j = 0; j < matrix[0].length; j++) {
+		coefs = calcCoefCols(matrix, j, level);
+		for (let i = 0; i < matrix.length; i++) {
+			matrix[i][j] = coefs[i];
+		}
+	}
 }
 
-function calcCof(array){
-	var resolution = array.length
-	var arr = []
-	var result = []
-
-	array.for (let i = 0; i < array.length; i=i+2) {
-		arr.push((array[i] +  array[i+1])/2)
-		result.push(array[i] - )
+function calcCoefRows(matrix, line, level) {
+	let means = [];
+	let coefs = [];
+	for(let i = 0; i < matrix[line].length/Math.pow(2, level); i++) {
+		let mean = (matrix[line][i*2] +  matrix[line][i*2+1])/2
+		means.push(mean)
+		coefs.push(matrix[line][i*2] - mean)
 	};
+	return means.concat(coefs)
+}
 
-	if (resolution == 1) return result
-	return calcCof(resolution-1,arr).concat(result)
+function calcCoefCols(matrix, col, level) {
+	let means = [];
+	let coefs = [];
+	for(let i = 0; i < matrix.length/Math.pow(2, level); i++) {
+		let mean = (matrix[i*2][col] +  matrix[i*2+1][col])/2
+		means.push(mean)
+		coefs.push(matrix[i*2][col] - mean)
+	};
+	return means.concat(coefs)
 }
 
 //Equivalente a Filtro de Média qnd fator de redução < 1
