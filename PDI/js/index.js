@@ -45,7 +45,7 @@ var sobelYMatrix = Matrix.getSobelY();
 var rgb = [0, 0, 0];
 var hsi = [0, 0, 0];
 var cmy = [255, 255, 255];
-var chromaValue = 25;
+var chromaValue = 10.;
 var chromaPath;
 
 window.onload = function(){
@@ -267,7 +267,11 @@ function updateColorSlides() {
 }
 
 function updateChromaValue(event) {
-	chromaValue = event.target.value/10;
+	chromaValue = event.target.value/100;
+}
+
+function sigma(x) {
+	return 255/(1+Math.exp(-(x - chromaValue)))
 }
 
 function runChroma() {
@@ -279,13 +283,13 @@ function runChroma() {
 		for (var i = 0; i < pix.length; i+=4) {
 			let aux = RGBtoHSI([pix[i], pix[i+1], pix[i+2]]);
 
-			let weights = [20, 1, 1];
-			
+			let weights = [10, 1, 1];
 			let weightSum = weights[0]+weights[1]+weights[2];
+			
 			let diff =(Math.abs(hsi[0]-aux[0])*weights[0] + Math.abs(hsi[1]-aux[1])*weights[1] + Math.abs(hsi[2]-aux[2])*weights[2])/weightSum;
-			if (diff < chromaValue) {
-				pix[i+3] = 0;
-			}
+
+			if (i%1000 == 0) console.log(sigma(diff));
+			pix[i+3] = sigma(diff);
 		}
 
 		ctx.putImageData(imgd, 0, 0);
