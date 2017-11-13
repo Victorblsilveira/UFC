@@ -22,13 +22,12 @@ google.charts.load("current", {packages:["corechart"]});
 
 var options = {
     title: "Histogram",
-    width: 500,
-    height: 200,
+    width: 400,
+    height: 100,
     legend: { position: "none" },
 };
 
-var histo_1;
-var histo_2;
+var hist;
 
 var threshold = 0.5
 var lambda = 1;
@@ -55,8 +54,7 @@ window.onload = function(){
 
 	$("#filters-simple").slideDown();
 
-	histo_1 = new google.visualization.ColumnChart(document.getElementById('histo_1'));
-	histo_2 = new google.visualization.ColumnChart(document.getElementById('histo_2'));
+	hist = new google.visualization.ColumnChart(document.getElementById('hist'));
 
 	createMatrix();
 
@@ -73,15 +71,10 @@ function handleImage(e){
     var reader = new FileReader();
     reader.onload = function(event){
         img.onload = function(){
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img,0,0);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-            $("#h-line").removeClass("hide");
-
-            drawHistogram(histo_1);
-            drawHistogram(histo_2);
-			showGraphs(true)
+            drawHistogram(hist);
+			$("#hist").removeClass("hide");
         }
 
         img.src = event.target.result;
@@ -104,18 +97,8 @@ function onFilterBlockClick(elementId) {
 }
 
 function reset(){
-	ctx.drawImage(img, 0, 0);
-	drawHistogram(histo_2);
-}
-
-function showGraphs(option){
-	if (option) {
-		$(".hist_son").removeClass("hide");
-		$(".histo_options").removeClass("hide");
-	} else {
-		$(".hist_son").addClass("hide");
-		$(".histo_options".addClass("hide"));
-	}
+	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+	drawHistogram(hist);
 }
 
 function drawHistogram(div_to_draw){
@@ -295,7 +278,9 @@ function runChroma() {
 
 		for (var i = 0; i < pix.length; i+=4) {
 			let aux = RGBtoHSI([pix[i], pix[i+1], pix[i+2]]);
-			let weights = [20, 5, 1];
+
+			let weights = [20, 1, 1];
+			
 			let weightSum = weights[0]+weights[1]+weights[2];
 			let diff =(Math.abs(hsi[0]-aux[0])*weights[0] + Math.abs(hsi[1]-aux[1])*weights[1] + Math.abs(hsi[2]-aux[2])*weights[2])/weightSum;
 			if (diff < chromaValue) {

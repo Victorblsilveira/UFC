@@ -16,6 +16,7 @@
         <script type="text/javascript" src="js/index.js"></script>
         <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="css/wheel.css">
+        <link rel="stylesheet" href="css/menu.css">
         <title>PDI</title>
     </head>
 
@@ -303,34 +304,26 @@
 
   	    	</div>
         </div>
+
+
+
         <div class="content">
 
-        	<div class="histo_options hide">
-            <p>Tipos Histogramas</p>
-            <div class="histo_option">Red   <input type="checkbox" onclick=""></div>
-            <div class="histo_option">Green <input type="checkbox" onclick=""></div>
-            <div class="histo_option">Blue  <input type="checkbox" onclick=""></div>
-            <div class="histo_option">Gray  <input type="checkbox" onclick=""></div>
-          </div>
-
           <div class="graphics-container">
-            <div class="image-panel">
-              <div class="image-container">
-                <img id='origin' class="image" src="">
-              </div>
-              <div id="histo_1" class="hist_son hide"></div>
-            </div>
-            <HR id="h-line" color="red" class="hide" style="margin-top: 12px; margin-bottom: 12px;"></HR>
-            <div class="image-panel">
-              <div class="image-container">
-                <canvas id='canvas' class="image"></canvas>
-              </div>
-              <div id="histo_2" class="hist_son hide"></div>
-            </div>
+            <canvas id='canvas' width="600" height="400"></canvas>
           </div>
 
-          <div id="reset-wrapper">
-          	<button id="reset-button" class="filter" onclick="reset()">Reset</button>
+          <div id="bottom-container">
+
+            <div id='origin-container'>
+              <img id='origin' src="img_icon.png">
+              <button id="reset-button" class="filter" onclick="reset()">Reset</button>
+            </div>
+
+            <div id='hist-container'>
+              <div id="hist" class="hist_son hide"></div>
+            </div>
+
         	</div>
 
         </div>

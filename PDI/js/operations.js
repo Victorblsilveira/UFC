@@ -14,7 +14,7 @@ function applyFilter(event, element, filter) {
 	}
 
 	ctx.putImageData(imgd, 0, 0);
-	drawHistogram(histo_2);
+	drawHistogram(hist);
 	setTimeout(function(){
 		element.classList.remove('loading')
 	},2000)
@@ -372,7 +372,7 @@ function localNormalizer() {
 	}
 
 	ctx.putImageData(imgd, 0, 0);
-	drawHistogram(histo_2);
+	drawHistogram(hist);
 
 }
 
