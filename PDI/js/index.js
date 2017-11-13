@@ -1,6 +1,10 @@
 var img = new Image();
+var img_back = new Image();
 var ctx;
 var canvas;
+
+var ctx_back;
+var canvas_back;
 
 var histogram;
 var histogramNormalizer;
@@ -46,11 +50,14 @@ var rgb = [0, 0, 0];
 var hsi = [0, 0, 0];
 var cmy = [255, 255, 255];
 var chromaValue = 10.;
-var chromaPath;
+var loadedChroma = false;
 
 window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
+
+	canvas_back = document.getElementById('canvas-back');
+	ctx_back = canvas_back.getContext('2d');
 
 	$("#filters-simple").slideDown();
 
@@ -85,8 +92,20 @@ function handleImage(e){
 }
 
 function handleImage2(e){
-	chromaPath = './img/' +  e.target.files[0].name;
-	console.log(chromaPath);
+	let splt = e.target.value.split('\\').join('/').split('/');
+	let filename = splt[splt.length - 1];
+
+	$('#image-picker-label2').text(filename);
+
+    var reader = new FileReader();
+    reader.onload = function(event){
+        img_back.onload = function(){
+            ctx_back.drawImage(img_back, 0, 0, canvas_back.width, canvas_back.height);
+            loadedChroma = true;
+        }
+        img_back.src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
 }
 
 function onFilterBlockClick(elementId) {
@@ -275,7 +294,7 @@ function sigma(x) {
 }
 
 function runChroma() {
-	if (chromaPath != undefined) {
+	if (loadedChroma) {
 
 		var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 		var pix = imgd.data;
@@ -288,13 +307,11 @@ function runChroma() {
 			
 			let diff =(Math.abs(hsi[0]-aux[0])*weights[0] + Math.abs(hsi[1]-aux[1])*weights[1] + Math.abs(hsi[2]-aux[2])*weights[2])/weightSum;
 
-			if (i%1000 == 0) console.log(sigma(diff));
+			//if (i%1000 == 0) console.log(sigma(diff));
 			pix[i+3] = sigma(diff);
 		}
 
 		ctx.putImageData(imgd, 0, 0);
-
-		$('#canvas').css('background-image', 'url(' + chromaPath + ')');
 	}
 }
 

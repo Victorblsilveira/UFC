@@ -18,24 +18,35 @@ body{
   float: right;
 }
 
+/* ------------------- Canvas ---------------------*/
+
 .graphics-container {
   width: calc(100% - 224px);
-  height: calc(100vh - 100px);
+  height: calc(100vh - 120px);
   position: fixed;
   top: 0px;
   text-align: center;
 }
 
-#canvas {
-  width: 600px;
+#canvas-container {
+	width: 600px;
   height: 400px;
-  display: block;
+	display: block;
   margin: 0 auto;
   margin-top: calc(100vh - 600px);
+  position: relative;
 }
 
-.hide{
-  opacity: 0;
+.canvas-class {
+	width: 600px;
+  height: 400px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#canvas {
+	z-index: 10;
 }
 
 /* ------------------- Page Foot ----------------------*/
@@ -45,7 +56,7 @@ body{
   height: 120px;
 	position: fixed;
 	bottom: 0px;
-  background-color: #222;
+  background-color: #444;
   vertical-align: middle;
 }
 
@@ -82,4 +93,8 @@ body{
   margin-right: 24px;
   width: 400px;
   height: 100px;
+}
+
+.hide{
+  opacity: 0;
 }
