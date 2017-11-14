@@ -6,9 +6,10 @@
     color: #FFFFFF;
     font-size: 12px;
     position: absolute;
-    width: 220px;
-    top: 48px;
-    transform: translate(-10px, 0px);
+    width: 400px;
+    top: 200px;
+    left: 230px;
+    z-index: 20;
 }
 #picker {
     cursor: crosshair;

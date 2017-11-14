@@ -11,7 +11,7 @@ $(function(){
     // drawing active image
     var image = new Image();
     image.onload = function () {
-        ctx.drawImage(image, 0, 0, image.width, image.height); // draw the image on the canvas
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // draw the image on the canvas
     }
 
     // select desired colorwheel
@@ -35,9 +35,8 @@ $(function(){
     $('#picker').mousemove(function(e) { // mouse move handler
         if (bCanPreview) {
             // get coordinates of current position
-            var canvasOffset = $(canvas).offset();
-            var canvasX = Math.floor(e.pageX - canvasOffset.left);
-            var canvasY = Math.floor(e.pageY - canvasOffset.top);
+            var canvasX = e.offsetX;
+            var canvasY = e.offsetY;
 
             // get current pixel
             var imageData = ctx.getImageData(canvasX, canvasY, 1, 1);
