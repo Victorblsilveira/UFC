@@ -58,8 +58,10 @@ $(function(){
             $('#hexVal').val('#' + ('0000' + dColor.toString(16)).substr(-6));
         }
     });
+
     $('#picker').click(function(e) { // click event handler
         bCanPreview = !bCanPreview;
+        $('.colorpicker').hide()
     });
 
     $('#canvas').mousemove(function(e) { // mouse move handler
@@ -87,6 +89,7 @@ $(function(){
             $('#hexVal').val('#' + ('0000' + dColor.toString(16)).substr(-6));
         }
     });
+
     $('#canvas').click(function(e) { // click event handler
         bCanPreview = !bCanPreview;
     });
