@@ -58,9 +58,21 @@ $(function(){
         }
     });
 
+    $('body').click(function (e) {
+
+        if(e.target.id == "colorpicker" || e.target.id == "preview")
+            return;
+        //For descendants of menu_content being clicked, remove this check if you do not want to put constraint on descendants.
+        if($(e.target).closest('#colorpicker').length)
+            return;    
+
+        if ($('#colorpicker').is(':visible'))
+            $('#colorpicker').fadeToggle("slow", "linear");
+    });
+
     $('#picker').click(function(e) { // click event handler
         bCanPreview = !bCanPreview;
-        $('.colorpicker').hide()
+        $('#colorpicker').fadeToggle("slow", "linear");
     });
 
     $('#canvas').mousemove(function(e) { // mouse move handler
@@ -94,7 +106,7 @@ $(function(){
     });
 
     $('.preview').click(function(e) { // preview click
-        $('.colorpicker').fadeToggle("slow", "linear");
+        $('#colorpicker').fadeToggle("slow", "linear");
         bCanPreview = true;
     });
 });
