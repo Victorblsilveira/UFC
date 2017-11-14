@@ -19,7 +19,7 @@ var Matrix = function(dim, start) {
 		return self.matrix[i][j];
 	}
 
-	self.set = function(i, j, element) {
+	self.set = function(i, j, element) {		
 		if (element == undefined) self.matrix[i] = j;
 		else self.matrix[i][j] = element;
 	}
