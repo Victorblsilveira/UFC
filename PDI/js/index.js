@@ -52,6 +52,8 @@ var cmy = [255, 255, 255];
 var chromaValue = 10.;
 var loadedChroma = false;
 
+var haar_level = 0;
+
 window.onload = function(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
@@ -82,6 +84,7 @@ function handleImage(e){
 
             drawHistogram(hist);
 			$("#hist").removeClass("hide");
+     		preparedToHaar = false;
         }
 
         img.src = event.target.result;
@@ -116,6 +119,11 @@ function onFilterBlockClick(elementId) {
 }
 
 function reset(){
+	haar_level = 0;
+	preparedToHaar = false;
+	$('#canvas').width(600).height(400);
+	ctx.canvas.width = 600;
+	ctx.canvas.height = 400;
 	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 	drawHistogram(hist);
 }
@@ -160,8 +168,8 @@ function getPixelIndex(i, j) {
 }
 
 function getIJFromPixel(index) {
-	i = index/4;
-	return [parseInt(i/canvas.width), i%canvas.width];
+	let _i = index/4;
+	return [parseInt(_i/canvas.width), _i%canvas.width];
 }
 
 function updateDimension(event){

@@ -532,104 +532,158 @@ function adaptiveNoise() {
 	ctx.putImageData(imgd, 0, 0);
 }
 
+var preparedToHaar = false;
+var haar_matrix = [];
 
-
-var haar_level = 0
-function haarTransform(){
-	haar_level+=1
-	var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+function prepareToHaar() {
+	haar_level = 0;
+	$('#canvas').width(256).height(256);
+	canvas.width = 256;
+	canvas.height = 256;
+	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+	let imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	var pix = imgd.data;
-	var matrix = new Matrix(canvas.width)
 
-	var pos;
-	for( let i in matrix.matrix ){
-		for ( let j in matrix.matrix[i] ){			
-			pos = getPixelIndex(i,j)
-			let val = pos >= pix.length ? [0,0,0,255] : 
-										  [pix[pos], 
-										   pix[pos+1],
-										   pix[pos+2],
-										   pix[pos+3]
-										  ]
-			matrix.set(i, j, val)
+	for( let i = 0; i < canvas.height; i++ ) {
+		haar_matrix[i] = [];
+		for ( let j = 0; j < canvas.width; j++ ) {
+			let pos = (i * canvas.width + j)*4;
+			haar_matrix[i][j] = [pix[pos], pix[pos+1], pix[pos+2]];
 		}
 	}
 
-	waveletTransform(matrix.matrix, haar_level)
-	imgd.data = toVec(matrix.matrix)
+	preparedToHaar = true;
+}
+
+function haarTransform() {
+	if (!preparedToHaar) prepareToHaar();
+	let canvas_size = canvas.width / Math.pow(2, haar_level);
+	if (canvas_size > 1) {
+		haar_level++;
+
+		waveletTransform(haar_matrix, canvas_size);
+		
+		fillCanvas(haar_matrix);
+	}
+}
+
+function fillCanvas(matrix) {
+	let imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+	for (let index = 0; index < imgd.data.length; index += 4) {
+		let pos = getIJFromPixel(index);
+		let rgba = matrix[pos[0]][pos[1]];
+		imgd.data[  index  ] = rgba[0];
+		imgd.data[index + 1] = rgba[1];
+		imgd.data[index + 2] = rgba[2];
+		//console.log(imgd.data.slice(i, i+4));
+	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.putImageData(imgd, 0, 0);
-
 }
 
-function toVec(matrix){
-	var res = []
-
-	for (let i in matrix.length){
-		for (let j in matrix[i].length){
-			res.push(matrix[i][j][0])
-			res.push(matrix[i][j][1])
-			res.push(matrix[i][j][2])
-			res.push(matrix[i][j][3])
-		}
+function waveletTransform(matrix, size) {
+	for (let i = 0; i < size; i++) {
+		let coefs = calcCoefRows(matrix, i, size);
+		for (let j = 0; j < size; j++)
+			matrix[i][j] = coefs[j];
 	}
-	return res
-}
 
-
-function haarInverse(){
-	//haar_level-=1
-
-}
-
-function waveletTransform(matrix, level) {
-	for (let i = 0; i < matrix.length; i++) {
-		matrix[i] = calcCoefRows(matrix, i, level);
-	}
-	for (let j = 0; j < matrix[0].length; j++) {
-		coefs = calcCoefCols(matrix, j, level);
-		for (let i = 0; i < matrix.length; i++) {
+	for (let j = 0; j < size; j++) {
+		let coefs = calcCoefCols(matrix, j, size);
+		for (let i = 0; i < size; i++)
 			matrix[i][j] = coefs[i];
-		}
 	}
 }
 
-function calcCoefRows(matrix, line, level) {
+function calcCoefRows(matrix, line, size) {
 	let means = [];
 	let coefs = [];
-	for(let i = 0; i < matrix[line].length/Math.pow(2, level); i++) {
-		console.log(matrix[line][i*2])
+	for(let i = 0; i < size/2; i++) {
+		//console.log(matrix[line][i*2])
 		let mean = [(matrix[line][i*2][0] +  matrix[line][i*2+1][0])/2,
 					(matrix[line][i*2][1] +  matrix[line][i*2+1][1])/2,
-					(matrix[line][i*2][2] +  matrix[line][i*2+1][2])/2,
-					(matrix[line][i*2][3] +  matrix[line][i*2+1][3])/2,
-					];
+					(matrix[line][i*2][2] +  matrix[line][i*2+1][2])/2];
 		means.push(mean)
-		coefs.push(	[matrix[line][i*2][0] - mean[0],
-					 matrix[line][i*2][1] - mean[1],
-					 matrix[line][i*2][2] - mean[2],
-					 matrix[line][i*2][3] - mean[3]]);
+		coefs.push(	[(matrix[line][i*2][0] - mean[0]),
+					 (matrix[line][i*2][1] - mean[1]),
+					 (matrix[line][i*2][2] - mean[2])]);
 	};
 	return means.concat(coefs)
 }
 
-function calcCoefCols(matrix, col, level) {
+function calcCoefCols(matrix, col, size) {
 	let means = [];
 	let coefs = [];
-	for(let i = 0; i < matrix.length/Math.pow(2, level); i++) {
+	for(let i = 0; i < size/2; i++) {
 		let mean = [(matrix[i*2][col][0] +  matrix[i*2+1][col][0])/2,
 					(matrix[i*2][col][1] +  matrix[i*2+1][col][1])/2,
-					(matrix[i*2][col][2] +  matrix[i*2+1][col][2])/2,
-					(matrix[i*2][col][3] +  matrix[i*2+1][col][3])/2,
-					];
+					(matrix[i*2][col][2] +  matrix[i*2+1][col][2])/2];
 		means.push(mean)
-		coefs.push(	[matrix[i*2][col][0] - mean[0],
-					 matrix[i*2][col][1] - mean[1],
-					 matrix[i*2][col][2] - mean[2],
-					 matrix[i*2][col][3] - mean[3]]);
+		coefs.push(	[(matrix[i*2][col][0] - mean[0]),
+					 (matrix[i*2][col][1] - mean[1]),
+					 (matrix[i*2][col][2] - mean[2])]);
 	};
 	return means.concat(coefs)
+}
+
+function haarInverse(){
+	let canvas_size = canvas.width / Math.pow(2, haar_level-1);
+	if (canvas_size <= canvas.width) {
+		haar_level--;
+		
+		invertWaveletTransform(haar_matrix, canvas_size);
+		
+		fillCanvas(haar_matrix);
+	}
+}
+
+function invertWaveletTransform(matrix, size) {
+	for (let i = 0; i < size; i++)
+		reconstructCol(matrix, i, size);
+	for (let i = 0; i < size; i++)
+		reconstructRow(matrix, i, size);
+}
+
+function reconstructRow(matrix, line, size) {
+	let means = [];
+	let coefs = [];
+	for (let i = 0; i < size/2; i++) {
+		means[i] = matrix[line][i];
+		coefs[i] = matrix[line][size/2 + i];
+	}
+
+	for(let i = 0; i < size/2; i++) {
+		matrix[line][ i*2 ] =  
+			[means[i][0] + coefs[i][0], 
+			 means[i][1] + coefs[i][1], 
+			 means[i][2] + coefs[i][2]];
+		matrix[line][i*2+1] =  
+			[means[i][0] - coefs[i][0], 
+			 means[i][1] - coefs[i][1], 
+			 means[i][2] - coefs[i][2]];
+	}
+}
+
+function reconstructCol(matrix, col, size) {
+	let means = [];
+	let coefs = [];
+	for (let i = 0; i < size/2; i++) {
+		means[i] = matrix[i][col];
+		coefs[i] = matrix[size/2 + i][col];
+	}
+
+	for(let i = 0; i < size/2; i++) {
+		matrix[ i*2 ][col] =  
+			[means[i][0] + coefs[i][0], 
+			 means[i][1] + coefs[i][1], 
+			 means[i][2] + coefs[i][2]];
+		matrix[i*2+1][col] =  
+			[means[i][0] - coefs[i][0], 
+			 means[i][1] - coefs[i][1], 
+			 means[i][2] - coefs[i][2]];
+	}
 }
 
 //Equivalente a Filtro de Média qnd fator de redução < 1
