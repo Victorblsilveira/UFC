@@ -564,6 +564,7 @@ function haarTransform() {
 		waveletTransform(haar_matrix, canvas_size);
 		
 		fillCanvas(haar_matrix);
+		drawHistogram(hist);
 	}
 }
 
@@ -636,6 +637,7 @@ function haarInverse(){
 		invertWaveletTransform(haar_matrix, canvas_size);
 		
 		fillCanvas(haar_matrix);
+		drawHistogram(hist);
 	}
 }
 
