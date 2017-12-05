@@ -214,6 +214,63 @@ function convolution_rgb(copy, pixels, i, matriz_) {
 	pixels[i+2] = valB;
 }
 
+function erosao(copy, pixels, i, matriz_){
+	if (matriz_ == undefined) matriz_ = matriz;
+	matriz_ = new Matrix(3,1)
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let val = 255;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width && matriz_.get(x, y) != 0) {
+				let mean = getMean(copy, getPixelIndex(_i, _j)) ;
+				val = val > mean ? mean : val
+			}
+		}
+	}
+	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val);
+}
+
+function dilatacao(copy, pixels, i, matriz_){
+	if (matriz_ == undefined) matriz_ = matriz;
+	matriz_ = new Matrix(3,1)
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let val = 0;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width && matriz_.get(x, y) != 0) {
+				let mean = getMean(copy, getPixelIndex(_i, _j)) ;
+				val = val < mean ? mean : val
+			}
+		}
+	}
+	pixels[i] = pixels[i+1] = pixels[i+2] = parseInt(val);
+}
+
+function borderDetect(copy, pixels, i, matriz_){
+	if (matriz_ == undefined) matriz_ = matriz;
+	matriz_ = new Matrix(3,1)
+	let p = getIJFromPixel(i);
+	let radius = (matriz_.getDim()-1)/2;
+	let val = 255;
+	for (let x = 0; x < matriz_.getDim(); x++) {
+		for (let y = 0; y < matriz_.getDim(); y++) {
+			_i = x - radius + p[0];
+			_j = y - radius + p[1];
+			if (_i >= 0 && _i < canvas.height && _j >= 0 && _j < canvas.width && matriz_.get(x, y) != 0) {
+				let mean = getMean(copy, getPixelIndex(_i, _j)) ;
+				val = val > mean ? mean : val
+			}
+		}
+	}
+	pixels[i] = pixels[i+1] = pixels[i+2] = getMean(copy,i) - parseInt(val);
+}
+
 function meanFilter(copy, pixels, i) {
 	convolution(copy, pixels, i, meanMatrix)
 }
@@ -562,7 +619,7 @@ function haarTransform() {
 		haar_level++;
 
 		waveletTransform(haar_matrix, canvas_size);
-		
+
 		fillCanvas(haar_matrix);
 		drawHistogram(hist);
 	}
@@ -633,9 +690,9 @@ function haarInverse(){
 	let canvas_size = canvas.width / Math.pow(2, haar_level-1);
 	if (canvas_size <= canvas.width) {
 		haar_level--;
-		
+
 		invertWaveletTransform(haar_matrix, canvas_size);
-		
+
 		fillCanvas(haar_matrix);
 		drawHistogram(hist);
 	}
@@ -657,13 +714,13 @@ function reconstructRow(matrix, line, size) {
 	}
 
 	for(let i = 0; i < size/2; i++) {
-		matrix[line][ i*2 ] =  
-			[means[i][0] + coefs[i][0], 
-			 means[i][1] + coefs[i][1], 
+		matrix[line][ i*2 ] =
+			[means[i][0] + coefs[i][0],
+			 means[i][1] + coefs[i][1],
 			 means[i][2] + coefs[i][2]];
-		matrix[line][i*2+1] =  
-			[means[i][0] - coefs[i][0], 
-			 means[i][1] - coefs[i][1], 
+		matrix[line][i*2+1] =
+			[means[i][0] - coefs[i][0],
+			 means[i][1] - coefs[i][1],
 			 means[i][2] - coefs[i][2]];
 	}
 }
@@ -677,13 +734,13 @@ function reconstructCol(matrix, col, size) {
 	}
 
 	for(let i = 0; i < size/2; i++) {
-		matrix[ i*2 ][col] =  
-			[means[i][0] + coefs[i][0], 
-			 means[i][1] + coefs[i][1], 
+		matrix[ i*2 ][col] =
+			[means[i][0] + coefs[i][0],
+			 means[i][1] + coefs[i][1],
 			 means[i][2] + coefs[i][2]];
-		matrix[i*2+1][col] =  
-			[means[i][0] - coefs[i][0], 
-			 means[i][1] - coefs[i][1], 
+		matrix[i*2+1][col] =
+			[means[i][0] - coefs[i][0],
+			 means[i][1] - coefs[i][1],
 			 means[i][2] - coefs[i][2]];
 	}
 }

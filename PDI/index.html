@@ -44,7 +44,7 @@
                 <button class="filter" onclick="applyFilter(event, this, grayscale,this)">Grayscale</button>
 
                 <button class="filter" onclick="applyFilter(event, this, negative)">Negative</button>
-                
+
                 <button class="filter" onclick="applyFilter(event, this, sepia)">Sépia</button>
                 <div class="">
                   <button class="filter" onclick="applyFilter(event, this, potenc)">Potency (lambda=<span id='range_potenc'>1.00</span>)</button>
@@ -188,7 +188,9 @@
                 <button class="filter" onclick="prepareToHaar()">Prepare to Haar</button>
                 <button class="filter" onclick="haarTransform()">Haar Transform</button>
                 <button class="filter" onclick="haarInverse()">Haar Destransform</button>
-
+                <button class="filter" onclick="applyFilter(event, this, dilatacao)">Dilatação</button>
+                <button class="filter" onclick="applyFilter(event, this, erosao)">Eresão</button>
+                <button class="filter" onclick="applyFilter(event, this, borderDetect)">Border Detect</button>
               </div>
 
 
