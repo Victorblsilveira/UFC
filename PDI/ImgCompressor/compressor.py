@@ -62,8 +62,6 @@ def bits2imgdata(bits):
 	return data
 
 
-
-
 def run_diff(rgbdict, start=0):
 	print('\trunning diff')
 	rdiff = [rgbdict['r'][i] for i in range(start+1)] + [rgbdict['r'][i] - rgbdict['r'][i-1] for i in range(start+1, len(rgbdict['r']))]
@@ -112,19 +110,21 @@ def recursive_haar(matrix):
 def runlength_compress(imgdata, shape):
 	print('\n--> Run Length Compression <--\n')
 	flat = imgdata2array(imgdata)
-	mat = array2matrix(flat, shape)
+	# mat = array2matrix(flat, shape)
 
-	mat = full_haar(mat)
-	flat = matrix2array(mat)
+	# mat = full_haar(mat)
+	# flat = matrix2array(mat)
 	print(len(flat))
 	# print(flat[30700:30900])
 
+	max_rep = 0
 	bit_string = ''
 	last = flat[0]
 	repeated = 1
 	has_repeated = False
 	for i in range(1, len(flat)):
 		if flat[i] != last:
+			max_rep = max(max_rep, repeated)
 			s = '1' if has_repeated else '0'
 			s += '1' if last > 0 else '0'
 			if has_repeated: s += '{0:05b}'.format(repeated)
@@ -136,6 +136,7 @@ def runlength_compress(imgdata, shape):
 		else:
 			has_repeated = True
 			repeated += 1
+	print(max_rep)
 	bit_string = '{0:032b}{1:032b}{2:032b}'.format(shape[0], shape[1], len(flat)) + bit_string
 	return bitarray(bit_string)
 
@@ -144,11 +145,13 @@ def runlength_decompress(bitarray):
 	shape = (bits2int(bitarray[:32]), bits2int(bitarray[32:64]))
 	arr = []
 	i = 32*3
+	# i = 0
 	size = bits2int(bitarray[64:96])
+	print(size)
 	while len(arr) < size:
 		repeated = bitarray[i]
 		positive = bitarray[i+1]
-		i += 2
+		i += 1
 		n = 1
 		if repeated:
 			n = bits2int(bitarray[i:i+5])
@@ -157,12 +160,11 @@ def runlength_decompress(bitarray):
 		i += 8
 		if not positive: number *= -1
 
-		for j in range(n):
-			arr.append(number)
+		arr += [number] * n
 		
 		#print(i, '/', len(bitarray))
 	arr = np.array(arr)
-	print(len(arr))
+	
 	#print(arr[30700:30900])
 	imgdata = array2imgdata(arr)
 	return imgdata, shape
@@ -187,17 +189,21 @@ def load_bit_array(filename):
 
 def compress_image(img_file, compressed_file):
 	img = Image.open(img_file)
-	bits = runlength_compress(img.getdata(), img.size)
-	save_bit_array('runlength.bin', bits)
+	rgb_dic = imgdata2rgbdict(img.getdata())
+	diff_dict = run_diff(rgb_dic)
+	bits = runlength_compress(rgbdict2imgdata(diff_dict), img.size)
+	save_bit_array(compressed_file, bits)
 
 def decompress_image(compressed_file):
 	bits = load_bit_array(compressed_file)
 	imgdata, shape = runlength_decompress(bits)
+	rgb_dic = imgdata2rgbdict(imgdata)
+	imgdata = rgbdict2imgdata(revert_diff(rgb_dic))
 	img = Image.new('RGB', shape)
 	img.putdata(imgdata)
 	img.show()
 
-compress_image('lena.bmp', 'runlength.bin')
-decompress_image('runlength.bin')
+compress_image('lena.bmp', 'lena.bin')
+decompress_image('lena.bin')
 
 
